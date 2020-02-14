@@ -35,7 +35,7 @@ if [ ! -d ./other ]; then
   mkdir -p ./other;
 fi
 
-# Generate a list of all subjects (ex. sub-NDARINVZN4F9J96)
+# Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
 ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
 # get list of subject folders in format "ABSPATH/abcd_bids/bids/sub-NDAR<????>"
@@ -43,5 +43,5 @@ ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
-    echo $BIDS_PATH/derivatives/abcd-hcp-pipeline/ses-baselineYear1Arm1/func/$sub"_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii" > other/CIFTI_files.txt
+    cat $BIDS_PATH/derivatives/abcd-hcp-pipeline/ses-baselineYear1Arm1/func/$sub"_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii" > other/CIFTI_files.txt
 done < other/subject_list.txt
