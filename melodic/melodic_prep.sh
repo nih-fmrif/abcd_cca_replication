@@ -54,7 +54,10 @@ while read sub; do
 done < other/subject_list.txt
 
 while read fname; do
-    if [[ ! -f "$fname" ]]; then
+    if [[ -f "$fname" ]]; then
+        # echo "$fname doesn't exist"
+        echo
+    else
         echo "$fname doesn't exist"
     fi
 done < other/CIFTI_files.txt
