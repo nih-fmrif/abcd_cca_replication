@@ -73,5 +73,5 @@ else
     while read sub; do
         fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
         wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
-    done < subjects_with_CIFTI.txt
+    done < other/subjects_with_CIFTI.txt
 fi
