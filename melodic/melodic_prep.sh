@@ -14,26 +14,29 @@ usage()
 
 #### Setup stuff
 while getopts ":f:d:o:h" arg; do
-  case $arg in
-    d) 	BIDS_PATH=$OPTARG;;
-    o) 	OUT_PATH=$OPTARG;;
-	h) 	usage
-		exit 1
-		;;
-  esac
+    case $arg in
+        d) 	BIDS_PATH=$OPTARG;;
+        o) 	OUT_PATH=$OPTARG;;
+        h) 	usage
+            exit 1
+            ;;
+    esac
 done
 
 # Make directory for the swarm files
 if [ ! -d ./NIFTI ]; then
-  mkdir -p ./NIFTI;
+    mkdir -p ./NIFTI;
 fi
 
 if [ ! -d ./groupICA200.gica ]; then
-  mkdir -p ./groupICA200.gica;
+    mkdir -p ./groupICA200.gica;
 fi
 
 if [ ! -d ./other ]; then
-  mkdir -p ./other;
+    mkdir -p ./other;
+else
+    rm -r ./other;
+    mkdir -p ./other;
 fi
 
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
