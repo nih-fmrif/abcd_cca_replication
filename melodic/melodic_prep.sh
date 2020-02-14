@@ -60,13 +60,13 @@ while read sub; do
         echo $sub >> other/subjects_with_CIFTI.txt
     else
         echo $fname >> other/missing_CIFTI_files.txt
+    fi
 done < other/subject_list.txt
 
 NUMSUBS=$(cat other/subjects_with_CIFTI.txt| wc -l)
 read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
 echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
 else
     # Convert the CIFTI files to NIFTI, and store in the NIFTI folder
