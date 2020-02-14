@@ -9,6 +9,7 @@
 usage()
 {
 	echo "usage: melodic_setup.sh -d <path/to/main/abcd_bids/> -o </path/to/melodic outputs>"
+    echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD download. for example: /data/ABCD/abcd_bids/bids/"
 }
 
 #### Setup stuff
@@ -43,5 +44,6 @@ ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
-    cat $BIDS_PATH/derivatives/abcd-hcp-pipeline/ses-baselineYear1Arm1/func/$sub"_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii" > other/CIFTI_files.txt
+    # echo $BIDS_PATH/derivatives/abcd-hcp-pipeline/$sub/ses-baselineYear1Arm1/func/$sub"_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii" > other/CIFTI_files.txt
+    file=${find $BIDS_PATH/derivatives/abcd-hcp-pipeline/$sub/ses-baselineYear1Arm1/func/ -name "*_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii"}
 done < other/subject_list.txt
