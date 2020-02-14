@@ -48,7 +48,7 @@ else
     mkdir -p ./other;
 fi
 
-echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files...\n"
+echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files..."
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
 ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
@@ -60,11 +60,11 @@ while read sub; do
         echo $sub >> other/subjects_with_CIFTI.txt
     else
         echo $fname >> other/missing_CIFTI_files.txt
-    fi
+
 done < other/subject_list.txt
 
 NUMSUBS=$(cat other/subjects_with_CIFTI.txt| wc -l)
-read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " 1 -r
+read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
@@ -73,6 +73,6 @@ else
     # Convert the CIFTI files to NIFTI, and store in the NIFTI folder
     while read sub; do
         fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
-        wb_command -cifti-convert -to-nifti $fname NIFTI/$sub.nii
+        wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
     done < subjects_with_CIFTI.txt
 fi
