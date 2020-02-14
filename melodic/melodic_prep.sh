@@ -43,6 +43,5 @@ ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
-    fname=$BIDS_PATH/derivatives/abcd-hcp-pipeline/ses-baselineYear1Arm1/func/$sub"_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii"
-    echo $fname > other/CIFTI_files.txt
+    $BIDS_PATH/derivatives/abcd-hcp-pipeline/ses-baselineYear1Arm1/func/$sub"_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii" > other/CIFTI_files.txt
 done < other/subject_list.txt
