@@ -48,6 +48,7 @@ else
     mkdir -p ./other;
 fi
 
+echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files...\n"
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
 ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
@@ -63,7 +64,7 @@ while read sub; do
 done < other/subject_list.txt
 
 NUMSUBS=$(cat other/subjects_with_CIFTI.txt| wc -l)
-read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -n 1 -r
+read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
