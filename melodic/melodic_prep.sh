@@ -4,6 +4,8 @@
 # melodic_setup.sh - a script to prep the resting state timeseries files for MELODIC group-ICA processing
 
 # Run this function within the melodic/ folder it resides inside.
+# Example usage:
+#   ./melodic_prep.sh -d /data/ABCD_MBDU/abcd_bids/bids -o outputs/
 
 ##### Functions
 usage()
@@ -22,6 +24,13 @@ while getopts ":f:d:o:h" arg; do
             ;;
     esac
 done
+
+# Before proceeding, make sure everything we need is present:
+path_to_executable=$(which wb_command)
+ if [ ! -x "$path_to_executable" ] ; then
+    echo "Error - HCP Workbench is not on PATH. Exiting"
+    exit 1
+ fi
 
 # Make directory for the swarm files
 if [ ! -d ./NIFTI ]; then
@@ -42,18 +51,27 @@ fi
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
 ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
-# get list of subject folders in format "ABSPATH/abcd_bids/bids/sub-NDAR<????>"
-# find $BIDS_PATH -maxdepth 1 | grep sub-NDAR > other/subject_list.txt
-
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
-    fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii 
+    fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
     if [[ -f "$fname" ]]; then
         echo $fname >> other/CIFTI_files.txt
+        echo $sub >> other/subjects_with_CIFTI.txt
     else
         echo $fname >> other/missing_CIFTI_files.txt
     fi
-    
-    # file=$(find $BIDS_PATH/derivatives/abcd-hcp-pipeline/$sub/ses-baselineYear1Arm1/func/ -name "*_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii");
-    # echo $file > other/CIFTI_files.txt
 done < other/subject_list.txt
+
+NUMSUBS=$(cat other/subjects_with_CIFTI.txt| wc -l)
+read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
+else
+    # Convert the CIFTI files to NIFTI, and store in the NIFTI folder
+    while read sub; do
+        fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
+        wb_command -cifti-convert -to-nifti $fname NIFTI/$sub.nii
+    done < subjects_with_CIFTI.txt
+fi
