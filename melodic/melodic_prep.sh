@@ -47,17 +47,13 @@ ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
-    # echo $BIDS_PATH/derivatives/abcd-hcp-pipeline/$sub/ses-baselineYear1Arm1/func/$sub"_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii" > other/CIFTI_files.txt
-    echo ${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii >> other/CIFTI_files.txt
+    fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii 
+    if [[ -f "$fname" ]]; then
+        echo $fname >> other/CIFTI_files.txt
+    else
+        echo $fname >> other/missing_CIFTI_files.txt
+    fi
+    
     # file=$(find $BIDS_PATH/derivatives/abcd-hcp-pipeline/$sub/ses-baselineYear1Arm1/func/ -name "*_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii");
     # echo $file > other/CIFTI_files.txt
 done < other/subject_list.txt
-
-while read fname; do
-    if [[ -f "$fname" ]]; then
-        # echo "$fname doesn't exist"
-        echo
-    else
-        echo "$fname doesn't exist"
-    fi
-done < other/CIFTI_files.txt
