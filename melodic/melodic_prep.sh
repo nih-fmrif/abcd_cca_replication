@@ -60,7 +60,6 @@ while read sub; do
         echo $sub >> other/subjects_with_CIFTI.txt
     else
         echo $fname >> other/missing_CIFTI_files.txt
-
 done < other/subject_list.txt
 
 NUMSUBS=$(cat other/subjects_with_CIFTI.txt| wc -l)
