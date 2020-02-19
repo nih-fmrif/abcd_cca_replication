@@ -41,16 +41,16 @@ if [ ! -d ./groupICA200.gica ]; then
     mkdir -p ./groupICA200.gica;
 fi
 
-if [ ! -d ./other ]; then
-    mkdir -p ./other;
+if [ ! -d ./data ]; then
+    mkdir -p ./data;
 else
-    rm -r ./other;
-    mkdir -p ./other;
+    rm -r ./data;
+    mkdir -p ./data;
 fi
 
 echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files..."
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
-ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
+ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > data/subject_list.txt
 
 sub-NDARINVTA3NBRK7_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
 
@@ -60,16 +60,16 @@ while read sub; do
     matfile=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
     
     if [[ -f "$fname" ]]; then
-        echo $tseries >> other/CIFTI_files.txt
-        echo $matfile >> other/mat_files.txt
-        echo $sub >> other/subjects_with_CIFTI.txt
+        echo $tseries >> data/CIFTI_files.txt
+        echo $matfile >> data/mat_files.txt
+        echo $sub >> data/subjects_with_CIFTI.txt
     else
-        echo $fname >> other/missing_CIFTI_files.txt
+        echo $fname >> data/missing_CIFTI_files.txt
     fi
-done < other/subject_list.txt
+done < data/subject_list.txt
 
 # Conversion from CIFTI --> NIFTI
-NUMSUBS=$(cat other/subjects_with_CIFTI.txt| wc -l)
+NUMSUBS=$(cat data/subjects_with_CIFTI.txt| wc -l)
 read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -79,5 +79,5 @@ else
     while read sub; do
         fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
         wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
-    done < other/subjects_with_CIFTI.txt
+    done < data/subjects_with_CIFTI.txt
 fi

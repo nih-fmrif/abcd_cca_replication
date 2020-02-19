@@ -7,7 +7,7 @@
 # sub-<NDAR ID>_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
 
 from helper_functions import mat_files
-
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
 from matplotlib.ticker import PercentFormatter
@@ -19,12 +19,12 @@ cwd = os.getcwd()
 filepath = sys.argv[1]      # path to mat_files.txt
 FD = float(sys.argv[2])     # frame displacement threshold of interest (ex. 0.xx) (range 0.00 to 0.50)
 
-fp = os.path.join(cwd,'other/motion_summary_data.csv')
+fp = os.path.join(cwd,'data/motion_summary_data.csv')
 fout1 = open(fp, 'a')
 fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
 
-fp = os.path.join(cwd,'other/mean_FDs.txt')
-fout2 = open('mean_FDs.txt','a')    # just the mean FD data
+fp = os.path.join(cwd,'data/mean_FDs.txt')
+fout2 = open('data/mean_FDs.txt','a')    # just the mean FD data
 
 print("Pulling motion data, please be patient..\n")
 i=1
@@ -55,33 +55,35 @@ for fp in file_list:
             continue
     
     i+=1
-    
+
 fout1.close()
 fout2.close()
-print("Finished pulling data, now generating histogram...\n")
 
-## Histogram ##
-fp = os.path.join(cwd,'other/mean_FDs.txt')
-data=np.loadtxt(fp)
 
-# mean and SD
-mu = np.mean(data)
-sigma = np.std(data)
-num_bins = 50
+# print("Finished pulling data, now generating histogram...\n")
 
-fig, ax = plt.subplots()
+# ## Histogram ##
+# fp = os.path.join(cwd,'other/mean_FDs.txt')
+# data=np.loadtxt(fp)
 
-# the histogram of the data
-n, bins, patches = ax.hist(data, num_bins, density=1)
+# # mean and SD
+# mu = np.mean(data)
+# sigma = np.std(data)
+# num_bins = 50
 
-# add a 'best fit' line
-y = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
-     np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
-ax.plot(bins, y, '--')
-ax.set_xlabel('Frame displacement')
-ax.set_ylabel('Probability density')
-ax.set_title(r'ABCD Histogram of motion: $\mu=${}, $\sigma=${}'.format(round(mu,4),round(sigma,4)))
+# fig, ax = plt.subplots()
 
-# Tweak spacing to prevent clipping of ylabel
-fig.tight_layout()
-plt.savefig(os.path.join(cwd,'other/histogram.png'))
+# # the histogram of the data
+# n, bins, patches = ax.hist(data, num_bins, density=1)
+
+# # add a 'best fit' line
+# y = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
+#      np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
+# ax.plot(bins, y, '--')
+# ax.set_xlabel('Frame displacement')
+# ax.set_ylabel('Probability density')
+# ax.set_title(r'ABCD Histogram of motion: $\mu=${}, $\sigma=${}'.format(round(mu,4),round(sigma,4)))
+
+# # Tweak spacing to prevent clipping of ylabel
+# fig.tight_layout()
+# plt.savefig(os.path.join(cwd,'other/histogram.png'))
