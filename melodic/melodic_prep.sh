@@ -52,17 +52,23 @@ echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
 ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > other/subject_list.txt
 
+sub-NDARINVTA3NBRK7_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
+
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
-    fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
+    tseries=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
+    matfile=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
+    
     if [[ -f "$fname" ]]; then
-        echo $fname >> other/CIFTI_files.txt
+        echo $tseries >> other/CIFTI_files.txt
+        echo $matfile >> other/mat_files.txt
         echo $sub >> other/subjects_with_CIFTI.txt
     else
         echo $fname >> other/missing_CIFTI_files.txt
     fi
 done < other/subject_list.txt
 
+# Conversion from CIFTI --> NIFTI
 NUMSUBS=$(cat other/subjects_with_CIFTI.txt| wc -l)
 read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
 echo
