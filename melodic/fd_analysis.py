@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 from matplotlib.ticker import PercentFormatter
 import os
+import sys
 
 cwd = os.getcwd()
 
@@ -25,8 +26,11 @@ fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remai
 fp = os.path.join(cwd,'other/mean_FDs.txt')
 fout2 = open('mean_FDs.txt','a')    # just the mean FD data
 
+print("Pulling motion data, please be patient..\n")
+i=1
 file_list = [line.rstrip('\n') for line in open(filepath)]
 for fp in file_list:
+    print(i)
     mat_contents = mat_files.loadmat(fp)        # load the .mat file (Version 5.0)
     motion_data = mat_contents['motion_data']   # array of mat_struct objects, need to iterate over them
 
@@ -49,9 +53,12 @@ for fp in file_list:
             fout2.write('{}\n'.format(struct.remaining_frame_mean_FD))
         else:
             continue
+    
+    i+=1
+    
 fout1.close()
 fout2.close()
-
+print("Finished pulling data, now generating histogram...\n")
 
 ## Histogram ##
 fp = os.path.join(cwd,'other/mean_FDs.txt')
@@ -73,7 +80,7 @@ y = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
 ax.plot(bins, y, '--')
 ax.set_xlabel('Frame displacement')
 ax.set_ylabel('Probability density')
-ax.set_title(r'Histogram of motion: $\mu=${}, $\sigma=${}'.format(round(mu,4),round(sigma,4)))
+ax.set_title(r'ABCD Histogram of motion: $\mu=${}, $\sigma=${}'.format(round(mu,4),round(sigma,4)))
 
 # Tweak spacing to prevent clipping of ylabel
 fig.tight_layout()
