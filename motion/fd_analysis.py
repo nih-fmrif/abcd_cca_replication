@@ -63,7 +63,7 @@ fout2.close()
 # print("Finished pulling data, now generating histogram...\n")
 
 # ## Histogram ##
-# fp = os.path.join(cwd,'other/mean_FDs.txt')
+# fp = os.path.join(cwd,'data/mean_FDs.txt')
 # data=np.loadtxt(fp)
 
 # # mean and SD
@@ -86,4 +86,4 @@ fout2.close()
 
 # # Tweak spacing to prevent clipping of ylabel
 # fig.tight_layout()
-# plt.savefig(os.path.join(cwd,'other/histogram.png'))
+# plt.savefig(os.path.join(cwd,'data/histogram.png'))

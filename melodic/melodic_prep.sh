@@ -79,3 +79,4 @@ else
         wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
     done < data/subjects_with_CIFTI.txt
 fi
+
