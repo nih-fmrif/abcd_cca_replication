@@ -3,3 +3,8 @@
 # Except this file
 !.gitignore
 !melodic_prep.sh
+!data/
+!groupICA200.gica/
+!groupICA200.dr/
+!NIFTI/
+!scripts/

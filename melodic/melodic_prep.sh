@@ -33,20 +33,20 @@ path_to_executable=$(which wb_command)
  fi
 
 # Make directory for the swarm files
-if [ ! -d ./NIFTI ]; then
-    mkdir -p ./NIFTI;
-fi
+# if [ ! -d ./NIFTI ]; then
+#     mkdir -p ./NIFTI;
+# fi
 
-if [ ! -d ./groupICA200.gica ]; then
-    mkdir -p ./groupICA200.gica;
-fi
+# if [ ! -d ./groupICA200.gica ]; then
+#     mkdir -p ./groupICA200.gica;
+# fi
 
-if [ ! -d ./data ]; then
-    mkdir -p ./data;
-else
-    rm -r ./data;
-    mkdir -p ./data;
-fi
+# if [ ! -d ./data ]; then
+#     mkdir -p ./data;
+# else
+#     rm -r ./data;
+#     mkdir -p ./data;
+# fi
 
 echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files..."
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
