@@ -1,0 +1,5 @@
+# Ignore these folders/items
+ABCDFixRelease/
+abcd_2.0_releasenotes/
+abcd_2.0_releasenotes.zip
+.vscode/
