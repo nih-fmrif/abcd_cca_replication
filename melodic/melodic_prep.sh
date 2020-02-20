@@ -52,8 +52,6 @@ echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
 ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > data/subject_list.txt
 
-sub-NDARINVTA3NBRK7_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
-
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
     tseries=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
