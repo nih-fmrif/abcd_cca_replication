@@ -32,21 +32,19 @@ path_to_executable=$(which wb_command)
     exit 1
  fi
 
-# Make directory for the swarm files
-# if [ ! -d ./NIFTI ]; then
-#     mkdir -p ./NIFTI;
-# fi
-
-# if [ ! -d ./groupICA200.gica ]; then
-#     mkdir -p ./groupICA200.gica;
-# fi
-
-# if [ ! -d ./data ]; then
-#     mkdir -p ./data;
-# else
-#     rm -r ./data;
-#     mkdir -p ./data;
-# fi
+# Check if the output .txt files exist, if so delete because we want to overwrite them
+if test -f "data/CIFTI_files.txt"; then
+    rm data/CIFTI_files.txt
+fi
+if test -f "data/mat_files.txt"; then
+    rm data/mat_files.txt
+fi
+if test -f "data/subjects_with_CIFTI.txt"; then
+    rm data/subjects_with_CIFTI.txt
+fi
+if test -f "data/missing_CIFTI_files.txt"; then
+    rm data/missing_CIFTI_files.txt
+fi
 
 echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files..."
 # Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
@@ -67,6 +65,7 @@ while read sub; do
 done < data/subject_list.txt
 
 # Conversion from CIFTI --> NIFTI
+# Before doing conversion, check if the file exists (so this script can be run multiple times, adding the new NIFTI files as they appear in subsequent releases)
 NUMSUBS=$(cat data/subjects_with_CIFTI.txt| wc -l)
 read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
 echo
@@ -76,7 +75,12 @@ else
     # Convert the CIFTI files to NIFTI, and store in the NIFTI folder
     while read sub; do
         fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
-        wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
+        if test -f "$PWD/NIFTI/$sub.nii"; then
+            # This file exists, so skip
+            # echo "$PWD/NIFTI/$sub.nii exists"
+            true
+        else
+            wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
+        fi
     done < data/subjects_with_CIFTI.txt
 fi
-
