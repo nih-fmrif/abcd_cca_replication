@@ -58,32 +58,3 @@ for fp in file_list:
 
 fout1.close()
 fout2.close()
-
-
-# print("Finished pulling data, now generating histogram...\n")
-
-# ## Histogram ##
-# fp = os.path.join(cwd,'data/mean_FDs.txt')
-# data=np.loadtxt(fp)
-
-# # mean and SD
-# mu = np.mean(data)
-# sigma = np.std(data)
-# num_bins = 50
-
-# fig, ax = plt.subplots()
-
-# # the histogram of the data
-# n, bins, patches = ax.hist(data, num_bins, density=1)
-
-# # add a 'best fit' line
-# y = ((1 / (np.sqrt(2 * np.pi) * sigma)) *
-#      np.exp(-0.5 * (1 / sigma * (bins - mu))**2))
-# ax.plot(bins, y, '--')
-# ax.set_xlabel('Frame displacement')
-# ax.set_ylabel('Probability density')
-# ax.set_title(r'ABCD Histogram of motion: $\mu=${}, $\sigma=${}'.format(round(mu,4),round(sigma,4)))
-
-# # Tweak spacing to prevent clipping of ylabel
-# fig.tight_layout()
-# plt.savefig(os.path.join(cwd,'data/histogram.png'))
