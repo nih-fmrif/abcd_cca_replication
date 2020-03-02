@@ -33,16 +33,16 @@ path_to_executable=$(which wb_command)
  fi
 
 # Check if the output .txt files exist, if so delete because we want to overwrite them
-if test -f "data/CIFTI_files.txt"; then
+if [ test -f "data/CIFTI_files.txt" ]; then
     rm data/CIFTI_files.txt
 fi
-if test -f "data/mat_files.txt"; then
+if [ test -f "data/mat_files.txt" ]; then
     rm data/mat_files.txt
 fi
-if test -f "data/subjects_with_CIFTI.txt"; then
+if [ test -f "data/subjects_with_CIFTI.txt" ]; then
     rm data/subjects_with_CIFTI.txt
 fi
-if test -f "data/missing_CIFTI_files.txt"; then
+if [ test -f "data/missing_CIFTI_files.txt" ]; then
     rm data/missing_CIFTI_files.txt
 fi
 
