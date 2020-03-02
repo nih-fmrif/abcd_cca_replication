@@ -188,8 +188,8 @@ plot_hist(hcp,abcd,'Histogram of FD, HCP vs. ABCD (Filtered subset)')
 
 # Output a final list of subjects to be included in the group-ICA
 # Write it to two folders: the abcd_cca_replication/motion/data/, and abcd_cca_replication/data/
-f1=open('data/ica_subjects.txt','w')
-f2=open('../data/ica_subjects.txt','w')
+f1=open('data/motion_filtered_subjects.txt','w')
+f2=open('../data/motion_filtered_subjects.txt','w')
 
 for ele in final_subs:
     f1.write(ele+'\n')
