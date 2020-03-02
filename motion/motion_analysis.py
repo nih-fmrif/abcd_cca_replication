@@ -154,7 +154,7 @@ mriqc=mriqc.drop(mriqc.index[0])
 # Now, we need to change the format of the subject key by removing the underscore (ex. NDAR_INVX8CRJYVP	 --> NDARINVX8CRJYVP)
 mriqc['subjectkey'] = mriqc['subjectkey'].str.replace('_','')
 
-qc = mriqc[['subjectkey','iqc_t1_ok_ser','iqc_t1_ok_ser','iqc_rsfmri_ok_ser','iqc_rsfmri_good_ser']]
+qc = mriqc[['subjectkey','iqc_t1_ok_ser','iqc_t1_good_ser','iqc_rsfmri_ok_ser','iqc_rsfmri_good_ser']]
 subs = msd_rt_anom_filt['sub'].tolist()
 qc=qc[qc['subjectkey'].isin(subs)]
 
