@@ -165,13 +165,17 @@ qc.shape
 # 2. iqc_rsfmri_good_ser >= 2 (for 10 mins)
 
 # Make sure the data are numeric
-qc['iqc_t1_ok_ser'] = pd.to_numeric(qc['iqc_t1_ok_ser'])
-qc['iqc_rsfmri_ok_ser'] = pd.to_numeric(qc['iqc_rsfmri_ok_ser'])
-qc['iqc_t1_good_ser'] = pd.to_numeric(qc['iqc_t1_good_ser'])
-qc['iqc_rsfmri_good_ser'] = pd.to_numeric(qc['iqc_rsfmri_good_ser'])
+numeric = ['iqc_t1_ok_ser','iqc_t1_ok_ser','iqc_rsfmri_ok_ser','iqc_rsfmri_good_ser']
+qc[numeric] = qc[numeric].apply(pd.to_numeric, errors='coerce')
 
-# qc2 is a looser drop criteria (ignoring protocol compliance), qc3 is stricter (requires protocol compliance)
-# Doesn't make huge difference in num of subjects, so we use qc3
+# qc['iqc_t1_ok_ser'] = pd.to_numeric(qc['iqc_t1_ok_ser'])
+# qc['iqc_rsfmri_ok_ser'] = pd.to_numeric(qc['iqc_rsfmri_ok_ser'])
+# qc['iqc_t1_good_ser'] = pd.to_numeric(qc['iqc_t1_good_ser'])
+# qc['iqc_rsfmri_good_ser'] = pd.to_numeric(qc['iqc_rsfmri_good_ser'])
+
+# qc2 is a less strict drop criteria (ignoring protocol compliance check for the t1 and rsfMRI scans)
+# qc3 is stricter (requires protocol compliance for both t1 and rsfMRI scans)
+# Doesn't make big difference in num of subjects, so we use qc3
 qc2 = qc.drop(qc[ ~( (qc['iqc_t1_ok_ser'] > 0) & (qc['iqc_rsfmri_ok_ser'] > 1) ) ].index)
 qc3 = qc.drop(qc[ ~( (qc['iqc_t1_good_ser'] > 0) & (qc['iqc_rsfmri_good_ser'] > 1) ) ].index)
 
