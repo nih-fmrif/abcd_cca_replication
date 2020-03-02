@@ -33,17 +33,20 @@ path_to_executable=$(which wb_command)
  fi
 
 # Check if the output .txt files exist, if so delete because we want to overwrite them
+if test -f data/subject_list.txt; then
+    rm data/subject_list.txt
+fi
 if test -f data/CIFTI_files.txt; then
     rm data/CIFTI_files.txt
 fi
 if test -f data/mat_files.txt; then
     rm data/mat_files.txt
 fi
-if test -f data/subjects_with_CIFTI.txt; then
-    rm data/subjects_with_CIFTI.txt
+if test -f data/subjects_with_mat_CIFTI.txt; then
+    rm data/subjects_with_mat_CIFTI.txt
 fi
-if test -f data/missing_CIFTI_files.txt; then
-    rm data/missing_CIFTI_files.txt
+if test -f data/missing_files.txt; then
+    rm data/missing_files.txt
 fi
 
 echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files..."
@@ -55,12 +58,12 @@ while read sub; do
     tseries=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
     matfile=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
     
-    if [[ -f "$fname" ]]; then
+    if [[ -f "$tseries" && -f "$matfile" ]]; then
         echo $tseries >> data/CIFTI_files.txt
         echo $matfile >> data/mat_files.txt
-        echo $sub >> data/subjects_with_CIFTI.txt
+        echo $sub >> data/subjects_with_mat_CIFTI.txt
     else
-        echo $fname >> data/missing_CIFTI_files.txt
+        echo $fname >> data/missing_files.txt
     fi
 done < data/subject_list.txt
 
