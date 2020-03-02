@@ -69,7 +69,7 @@ done < data/subject_list.txt
 
 # Conversion from CIFTI --> NIFTI
 # Before doing conversion, check if the file exists (so this script can be run multiple times, adding the new NIFTI files as they appear in subsequent releases)
-NUMSUBS=$(cat data/subjects_with_CIFTI.txt| wc -l)
+NUMSUBS=$(cat data/subjects_with_mat_CIFTI.txt| wc -l)
 read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
