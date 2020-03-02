@@ -3,7 +3,7 @@
 rm(list=ls())
 script.dir <- "/data/ABCD_MBDU/goyaln2/analysis-nda/notebooks/general"
 setwd(script.dir)
-input_list = Sys.glob(paths = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/sm_prep/abcd_sm_2.0-2.0.1/*.txt")
+input_list = Sys.glob(paths = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/sm_prep/sm_raw_data/*.txt")
 length(input_list)
 
 # Remove all files that are not required for this merge. This includes files that are related to the download process as well as files that reference the raw data sharing (Fast-Track).
