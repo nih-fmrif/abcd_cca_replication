@@ -16,7 +16,7 @@ import sys
 
 cwd = os.getcwd()
 
-filepath = sys.argv[1]      # path to mat_files.txt
+filepath = sys.argv[1]      # path to mat_files.txt (a text file with a list of paths to .mat files)
 FD = float(sys.argv[2])     # frame displacement threshold of interest (ex. 0.xx) (range 0.00 to 0.50)
 
 fp = os.path.join(cwd,'data/motion_summary_data.csv')
