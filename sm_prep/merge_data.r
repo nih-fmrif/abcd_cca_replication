@@ -4,7 +4,7 @@
 # Merge NDA18 2.0.1 data into a single rds file (need memory size >=32GB)
 # We will assume that you downloaded the instrument package and placed them in the certain directory. Specify the path and read in a list of all the text files provided.
 rm(list=ls())
-script.dir <- "../analysis-nda/notebooks/general"
+script.dir <- "../../analysis-nda/notebooks/general"
 setwd(script.dir)
 input_list = Sys.glob(paths = "./sm_raw_data/*.txt")
 length(input_list)
