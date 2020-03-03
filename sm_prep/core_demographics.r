@@ -1,4 +1,4 @@
-script.dir <- "../../analysis-nda/notebooks/general"
+script.dir <- "../../analysis-nda/notebooks/general/"
 setwd(script.dir)
 nda18 = readRDS("nda2.0.1_orig.Rds")
 #The site_name is anonymized and stored per event in case participants move from one site to another during the study.
