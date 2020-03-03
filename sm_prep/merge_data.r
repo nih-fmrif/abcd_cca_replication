@@ -1,9 +1,12 @@
+# Note, this script is just composed of code from here, in script format for simplicity: https://github.com/ABCD-STUDY/analysis-nda
+# All credit goes to the original authors
+
 # Merge NDA18 2.0.1 data into a single rds file (need memory size >=32GB)
 # We will assume that you downloaded the instrument package and placed them in the certain directory. Specify the path and read in a list of all the text files provided.
 rm(list=ls())
-script.dir <- "/data/ABCD_MBDU/goyaln2/analysis-nda/notebooks/general"
+script.dir <- "../analysis-nda/notebooks/general"
 setwd(script.dir)
-input_list = Sys.glob(paths = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/sm_prep/sm_raw_data/*.txt")
+input_list = Sys.glob(paths = "./sm_raw_data/*.txt")
 length(input_list)
 
 # Remove all files that are not required for this merge. This includes files that are related to the download process as well as files that reference the raw data sharing (Fast-Track).
