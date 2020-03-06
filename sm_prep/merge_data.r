@@ -19,7 +19,7 @@ if (length(which(grepl("errors",input_list))) > 0) input_list = input_list[-whic
 length(input_list)
 instrument.name=NULL
 for(p in 1:length(input_list)){
-    instrument.name[p] = gsub('*.txt$|.txt', '', basename(input_list[p])) 
+		instrument.name[p] = gsub('*.txt$|.txt', '', basename(input_list[p])) 
 }
 length(instrument.name)
 
@@ -29,64 +29,64 @@ length(instrument.name)
 alia = read.csv(paste0(script.dir,'/NDA_DEAP_names_2.0.1.csv') )
 tables = list()
 for (p in 1:length(input_list)) {
-  print(p)
-  input = input_list[p]
-  print(paste("import: ", input, " [", p, "/",length(input_list), "]", sep=""))
-  
-  dt <- tryCatch({
-    a = read.csv(file = input, sep = '\t',header = TRUE, row.names=NULL, comment.char = "", quote="", check.names=FALSE)
-    a = as.data.frame(sapply(a, function(x) gsub("\"", "", x)))
-    names(a) = as.list(sapply(names(a), function(x) gsub("\"", "", x)))
-    a
-  }, error = function(e) {
-    print(e)
-    return(read.table(file = input, sep = '\t',header = TRUE))
-  })
-  
-  # replace variable names from nda with their alias names to make them more like ABCD
-  instrument=instrument.name[p]
-  ali  = alia[which(alia$instrument == instrument),]
-  nn = names(dt)
-  for (q in 1:length(nn)) {
-    if (nn[q] %in% ali$nda) {
-      colnames(dt)[q] <- as.character(ali$abcd[ali$nda == nn[q]])
-    }
-  }
-  tables[[p]] = dt
+	print(p)
+	input = input_list[p]
+	print(paste("import: ", input, " [", p, "/",length(input_list), "]", sep=""))
+	
+	dt <- tryCatch({
+		a = read.csv(file = input, sep = '\t',header = TRUE, row.names=NULL, comment.char = "", quote="", check.names=FALSE)
+		a = as.data.frame(sapply(a, function(x) gsub("\"", "", x)))
+		names(a) = as.list(sapply(names(a), function(x) gsub("\"", "", x)))
+		a
+	}, error = function(e) {
+		print(e)
+		return(read.table(file = input, sep = '\t',header = TRUE))
+	})
+	
+	# replace variable names from nda with their alias names to make them more like ABCD
+	instrument=instrument.name[p]
+	ali  = alia[which(alia$instrument == instrument),]
+	nn = names(dt)
+	for (q in 1:length(nn)) {
+		if (nn[q] %in% ali$nda) {
+			colnames(dt)[q] <- as.character(ali$abcd[ali$nda == nn[q]])
+		}
+	}
+	tables[[p]] = dt
 }
 
 # The first row in each spreadsheet is the element description. Lets remove those for our data tables. This information is already present in the ABCD Data Dictionaries.
 len.tables=length(tables)
 for (p in 1:len.tables) {
-  dt = tables[[p]]
-  dt = dt[-1,]
-  dt = droplevels(dt)
-  tables[[p]] = dt
+	dt = tables[[p]]
+	dt = dt[-1,]
+	dt = droplevels(dt)
+	tables[[p]] = dt
 }
 
 # Check if "visit" was used as "eventnames" in tables
 for (p in 1:len.tables) {
-  dt = tables[[p]]
-  if ("visit" %in% names(dt) ){
-     print(p)
-      print(instrument.name[p]) #nothing print out     
-  } 
+	dt = tables[[p]]
+	if ("visit" %in% names(dt) ){
+		 print(p)
+			print(instrument.name[p]) #nothing print out     
+	} 
 }
 
 # Drop columns introduced by NDA, they are not required in the instruments. But keep dataset_id (QC purpose) and will remove later
 for (p in 1:len.tables) {
-  dt = tables[[p]]
-  dt = dt[,!(names(dt) %in% c(paste0(instrument.name[p],"_id"),"collection_id", "collection_title", "promoted_subjectkey", "subjectkey", "study_cohort_name"))]
-  tables[[p]] = dt
+	dt = tables[[p]]
+	dt = dt[,!(names(dt) %in% c(paste0(instrument.name[p],"_id"),"collection_id", "collection_title", "promoted_subjectkey", "subjectkey", "study_cohort_name"))]
+	tables[[p]] = dt
 }
 
 # Check columns that are all empty; rm those empty col;
 emptycolumns = list()
 for (p in 1:len.tables) {
-  dt = tables[[p]]
-  emptycolumns = append(emptycolumns,names(dt)[sapply(dt, function(x) all((x=="")|(x=="NA")))])
-  dt = dt[!sapply(dt, function(x) all((x=="")|(x=="NA")))]
-  tables[[p]] = dt
+	dt = tables[[p]]
+	emptycolumns = append(emptycolumns,names(dt)[sapply(dt, function(x) all((x=="")|(x=="NA")))])
+	dt = dt[!sapply(dt, function(x) all((x=="")|(x=="NA")))]
+	tables[[p]] = dt
 }
 emptycolumn = unlist(emptycolumns)
 length(emptycolumn)
@@ -96,27 +96,27 @@ length(emptycolumn)
 lt01.indx=which(instrument.name=="abcd_lt01"); #longitudinal tracking
 rm.vars=c("visit","interview_age","interview_date","gender","sex") #only need these variables once
 for (p in 1:len.tables) {
-  dt = tables[[p]]  
-  if (p != lt01.indx){
-  	dt = dt[,!(names(dt) %in% rm.vars)] 
-  	tables[[p]] = dt
-  }
+	dt = tables[[p]]  
+	if (p != lt01.indx){
+		dt = dt[,!(names(dt) %in% rm.vars)] 
+		tables[[p]] = dt
+	}
 
 
 # Check: if any table without eventname
 for (p in 1:len.tables) {
-  dt = tables[[p]]
-  if (!("eventname" %in% names(dt))) {
-    print(p)
-    print(instrument.name[p])
-  }
+	dt = tables[[p]]
+	if (!("eventname" %in% names(dt))) {
+		print(p)
+		print(instrument.name[p])
+	}
 }
 
 # Re-calibrate the levels in each table. Information that has been removed in previous steps could have changed the factor information in each table.
 for (p in 1:len.tables) {
-  dt = tables[[p]]
-  dt = droplevels(dt)
-  tables[[p]] = dt
+	dt = tables[[p]]
+	dt = droplevels(dt)
+	tables[[p]] = dt
 }
 
 # Merge the individual tables into a single spreadsheet. The following loop performs repeated merging operations between pairs of intruments.
@@ -124,19 +124,19 @@ t2 = tables
 rm(tables) #save space
 cnt=0
 while ( length(t2) > 1 ) {
-  cnt=cnt+1
-  print(paste0("iteration : ",cnt));
-  access= seq(1,length(t2)-1,2)
-  for (i in access) {
-    bm = dim(t2[[i]])
-    by.vars=c("src_subject_id","eventname")
-    t2[[i]] = merge(t2[[i]], t2[[i+1]], by=by.vars, all=TRUE)
-    print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], "-",length(by.vars)," = ",dim(t2[[i]])[2]))
-  }
-  # for odd number of instruments add the last spreadsheet back to the list
-  if (length(t2) %% 2 != 0) access = append(access,length(t2))
-  # reduce the list
-  t2 = t2[access]
+	cnt=cnt+1
+	print(paste0("iteration : ",cnt));
+	access= seq(1,length(t2)-1,2)
+	for (i in access) {
+		bm = dim(t2[[i]])
+		by.vars=c("src_subject_id","eventname")
+		t2[[i]] = merge(t2[[i]], t2[[i+1]], by=by.vars, all=TRUE)
+		print(paste("rows before: ", bm[1], dim(t2[[i+1]])[1], " rows after: ",dim(t2[[i]])[1], "indices: ",i,i+1," columns: ",bm[2],"+",dim(t2[[i+1]])[2], "-",length(by.vars)," = ",dim(t2[[i]])[2]))
+	}
+	# for odd number of instruments add the last spreadsheet back to the list
+	if (length(t2) %% 2 != 0) access = append(access,length(t2))
+	# reduce the list
+	t2 = t2[access]
 }
 nda18 = t2[[1]]
 
