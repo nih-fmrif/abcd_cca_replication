@@ -1,0 +1,3 @@
+[submodule "analysis-nda"]
+	path = analysis-nda
+	url = https://github.com/ABCD-STUDY/analysis-nda.git
