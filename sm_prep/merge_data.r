@@ -101,7 +101,7 @@ for (p in 1:len.tables) {
 		dt = dt[,!(names(dt) %in% rm.vars)] 
 		tables[[p]] = dt
 	}
-
+}
 
 # Check: if any table without eventname
 for (p in 1:len.tables) {
