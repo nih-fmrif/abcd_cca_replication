@@ -8,7 +8,7 @@ nda18$subjectid = nda18$src_subject_id
 ### Age (in month)
 nda18$age = nda18$interview_age
 ##NDA used to using "gender" as "sex at birth"; rename it as "sex" and reset empty as NA;
-nda18$sex=nda18$gender
+# nda18$sex=nda18$gender
 nda18$sex[which(nda18$sex=="")]=NA
 nda18$sex=factor( nda18$sex, levels= c("F","M"))
 #rm gender
