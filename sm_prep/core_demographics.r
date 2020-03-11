@@ -12,7 +12,7 @@ nda18$age = nda18$interview_age
 nda18$sex[which(nda18$sex=="")]=NA
 nda18$sex=factor( nda18$sex, levels= c("F","M"))
 #rm gender
-nda18=nda18[,-which(colnames(nda18)=="gender")]
+# nda18=nda18[,-which(colnames(nda18)=="gender")]
 ### Female. 
 nda18$female = factor(as.numeric(nda18$sex == "F"), levels = 0:1, labels = c("no", "yes") ) 
 ### Household income
