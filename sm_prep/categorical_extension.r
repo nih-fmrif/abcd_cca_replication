@@ -5,7 +5,7 @@
 script.dir <- "../../analysis-nda/notebooks/general/"
 setwd(script.dir)
 nda18 = readRDS("nda2.0.1_demo.Rds")
-categories = read.csv('choices_coding_nda2.0.1.csv') 
+categories = read.csv('choices_coding_nda.2.0.1.csv') 
 
 # This loop will go throught the column names stored in the categories table and convert those columns in the data frame to factor variables.
 for (kitty in categories$name) {
