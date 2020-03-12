@@ -72,9 +72,9 @@ rm(data_clean)
 
 # Redefine race
 library(data.table)
-dat_nms = c("subjectid","demo_ethn_p", "demo_race_a_p___10", "demo_race_a_p___11","demo_race_a_p___12", "demo_race_a_p___13",
+dat_nms = c("subjectid", "demo_ethn_p", "demo_race_a_p___10", "demo_race_a_p___11", "demo_race_a_p___12", "demo_race_a_p___13",
 "demo_race_a_p___14", "demo_race_a_p___15", "demo_race_a_p___16", "demo_race_a_p___17", 
-"demo_race_a_p___18", "demo_race_a_p___19", "demo_race_a_p___20", "demo_race_a_p___21", "demo_race_a_p___22","demo_race_a_p___23",
+"demo_race_a_p___18", "demo_race_a_p___19", "demo_race_a_p___20", "demo_race_a_p___21", "demo_race_a_p___22", "demo_race_a_p___23",
 "demo_race_a_p___24", "demo_race_a_p___25",
 "demo_race_a_p___77", "demo_race_a_p___99")
 ind_dat = which(names(nda18)==dat_nms[1])
