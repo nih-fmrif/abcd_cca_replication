@@ -3,9 +3,10 @@
 # Except this file
 !.gitignore
 !melodic_prep.sh
-!merge_data.r
-!core_demographics.r
-!categorical_extension.r
-!merge_additional_variables.r
+# merge_data.r
+# core_demographics.r
+# categorical_extension.r
+# merge_additional_variables.r
 !data_structure_processing.ipynb
+!rds_proc.r
 
