@@ -7,8 +7,8 @@
 
 library(dplyr)
 
-# Navigate to the folder containing nda2.0.1.Rds prior to running this script
-nda1 <- readRDS("nda2.0.1.Rds")
+# Note, you must move the .rds to the working directory of this script!
+nda1 <- readRDS("nda2.0.1.rds")
 subject_list <- readLines("../motion/data/motion_filtered_subjects_R.txt")
 subject_list <- factor(subject_list)
 
@@ -73,7 +73,7 @@ for (i in 4:NCOL(nda4)) {
 
 nda5 <- nda4[ , !(names(nda4) %in% badcols)]
 
-saveRDS(nda5, "./data/nda2.0.1_full_proc.Rds")
+saveRDS(nda5, "./data/nda2.0.1_full_proc.rds")
 # write.csv(col_inc_excl,"/data/ABCD_MBDU/goyaln2/analysis-nda/notebooks/general/col_inc_excl")
 
 write.table(t(as.data.frame(col_inc_excl)), 
