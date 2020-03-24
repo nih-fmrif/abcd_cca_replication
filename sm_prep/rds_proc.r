@@ -8,9 +8,9 @@
 library(dplyr)
 
 # Navigate to the folder containing nda2.0.1.Rds prior to running this script
-nda1 = readRDS("/data/ABCD_MBDU/goyaln2/abcd_cca_replication/rds_dwnload/results/ABCD_releases_2.0.1_Rds/nda2.0.1.Rds")
-subject_list = readLines("/data/ABCD_MBDU/goyaln2/abcd_cca_replication/motion/data/motion_filtered_subjects_R.txt")
-subject_list = factor(subject_list)
+nda1 <- readRDS("nda2.0.1.Rds")
+subject_list <- readLines("../motion/data/motion_filtered_subjects_R.txt")
+subject_list <- factor(subject_list)
 
 nda2 <- nda1[nda1$src_subject_id %in% subject_list,]
 
@@ -73,11 +73,11 @@ for (i in 4:NCOL(nda4)) {
 
 nda5 <- nda4[ , !(names(nda4) %in% badcols)]
 
-saveRDS(nda5, "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/sm_prep/data/nda2.0.1_full_proc.Rds")
+saveRDS(nda5, "./data/nda2.0.1_full_proc.Rds")
 # write.csv(col_inc_excl,"/data/ABCD_MBDU/goyaln2/analysis-nda/notebooks/general/col_inc_excl")
 
 write.table(t(as.data.frame(col_inc_excl)), 
-            file = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/sm_prep/data/col_inc_excl.csv", 
+            file = "./data/col_inc_excl.csv", 
             row.names = TRUE, 
             col.names = FALSE,
             quote = FALSE)
