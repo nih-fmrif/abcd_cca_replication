@@ -9,4 +9,5 @@
 # merge_additional_variables.r
 !data_structure_processing.ipynb
 !rds_proc.r
+!data
 
