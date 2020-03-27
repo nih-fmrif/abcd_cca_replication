@@ -13,7 +13,6 @@ nda1 <- readRDS("nda2.0.1.Rds")
 subject_list <- readLines("../motion/data/motion_filtered_subjects_R.txt")
 subject_list <- factor(subject_list)
 sm_list <- readLines("../data/subject_measures.txt")
-sm_list <- factor(sm_list)
 
 # Drop subjects, keep only baseline measurements (based on date)
 nda2 <- nda1[nda1$src_subject_id %in% subject_list,]
@@ -35,11 +34,11 @@ num_rows <- NROW(nda5)
 num_cols <- NCOL(nda5)
 
 # Save the final filtered .Rds
-saveRDS(nda5, "./data/nda2.0.1_full_proc.Rds")
+saveRDS(nda5, "../data/nda2.0.1_full_proc.Rds")
 
 # Now, we need to save this final matrix as a CSV or TSV file, either is fine.
-write.table(nda2,
-            file = "VARS.csv",
+write.table(nda5,
+            file = "../data/VARS.csv",
             sep  = ",",
             row.names = FALSE, 
             col.names = TRUE,
@@ -48,7 +47,7 @@ write.table(nda2,
 # Also write a file with final list of subjects
 subs_list <- list(nda5$subjectid)
 write.table(subs_list, 
-            file = "./data/subjects.txt", 
+            file = "../data/final_subjects.txt", 
             row.names = FALSE, 
             col.names = FALSE,
             quote = FALSE)
