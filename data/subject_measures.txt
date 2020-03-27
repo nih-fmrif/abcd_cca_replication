@@ -53,12 +53,7 @@ fhx_ss_momdad_trouble.bl
 fhx_ss_parent_trouble.bl
 fhx_ss_momdad_nerves.bl
 fhx_ss_parent_nerves.bl
-fhx_ss_momdad_professional.bl
-fhx_ss_parent_professional.bl
-fhx_ss_momdad_hospitalized.bl
-fhx_ss_parent_hospitalized.bl
 fhx_ss_momdad_suicide.bl
-fhx_ss_parent_suicide
 cbcl_scr_syn_anxdep_r
 cbcl_scr_syn_anxdep_t
 cbcl_scr_syn_withdep_r
