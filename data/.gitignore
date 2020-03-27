@@ -3,3 +3,4 @@
 # Except this file
 !.gitignore
 !ica_subjects.txt
+!subject_measures.txt
