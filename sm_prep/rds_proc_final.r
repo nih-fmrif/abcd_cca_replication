@@ -38,8 +38,9 @@ num_cols <- NCOL(nda5)
 saveRDS(nda5, "./data/nda2.0.1_full_proc.Rds")
 
 # Now, we need to save this final matrix as a CSV or TSV file, either is fine.
-write.table(nda5,
-            file = "./data/VARS.csv", 
+write.table(nda2,
+            file = "VARS.csv",
+            sep  = ",",
             row.names = FALSE, 
             col.names = TRUE,
             quote = FALSE)
