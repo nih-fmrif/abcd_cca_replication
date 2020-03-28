@@ -36,8 +36,22 @@ num_cols <- NCOL(nda5)
 # Save the final filtered .Rds
 saveRDS(nda5, "../data/nda2.0.1_full_proc.Rds")
 
+# Now, lets save a factored copy
+nda_factored<-nda5
+for (i in 1:NCOL(nda5)) {
+    name <- names(nda5)[i]
+    if ( is.factor(nda5[,i]) ) {
+        # print(names(nda)[i])
+        nda_factored[name] <- as.numeric(nda5[,i])
+        next
+    }
+    nda_factored[name] <- nda5[,i]
+}
+
+saveRDS(nda_factored, "../data/nda2.0.1_full_proc_factored.Rds")
+
 # Now, we need to save this final matrix as a CSV or TSV file, either is fine.
-write.table(nda5,
+write.table(nda_factored,
             file = "../data/VARS.csv",
             sep  = ",",
             row.names = FALSE, 
