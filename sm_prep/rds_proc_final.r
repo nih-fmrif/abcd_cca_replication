@@ -33,6 +33,9 @@ nda5 <- nda4[ , (names(nda4) %in% sm_list)]
 num_rows <- NROW(nda5)
 num_cols <- NCOL(nda5)
 
+# Finally, remove any completely empty rows which may have been introduced
+nda5<- nda5[rowSums(is.na(nda5)) != ncol(nda5),]
+
 # Save the final filtered .Rds
 saveRDS(nda5, "../data/nda2.0.1_full_proc.Rds")
 
