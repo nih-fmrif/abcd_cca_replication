@@ -39,8 +39,10 @@ saveRDS(nda5, "../data/nda2.0.1_full_proc.Rds")
 # Now, lets save a factored copy
 nda_factored<-nda5
 for (i in 1:NCOL(nda5)) {
+    
+    # column name
     name <- names(nda5)[i]
-    if ( is.factor(nda5[,i]) ) {
+    if ( is.factor(nda5[,i]) && (name != "subjectid") ) {
         # print(names(nda)[i])
         nda_factored[name] <- as.numeric(nda5[,i])
         next
