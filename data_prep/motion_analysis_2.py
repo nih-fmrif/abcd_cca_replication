@@ -129,7 +129,7 @@ f_log.write("Number number of subjects after dropping those missing remaining_fr
 
 # Now, lets recreate the histograms for analysis
 # msd_rt_filt means "motion_summary_data_remainingtime_filtered" 
-msd_rt_filt=msd[(msd['remaining_seconds'].astype('int')>=600)]
+msd_rt_filt=msd[(msd['remaining_seconds'].astype('float')>=600)]
 abcd = msd_rt_filt['remaining_frame_mean_FD'].tolist()
 
 f_log.write("Number of subjects with >600seconds good scan time:\t{}\n".format(len(abcd)))
