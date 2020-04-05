@@ -1,0 +1,13 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!data
+!NIFTI
+!pull_filepaths_0.sh
+!pull_motion_data_1.py
+!motion_analysis_2.py
+!helper_functions
+!censoring_data
+!groupICA200.dr
+!groupICA200.gica

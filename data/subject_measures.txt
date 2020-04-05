@@ -15,7 +15,7 @@ high.educ
 anthro_height_calc
 anthro_weight_calc
 anthro_bmi_calc
-rfMRI_motion
+remaining_frame_mean_FD
 neurocog_pc1.bl
 neurocog_pc2.bl
 neurocog_pc3.bl

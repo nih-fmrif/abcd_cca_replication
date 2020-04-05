@@ -2,5 +2,6 @@
 *
 # Except this file
 !.gitignore
-!ica_subjects.txt
 !subject_measures.txt
+!final_subjects.txt
+!confounds.txt
