@@ -79,7 +79,7 @@ fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remai
 fp = os.path.join(cwd,'data/mean_FDs.txt')
 fout2 = open('data/mean_FDs.txt','a')    # just the mean FD data
 
-print("Pulling motion data, please be patient..\n")
+print("Pulling motion data, please be patient..")
 i=0
 file_list = [line.rstrip('\n') for line in open(filepath)]
 for fp in file_list:
