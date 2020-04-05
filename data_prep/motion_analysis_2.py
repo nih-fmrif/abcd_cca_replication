@@ -117,10 +117,11 @@ msd = pd.read_csv(fp, sep=',')
 f_log.write("Initial number of subjects under consideration:\t{}\n".format(msd.shape[0]))
 
 # Drop any subjects with nan in their remainig_frame_mean_FD
-# pd.to_numeric(msd['tester'], errors='coerce')
-# msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])]
+msd['remaining_frame_mean_FD'] = pd.to_numeric(msd['remaining_frame_mean_FD'], errors='coerce')
+
+msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])]
 # msd=msd[~pd.isnull(msd['remaining_frame_mean_FD'])]
-msd.dropna(axis=0,subset=['remaining_frame_mean_FD'],inplace=True)
+# msd.dropna(axis=0,subset=['remaining_frame_mean_FD'],inplace=True)
 f_log.write("Number number of subjects after dropping those missing remaining_frame_mean_FD value:\t{}\n".format(msd.shape[0]))
 
 # print(len(msd[msd['remaining_seconds'].ge(600)]))
