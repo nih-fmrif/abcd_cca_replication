@@ -3,3 +3,4 @@
 # Except this file
 !.gitignore
 !HCP500_rfMRI_motion.txt
+!subject_measures.txt
