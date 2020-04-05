@@ -117,7 +117,7 @@ msd = pd.read_csv(fp, sep=',')
 f_log.write("Initial number of subjects under consideration:\t{}\n".format(msd.shape[0]))
 
 # Drop any subjects with nan in their remainig_frame_mean_FD
-msd['remaining_frame_mean_FD'] = pd.to_numeric(msd['remaining_frame_mean_FD'], errors='coerce')
+msd = pd.to_numeric(msd)
 
 msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])]
 # msd=msd[~pd.isnull(msd['remaining_frame_mean_FD'])]
