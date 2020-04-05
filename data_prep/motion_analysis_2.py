@@ -117,8 +117,7 @@ msd = pd.read_csv(fp, sep=',')
 f_log.write("Initial number of subjects under consideration:\t{}\n".format(msd.shape[0]))
 
 # Drop any subjects with nan in their remainig_frame_mean_FD
-msd = pd.to_numeric(msd)
-
+msd['remaining_frame_mean_FD'] = pd.to_numeric(msd['remaining_frame_mean_FD'], errors='coerce')
 msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])]
 # msd=msd[~pd.isnull(msd['remaining_frame_mean_FD'])]
 # msd.dropna(axis=0,subset=['remaining_frame_mean_FD'],inplace=True)
@@ -130,7 +129,7 @@ f_log.write("Number number of subjects after dropping those missing remaining_fr
 
 # Now, lets recreate the histograms for analysis
 # msd_rt_filt means "motion_summary_data_remainingtime_filtered" 
-msd_rt_filt=msd[(msd['remaining_seconds']>=600)]
+msd_rt_filt=msd[(msd['remaining_seconds'].astype('int')>=600)]
 abcd = msd_rt_filt['remaining_frame_mean_FD'].tolist()
 
 f_log.write("Number of subjects with >600seconds good scan time:\t{}\n".format(len(abcd)))
