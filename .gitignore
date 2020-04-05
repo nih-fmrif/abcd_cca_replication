@@ -5,3 +5,5 @@
 !data
 !dependencies
 !data_prep
+!conda_requirements.txt
+!pip_requirements.txt
