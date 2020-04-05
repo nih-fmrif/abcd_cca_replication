@@ -1,17 +1,19 @@
 #! /bin/bash
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
-# melodic_setup.sh - a script to prep the resting state timeseries files for MELODIC group-ICA processing
+# pull_filepaths_0.sh - a script to determine subjects who have the resting state timeseries and motion .mat files for MELODIC group-ICA processing
 
-# Run this function within the melodic/ folder it resides inside.
+# Run this function while INSIDE the data_prep/ folder in which resides
+# You must have the Connectome Workbench software on path
+
 # Example usage:
-#   ./melodic_prep.sh -d /data/ABCD_MBDU/abcd_bids/bids -o outputs/
+#   ./pull_filepaths_0.sh -d /data/ABCD_MBDU/abcd_bids/bids -o data/
 
 ##### Functions
 usage()
 {
-	echo "usage: melodic_setup.sh -d <path/to/main/abcd_bids/> -o </path/to/melodic outputs>"
-    echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD download. for example: /data/ABCD/abcd_bids/bids/"
+	echo "usage: pull_filepaths_0.sh -d <path/to/main/abcd_bids/> -o </path/to/abcd_cca_replication/data_prep/data>"
+    echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
 }
 
 #### Setup stuff
@@ -33,43 +35,44 @@ path_to_executable=$(which wb_command)
  fi
 
 # Check if the output .txt files exist, if so delete because we want to overwrite them
-if test -f data/subject_list.txt; then
-    rm data/subject_list.txt
+if test -f data/all_release_subjects.txt; then
+    rm data/all_release_subjects.txt
 fi
-if test -f data/CIFTI_files.txt; then
-    rm data/CIFTI_files.txt
+if test -f data/rsfMRI_files.txt; then
+    rm data/rsfMRI_files.txt
 fi
-if test -f data/mat_files.txt; then
-    rm data/mat_files.txt
+if test -f data/motion_mat_files.txt; then
+    rm data/motion_mat_files.txt
 fi
-if test -f data/subjects_with_mat_CIFTI.txt; then
-    rm data/subjects_with_mat_CIFTI.txt
+if test -f data/subjects_with_files.txt; then
+    rm data/subjects_with_files.txt
 fi
-if test -f data/missing_files.txt; then
-    rm data/missing_files.txt
+if test -f data/subjects_missing_files.txt; then
+    rm data/subjects_missing_files.txt
 fi
 
-echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) files..."
-# Generate a list of all subjects who have files in the derivatives folder(ex. sub-NDARINVZN4F9J96)
-ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > data/subject_list.txt
+# Generate a list of ALL subjects who are present in the ABCD derivatives folder(ex. sub-NDARINVZN4F9J96)
+ls $BIDS_PATH/derivatives/abcd-hcp-pipeline | grep sub- > data/all_release_subjects.txt
+ALLNUMSUBS=$(cat data/all_release_subjects.txt| wc -l)
 
+echo "Generating a list of subjects with task-rest_bold_desc-filtered_timeseries.dtseries.nii (CIFTI) and motion .mat files available..."
 while read sub; do
     # Get absolute path for their sub-<subject_ID>_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii files (CIFTIs)
     tseries=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
     matfile=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
     
     if [[ -f "$tseries" && -f "$matfile" ]]; then
-        echo $tseries >> data/CIFTI_files.txt
-        echo $matfile >> data/mat_files.txt
-        echo $sub >> data/subjects_with_mat_CIFTI.txt
+        echo $tseries >> data/rsfMRI_files.txt
+        echo $matfile >> data/motion_mat_files.txt
+        echo $sub >> data/subjects_with_files.txt
     else
-        echo $fname >> data/missing_files.txt
+        echo $sub >> data/subjects_missing_files.txt
     fi
-done < data/subject_list.txt
+done < data/all_release_subjects.txt
 
 # Conversion from CIFTI --> NIFTI
 # Before doing conversion, check if the file exists (so this script can be run multiple times, adding the new NIFTI files as they appear in subsequent releases)
-NUMSUBS=$(cat data/subjects_with_mat_CIFTI.txt| wc -l)
+NUMSUBS=$(cat data/subjects_with_files.txt| wc -l)
 read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -85,5 +88,12 @@ else
         else
             wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
         fi
-    done < data/subjects_with_mat_CIFTI.txt
+    done < data/subjects_with_files.txt
 fi
+
+# Finally, log results
+echo "--- RESULTS OF pull_filepaths_0.sh ---" >> log.txt
+echo date >> log.txt
+echo "total subjects in release:\t$ALLNUMSUBS" >> log.txt
+echo "subjects with scan and motion data present:\t$NUMSUBS" >> log.txt
+echo "" >> log.txt

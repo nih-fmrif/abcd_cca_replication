@@ -1,9 +1,0 @@
-# Ignore everything in this directory
-*
-# Except this file
-!.gitignore
-!melodic_prep.sh
-!data_structure_processing.ipynb
-!rds_proc.r
-!data
-!rds_proc_final.r

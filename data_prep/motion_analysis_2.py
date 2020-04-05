@@ -12,6 +12,7 @@ from scipy import stats
 from matplotlib import colors
 from matplotlib.ticker import PercentFormatter
 import os
+import datetime
 
 def find_anomalies(random_data):
     # Function to Detection Outlier on one-dimentional datasets.
@@ -87,11 +88,16 @@ hcp=np.loadtxt(fp)
 fp = os.path.join(cwd,'data/mean_FDs.txt')
 abcd=np.loadtxt(fp)
 
-print("# subjects before dropping NaNs:{}\n".format(len(abcd)))
-# for ABCD, if nan (meaning they had no remaining timepoints, so drop them)
-abcd = abcd[~np.isnan(abcd)]
-print("# subjects AFTER dropping NaNs:{}\n".format(len(abcd)))
+# Logging file
+fp = os.path.join(cwd,'log.txt')
+f_log = open(fp, 'a')
+f_log.write("--- RESULTS OF motion_analysis_2.py ---\n")
+f_log.write('%s\n' % datetime.datetime.now())
 
+# print("# subjects before dropping NaNs:{}\n".format(len(abcd)))
+# for ABCD, if nan (meaning they had no remaining timepoints, so drop them)
+# abcd = abcd[~np.isnan(abcd)]
+# print("# subjects AFTER dropping NaNs:{}\n".format(len(abcd)))
 
 # plot_hist(hcp,abcd,'Histogram of FD, HCP & ABCD (all subjects available)')
 # stats.ks_2samp(hcp, abcd)
@@ -108,19 +114,23 @@ fp = os.path.join(cwd,'data/motion_summary_data.csv')
 # note that msd means 'motion_summary_data'
 msd = pd.read_csv(fp, sep=',')
 
+f_log.write("Initial number of subjects under consideration:\t{}\n".format(msd.shape[1]))
+
 # again, drop subjects w/ nan in their remaining_frame_mean_FD
-msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])] #replace nan w/ )
-msd.shape
+msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])] #Drop any subjects with nan in their remainig_frame_mean_FD
+
+f_log.write("Number number of subjects after dropping those missing remaining_frame_mean_FD value:\t{}\n".format(msd.shape[1]))
 
 # print(len(msd[msd['remaining_seconds'].ge(600)]))
 # print(len(msd['sub']))
 # print(len(msd[(msd['remaining_seconds'].ge(600))])/len(msd['sub']))
 
 # Now, lets recreate the histograms for analysis
-# msd_rt_filt means "motion_summary_data_remaining_time_filtered" 
+# msd_rt_filt means "motion_summary_data_remainingtime_filtered" 
 msd_rt_filt=msd[(msd['remaining_seconds']>=600)]
 abcd = msd_rt_filt['remaining_frame_mean_FD'].tolist()
-# msd_rt_filt
+
+f_log.write("Number of subjects with >600seconds good scan time:\t{}\n".format(len(abcd)))
 
 # plot_hist(hcp,abcd,'Histogram of FD, HCP & ABCD (>10min filtered)')
 # stats.ks_2samp(hcp, abcd)
@@ -132,20 +142,20 @@ abcd = msd_rt_filt['remaining_frame_mean_FD'].tolist()
 # sns.boxplot(x=abcd)
 
 # Finally, lets remove the outliers seen in the boxplot
-
 anoms=find_anomalies(abcd)
 msd_rt_anom_filt = msd_rt_filt[~msd_rt_filt['remaining_frame_mean_FD'].isin(anoms)]
 abcd=msd_rt_anom_filt['remaining_frame_mean_FD'].tolist()
+
+f_log.write("Number of subjects after anomalies removed:\t{}\n".format(len(abcd)))
 
 # Now, let's plot the distribution without these outliers:
 # plot_hist(hcp,abcd,'Histogram of FD, HCP vs. ABCD (>10min & outliers removed')
 # stats.ks_2samp(hcp, abcd)
 
-
 # Now that we've removed subjects based on amount of "good" scan time & removed outliers, let's pull the mri QC metrics from the 2.0.1 release file (mriqcrp102.txt)
-# This can be obtained via the shared package 144683,ABCDFixRelease
-
-fp = os.path.join(cwd,'../sm_prep/sm_raw_data/mriqcrp102.txt')
+# This can be obtained via the shared package 144683 on NDA, ABCDFixRelease
+# please note that the END USER MUST PLACE THE mriqcrp102.txt into data_prep/data/ MANUALLY!
+fp = os.path.join(cwd,'data/mriqcrp102.txt')
 mriqc = pd.read_csv(fp,sep='\t')
 
 # drop the first row (its a bunch of strings we dont need)
@@ -174,24 +184,22 @@ qc.shape
 numeric = ['iqc_t1_ok_ser','iqc_t1_good_ser','iqc_rsfmri_ok_ser','iqc_rsfmri_good_ser']
 qc[numeric] = qc[numeric].apply(pd.to_numeric, errors='coerce')
 
-# qc['iqc_t1_ok_ser'] = pd.to_numeric(qc['iqc_t1_ok_ser'])
-# qc['iqc_rsfmri_ok_ser'] = pd.to_numeric(qc['iqc_rsfmri_ok_ser'])
-# qc['iqc_t1_good_ser'] = pd.to_numeric(qc['iqc_t1_good_ser'])
-# qc['iqc_rsfmri_good_ser'] = pd.to_numeric(qc['iqc_rsfmri_good_ser'])
-
 # qc2 is a less strict drop criteria (ignoring protocol compliance check for the t1 and rsfMRI scans)
 # qc3 is stricter (requires protocol compliance for both t1 and rsfMRI scans)
 # Doesn't make big difference in num of subjects, so we use qc3
 qc2 = qc.drop(qc[ ~( (qc['iqc_t1_ok_ser'] > 0) & (qc['iqc_rsfmri_ok_ser'] > 1) ) ].index)
 qc3 = qc.drop(qc[ ~( (qc['iqc_t1_good_ser'] > 0) & (qc['iqc_rsfmri_good_ser'] > 1) ) ].index)
 
-print("qc2 shape {}".format(qc2.shape))
+# print("qc2 shape {}".format(qc2.shape))
 print("qc3 shape {}".format(qc3.shape))
+print("Final number of subjects:\t{}\n".format(qc3.shape[0]))
 
 # Now create final dataframe (which has undergone: removal of subjects with missing data, removal of subjects with <10min, removal of outliers, and application of 2 filtering criteria)
 final_subs = qc3['subjectkey'].tolist()
 msd_final = msd_rt_anom_filt[msd_rt_anom_filt['sub'].isin(final_subs)]
 abcd=msd_final['remaining_frame_mean_FD'].tolist()
+
+f_log.write("Number of subjects after QC drop\t{}\n".format(len(abcd)))
 
 # Let's make one final plot of the histograms
 plot_hist(hcp,abcd,'Histogram of FD, HCP vs. ABCD (Filtered subset)')
@@ -199,12 +207,13 @@ plot_hist(hcp,abcd,'Histogram of FD, HCP vs. ABCD (Filtered subset)')
 # Output a final list of subjects to be included in the group-ICA
 # Write it to two folders: the abcd_cca_replication/motion/data/, and abcd_cca_replication/data/
 f1=open('data/motion_filtered_subjects.txt','w')
-f2=open('../data/motion_filtered_subjects.txt','w')
+f2=open('data/motion_filtered_subjects_R.txt','w')
 
 for ele in final_subs:
+    ele2 = "NDAR_" + ele.split("NDAR")[1]
     f1.write(ele+'\n')
-    f2.write(ele+'\n')
-    
+    f2.write(ele2+'\n')
+
 f1.close()
 f2.close()
-
+f_log.close()
