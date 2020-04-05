@@ -93,7 +93,7 @@ fi
 
 # Finally, log results
 echo "--- RESULTS OF pull_filepaths_0.sh ---" >> log.txt
-echo date >> log.txt
-echo "total subjects in release:\t$ALLNUMSUBS" >> log.txt
-echo "subjects with scan and motion data present:\t$NUMSUBS" >> log.txt
+echo $(date) >> log.txt
+echo "total subjects in release: $ALLNUMSUBS" >> log.txt
+echo "subjects with scan and motion data present: $NUMSUBS" >> log.txt
 echo "" >> log.txt
