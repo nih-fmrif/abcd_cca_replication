@@ -114,12 +114,12 @@ fp = os.path.join(cwd,'data/motion_summary_data.csv')
 # note that msd means 'motion_summary_data'
 msd = pd.read_csv(fp, sep=',')
 
-f_log.write("Initial number of subjects under consideration:\t{}\n".format(msd.shape[1]))
+f_log.write("Initial number of subjects under consideration:\t{}\n".format(msd.shape[0]))
 
 # Drop any subjects with nan in their remainig_frame_mean_FD
-# msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])]
-msd.dropna(subset=['remaining_frame_mean_FD'],inplace=True)
-f_log.write("Number number of subjects after dropping those missing remaining_frame_mean_FD value:\t{}\n".format(msd.shape[1]))
+msd=msd[~np.isnan(msd['remaining_frame_mean_FD'])]
+# msd.dropna(subset=['remaining_frame_mean_FD'],inplace=True)
+f_log.write("Number number of subjects after dropping those missing remaining_frame_mean_FD value:\t{}\n".format(msd.shape[0]))
 
 # print(len(msd[msd['remaining_seconds'].ge(600)]))
 # print(len(msd['sub']))
@@ -199,7 +199,7 @@ final_subs = qc3['subjectkey'].tolist()
 msd_final = msd_rt_anom_filt[msd_rt_anom_filt['sub'].isin(final_subs)]
 abcd=msd_final['remaining_frame_mean_FD'].tolist()
 
-f_log.write("Number of subjects after QC drop\t{}\n".format(len(abcd)))
+f_log.write("Number of subjects after QC drop\t{}\n\n".format(len(abcd)))
 
 # Let's make one final plot of the histograms
 plot_hist(hcp,abcd,'Histogram of FD, HCP vs. ABCD (Filtered subset)')
