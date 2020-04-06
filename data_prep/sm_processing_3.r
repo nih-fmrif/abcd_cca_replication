@@ -7,7 +7,7 @@
 
 library(dplyr)
 
-# Note, you must move the .rds to the working directory of this script!
+# NOTE, you must move the .Rds file to abcd_cca_replication/data_prep/data/ for this script to run properly
 nda1 <- readRDS("./data/nda2.0.1.Rds")
 subject_list <- readLines("./data/motion_filtered_subjects_R.txt")
 subject_list <- factor(subject_list)
@@ -66,7 +66,7 @@ num_cols <- NCOL(nda_factored)
 
 for (i in 4:NCOL(nda_factored)) {
     col <- colnames[[1]][[i]]
-    vec = nda_factored[col] #get the vector of values
+    vec = as.numeric(nda_factored[[col]]) #get the vector of values
 
     # Get the size of equal-value groups, ignore NAs
     tab <- sort(table(vec),decreasing = TRUE, useNA = False)
