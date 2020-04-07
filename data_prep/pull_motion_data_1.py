@@ -108,7 +108,7 @@ for fp in file_list:
             # Finally, save the censoring data for this subject
             # data is in struct.frame_removal
             censor_list = list(struct.frame_removal)
-            censor_out = "censoring_data/"+sub+"_censor.txt"
+            censor_out = "censoring_data/sub-"+sub+"_censor.txt"
             np.savetxt(os.path.join(cwd,censor_out), list(struct.frame_removal), fmt="%d")
 
         else:

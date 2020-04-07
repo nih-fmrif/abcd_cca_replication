@@ -7,7 +7,7 @@ race_ethnicity
 remaining_frame_mean_FD
 demo_prtnr_empl_p
 household.income.bl
-anthro_height_calc
+anthro_bmi_calc
 anthro_weight_calc
 smri_vol_subcort.aseg_intracranialvolume
 smri_vol_subcort.aseg_wholebrain
