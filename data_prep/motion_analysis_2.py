@@ -32,7 +32,7 @@ def find_anomalies(random_data):
     for outlier in random_data:
         if outlier > upper_limit or outlier < lower_limit:
             anomalies.append(outlier)
-    return anomalies
+    return [anomalies,upper_limit,lower_limit]
 
 def plot_hist(l1,l2,titlestr):
     bins=50
@@ -144,10 +144,11 @@ f_log.write("Number of subjects with >600seconds good scan time:\t{}\n".format(l
 # sns.boxplot(x=abcd)
 
 # Finally, lets remove the outliers seen in the boxplot
-anoms=find_anomalies(abcd)
+[anoms,upper_lim,lower_lim]=find_anomalies(abcd)
 msd_rt_anom_filt = msd_rt_filt[~msd_rt_filt['remaining_frame_mean_FD'].isin(anoms)]
 abcd=msd_rt_anom_filt['remaining_frame_mean_FD'].tolist()
 
+f_log.write("Upper cutoff:\t{}\nLowerCutoff:\t{}\n".format(upper_lim,lower_lim))
 f_log.write("Number of subjects after anomalies removed:\t{}\n".format(len(abcd)))
 
 # Now, let's plot the distribution without these outliers:
