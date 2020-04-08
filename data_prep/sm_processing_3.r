@@ -7,26 +7,31 @@
 
 library(dplyr)
 
+mode <- function(x) {
+    ux <- unique(x)
+    ux[which.max(tabulate(match(x, ux)))]
+}
+
 # NOTE, you must move the .Rds file to abcd_cca_replication/data_prep/data/ for this script to run properly
 nda1 <- readRDS("./data/nda2.0.1.Rds")
 subject_list <- readLines("./data/motion_filtered_subjects_R.txt")
 subject_list <- factor(subject_list)
 sm_list <- readLines("./data/subject_measures.txt")
-
-# Drop subjects not in our list
-nda2 <- nda1[nda1$src_subject_id %in% subject_list,]
-
+nda2 <- nda1
 # Sort by interview date, keep only baseline measurements (based on date)
-nda2$interview_date <- as.Date(nda2$interview_date, "%m/%d/%Y")
+nda2$interview_date <- as.Date(nda1$interview_date, "%m/%d/%Y")
 nda3 <- nda2[order(as.integer(nda2$interview_date),decreasing = FALSE), ]
 
 # Drop the follow up records, keeping only first instance
 nda4 <- nda3 %>% distinct(src_subject_id, .keep_all = TRUE)
 
-# Finally, remove any completely empty rows which may have been introduced
-nda5 <- nda4[rowSums(is.na(nda4)) != ncol(nda4),]
+# Drop subjects not in our list
+nda5 <- nda4[nda4$src_subject_id %in% subject_list,]
 
-# Now, lets make a factored copy
+# Finally, remove any completely empty rows which may have been introduced
+nda5 <- nda5[rowSums(is.na(nda5)) != ncol(nda5),]
+
+# Now, lets make a numeric copy
 nda_factored <- nda5
 for (i in 1:NCOL(nda5)) {
     # column name
@@ -164,19 +169,52 @@ write(print_line, file="log.txt", append=TRUE)
 # Save the final .Rds
 saveRDS(nda7, "./data/nda2.0.1_full_proc_factored.Rds")
 
+# Get basic demographics before and after
+# num subjects
+# num subjects male, num female
+# age distribution
+# number scan sites
+# number scanner types
+# use nda4 for 11875 subjects
+# use nda5 for 7812 subjects
+print_line = sprintf("--SUMMARY STATS--:")
+write(print_line, file="log.txt", append=TRUE)
+
+print_line = sprintf("-BEFORE FILTERING-:")
+write(print_line, file="log.txt", append=TRUE)
+print_line = sprintf("F %s | M %s",table(nda4['sex'])[[1]],table(nda4['sex'])[[2]])
+write(print_line, file="log.txt", append=TRUE)
+print_line = sprintf("Age: mean %s | median %s | mode %s | range %s-%s | stddev %s", mean(nda4[['age']]), median(nda4[['age']]), mode(nda4[['age']]), range(nda4[['age']])[1], range(nda4[['age']])[2], sd(nda4[['age']]))
+write(print_line, file="log.txt", append=TRUE)
+print_line = table(nda4[['abcd_site']])
+write.table(print_line, file="log.txt", append=TRUE)
+print_line = table(nda4[['mri_info_manufacturer']])
+write.table(print_line, file="log.txt", append=TRUE)
+
+print_line = sprintf("-AFTER FILTERING-:")
+write(print_line, file="log.txt", append=TRUE)
+print_line = sprintf("F %s | M %s",table(nda5['sex'])[[1]],table(nda5['sex'])[[2]])
+write(print_line, file="log.txt", append=TRUE)
+print_line = sprintf("Age: mean %s | median %s | mode %s | range %s-%s | stddev %s", mean(nda5[['age']]), median(nda5[['age']]), mode(nda5[['age']]), range(nda5[['age']])[1], range(nda5[['age']])[2], sd(nda5[['age']]))
+write(print_line, file="log.txt", append=TRUE)
+print_line = table(nda5[['abcd_site']])
+write.table(print_line, file="log.txt", append=TRUE)
+print_line = table(nda5[['mri_info_manufacturer']])
+write.table(print_line, file="log.txt", append=TRUE)
+
 # Now, we need to save this final matrix as a CSV or TSV file, either is fine.
 write.table(nda7,
             file = "./data/VARS_no_motion.txt",
             sep  = ",",
-            row.names = FALSE, 
+            row.names = FALSE,
             col.names = TRUE,
             quote = FALSE)
 
 # Also write a file with final list of subjects
 subs_list <- list(nda7$subjectid)
-write.table(subs_list, 
-            file = "./data/final_subjects.txt", 
-            row.names = FALSE, 
+write.table(subs_list,
+            file = "./data/final_subjects.txt",
+            row.names = FALSE,
             col.names = FALSE,
             quote = FALSE)
 
