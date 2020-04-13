@@ -31,17 +31,28 @@ nda5 <- nda4[nda4$src_subject_id %in% subject_list,]
 # Finally, remove any completely empty rows which may have been introduced
 nda5 <- nda5[rowSums(is.na(nda5)) != ncol(nda5),]
 
+
+### Analyze Sibships ###
+# In original 11,875 (use nda4)
+# breakdown of Zygosity field before dropping Zygosity = 'missing'  subjects
+table(nda4['Zygosity'])
+table(nda4['rel_relationship'])
+#After dropping the imaging filtered subjects
+table(nda5['Zygosity'])
+table(nda5['rel_relationship'])
+
+
 # Now, lets make a numeric copy
-nda_factored <- nda5
+nda_numeric <- nda5
 for (i in 1:NCOL(nda5)) {
     # column name
     name <- names(nda5)[i]
     if ( is.factor(nda5[,i]) && (name != "subjectid") ) {
         # print(names(nda)[i])
-        nda_factored[name] <- as.numeric(nda5[,i])
+        nda_numeric[name] <- as.numeric(nda5[,i])
         next
     }
-    nda_factored[name] <- nda5[,i]
+    nda_numeric[name] <- nda5[,i]
 }
 
 # Apply quantiative exclusion criteria
@@ -57,7 +68,7 @@ for (i in 1:NCOL(nda5)) {
 col_inc_excl <- list()
 badcols <- list()
 
-colnames <- list(names(nda_factored))
+colnames <- list(names(nda_numeric))
 # NOTE:
 # 0 - excluded because all fields empty
 # 1 - excluded due to criteria 1, too much missing data >50pct
@@ -69,12 +80,12 @@ cnt_drop_na <- 0
 cnt_drop_var <- 0
 cnt_drop_outlier <- 0
 
-num_rows <- NROW(nda_factored)
-num_cols <- NCOL(nda_factored)
+num_rows <- NROW(nda_numeric)
+num_cols <- NCOL(nda_numeric)
 
-for (i in 4:NCOL(nda_factored)) {
+for (i in 4:NCOL(nda_numeric)) {
     col <- colnames[[1]][[i]]
-    vec = as.numeric(nda_factored[[col]]) #get the vector of values
+    vec = as.numeric(nda_numeric[[col]]) #get the vector of values
 
     # Get the size of equal-value groups, ignore NAs
     tab <- sort(table(vec),decreasing = TRUE, useNA = False)
@@ -119,6 +130,12 @@ for (i in 4:NCOL(nda_factored)) {
     } else {
         col_inc_excl[[col]] <- 4
     }
+
+    # Note, this loop will flag zygosity fields incorrect, fix that here:
+    if (col == 'Zygosity' or col == "paired.subjectid"){
+        col_inc_excl[[col]] <- 4
+        badcols <- badcols[-c(col)]
+    }
 }
 
 print_line = sprintf("--- RESULTS OF sm_processing_3.r ---")
@@ -135,7 +152,7 @@ print_line = sprintf("SMs dropped due to extreme outliers: %d", cnt_drop_outlier
 write(print_line, file="log.txt", append=TRUE)
 
 # Drop any bad cols
-nda5 <- nda_factored[ , !(names(nda_factored) %in% badcols)]
+nda5 <- nda_numeric[ , !(names(nda_numeric) %in% badcols)]
 saveRDS(nda5, "./data/nda2.0.1_preproc.Rds")
 
 print_line = sprintf("Final number of SMs after filtering: %s", NCOL(nda5))
@@ -149,9 +166,10 @@ write.table(t(as.data.frame(col_inc_excl)),
             quote = FALSE)
 
 # Now just keep the columns we want
-# Manually add back in Zygosity
+# Manually add back in Zygosity and paired.subjectid (which matches twins up for us)
 nda6 <- nda5[ , (names(nda5) %in% sm_list)]
 nda6['Zygosity'] <- nda5['Zygosity']
+nda6['paired.subjectid'] <- nda5['paired.subjectid']
 
 print_line = sprintf("Final number of SMs for CCA: %s", NCOL(nda6))
 write(print_line, file="log.txt", append=TRUE)
