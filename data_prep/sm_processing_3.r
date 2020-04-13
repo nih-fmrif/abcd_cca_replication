@@ -111,7 +111,11 @@ for (i in 4:NCOL(nda_numeric)) {
     Ys_mean <- mean(Ys, na.rm = TRUE)*100
     ratio <- Ys_max/Ys_mean
 
-    if ( (num_nan/num_rows) > 0.5){
+    ## Note, this loop will flag zygosity fields incorrect, fix that here:
+    if (col == 'Zygosity' | col == "paired.subjectid"){
+        col_inc_excl[[col]] <- 4
+        badcols <- badcols[-c(col)]
+    } else if ( (num_nan/num_rows) > 0.5){
         ## Missing >50% data in this coliumn
         col_inc_excl[[col]] <- 1
         badcols <- c(badcols,col)
@@ -130,12 +134,6 @@ for (i in 4:NCOL(nda_numeric)) {
         cnt_drop_outlier <- cnt_drop_outlier + 1
     } else {
         col_inc_excl[[col]] <- 4
-    }
-
-    ## Note, this loop will flag zygosity fields incorrect, fix that here:
-    if (col == 'Zygosity' | col == "paired.subjectid"){
-        col_inc_excl[[col]] <- 4
-        badcols <- badcols[-c(col)]
     }
 }
 
