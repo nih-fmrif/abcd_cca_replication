@@ -1,6 +1,7 @@
 # sm_processing.r
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
-# This script loads the pre-made .Rds file released by ABCD and:
+
+# This script loads the pre-made .Rds file released by ABCD DAIC (https://github.com/ABCD-STUDY/analysis-nda) and:
 #   1. keeps only baseline exams
 #   2. Filters out only the subjects whose scans were deemed eligible for our CCA analysis (see motion/data/motion_filtered_subjects_R.txt)
 #   3. applies basic quantitative filtering criteria to the data
@@ -87,14 +88,14 @@ for (i in 4:NCOL(nda_numeric)) {
     col <- colnames[[1]][[i]]
     vec = as.numeric(nda_numeric[[col]]) #get the vector of values
 
-    # Get the size of equal-value groups, ignore NAs
+    ## Get the size of equal-value groups, ignore NAs
     tab <- sort(table(vec),decreasing = TRUE, useNA = False)
 
-    # Note, in the scenario where a col ONLY has NANs, then tab will be a NULL vector
+    ## Note, in the scenario where a col ONLY has NANs, then tab will be a NULL vector
     if (length(tab)>0){
         eq_vals <- tab[[1]] #size of largest equal-values group (ignoring NANs)
     } else {
-        # This col is just NANs, store the name and move on
+        ## This col is just NANs, store the name and move on
         col_inc_excl[[col]] <- 0
         badcols <- c(badcols,col)
         next
@@ -103,27 +104,27 @@ for (i in 4:NCOL(nda_numeric)) {
     num_nan <- sum(is.na(vec))
     num_not_nan <- num_rows-num_nan
 
-    # Find outliers
-    # Vector Ys = (Xs - median(Xs)).^2
+    ## Find outliers
+    ## Vector Ys = (Xs - median(Xs)).^2
     Ys = (na.omit(vec) - median(na.omit(vec)))^2
     Ys_max <- max(Ys, na.rm = TRUE)
     Ys_mean <- mean(Ys, na.rm = TRUE)*100
     ratio <- Ys_max/Ys_mean
 
     if ( (num_nan/num_rows) > 0.5){
-        # Missing >50% data in this coliumn
+        ## Missing >50% data in this coliumn
         col_inc_excl[[col]] <- 1
         badcols <- c(badcols,col)
         cnt_drop_na <- cnt_drop_na + 1
         next
     } else if ( (eq_vals/num_not_nan)>0.95 ) {
-        # too much similar data, over 95% entries same
+        ## too much similar data, over 95% entries same
         col_inc_excl[[col]] <- 2
         badcols <- c(badcols,col)
         cnt_drop_var <- cnt_drop_var + 1
         next
     } else if (ratio > 1) {
-        # Contains an extreme outlier
+        ## Contains an extreme outlier
         col_inc_excl[[col]] <- 3
         badcols <- c(badcols,col)
         cnt_drop_outlier <- cnt_drop_outlier + 1
@@ -131,7 +132,7 @@ for (i in 4:NCOL(nda_numeric)) {
         col_inc_excl[[col]] <- 4
     }
 
-    # Note, this loop will flag zygosity fields incorrect, fix that here:
+    ## Note, this loop will flag zygosity fields incorrect, fix that here:
     if (col == 'Zygosity' or col == "paired.subjectid"){
         col_inc_excl[[col]] <- 4
         badcols <- badcols[-c(col)]
@@ -152,37 +153,31 @@ print_line = sprintf("SMs dropped due to extreme outliers: %d", cnt_drop_outlier
 write(print_line, file="log.txt", append=TRUE)
 
 # Drop any bad cols
-nda5 <- nda_numeric[ , !(names(nda_numeric) %in% badcols)]
-saveRDS(nda5, "./data/nda2.0.1_preproc.Rds")
+# nda5 <- nda_numeric[ , !(names(nda_numeric) %in% badcols)]
+# saveRDS(nda5, "./data/nda2.0.1_preproc.Rds")
 
-print_line = sprintf("Final number of SMs after filtering: %s", NCOL(nda5))
-write(print_line, file="log.txt", append=TRUE)
+# print_line = sprintf("Final number of SMs after filtering: %s", NCOL(nda5))
+# write(print_line, file="log.txt", append=TRUE)
 
-# Save info on good and bad columns
+## Save info on good and bad columns
 write.table(t(as.data.frame(col_inc_excl)), 
             file = "./data/col_inc_excl.csv", 
             row.names = TRUE, 
             col.names = FALSE,
             quote = FALSE)
 
-# Now just keep the columns we want
-# Manually add back in Zygosity and paired.subjectid (which matches twins up for us)
-nda6 <- nda5[ , (names(nda5) %in% sm_list)]
-nda6['Zygosity'] <- nda5['Zygosity']
-nda6['paired.subjectid'] <- nda5['paired.subjectid']
+## Now just keep the columns we want (the quantitative filtering was done ahead of time, so we already know which SMs we want)
+nda6 <- nda_numeric[ , (names(nda_numeric) %in% sm_list)]
 
-print_line = sprintf("Final number of SMs for CCA: %s", NCOL(nda6))
+print_line = sprintf("Final SMs in matrix (not including motion): %s", NCOL(nda6))
 write(print_line, file="log.txt", append=TRUE)
 
-# Drop any subjectd whose row is empty except for their subject id
-# before
-print_line = sprintf("Number subjects BEFORE dropping any with all SMs missing: %s", NROW(nda5))
-write(print_line, file="log.txt", append=TRUE)
-# Drop them
-nda7 <- nda6[rowSums(is.na(nda6[,2:NCOL(nda6)])) != NCOL(nda6),]
-# After
-print_line = sprintf("Number subjects AFTER dropping any with all SMs missing: %s", NROW(nda7))
-write(print_line, file="log.txt", append=TRUE)
+## Drop any subjectd whose row is empty except for their subject id
+# print_line = sprintf("Number subjects BEFORE dropping any with all SMs missing: %s", NROW(nda5))
+# write(print_line, file="log.txt", append=TRUE)
+nda7 <- nda6[rowSums(is.na(nda6[,2:NCOL(nda6)])) != NCOL(nda6),]    #Drop the subjects
+# print_line = sprintf("Number subjects AFTER dropping any with all SMs missing: %s", NROW(nda7))
+# write(print_line, file="log.txt", append=TRUE)
 
 # Save the final .Rds
 saveRDS(nda7, "./data/nda2.0.1_full_proc_factored.Rds")
@@ -236,11 +231,10 @@ write.table(subs_list,
             col.names = FALSE,
             quote = FALSE)
 
-# And final SMs
-# Also write a file with final list of subjects
-sm_list <- list(names(nda7))
-write.table(sm_list, 
-            file = "./data/final_sm_list.txt", 
-            row.names = FALSE, 
-            col.names = FALSE,
-            quote = FALSE)
+# Write a file with final list of subject measures
+# sm_list <- list(names(nda7))
+# write.table(sm_list, 
+#             file = "./data/final_sm_list.txt", 
+#             row.names = FALSE, 
+#             col.names = FALSE,
+#             quote = FALSE)
