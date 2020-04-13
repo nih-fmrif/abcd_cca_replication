@@ -133,7 +133,7 @@ for (i in 4:NCOL(nda_numeric)) {
     }
 
     ## Note, this loop will flag zygosity fields incorrect, fix that here:
-    if (col == 'Zygosity' or col == "paired.subjectid"){
+    if (col == 'Zygosity' | col == "paired.subjectid"){
         col_inc_excl[[col]] <- 4
         badcols <- badcols[-c(col)]
     }
