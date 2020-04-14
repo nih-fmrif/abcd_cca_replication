@@ -1,9 +1,0 @@
-# Ignore everything in this directory
-*
-# Except this file
-!.gitignore
-!FSLNets/
-!L1precision/
-!pwling/
-!libsvm-3.24/
-!palm-alpha115/
