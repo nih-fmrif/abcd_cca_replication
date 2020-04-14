@@ -10,9 +10,9 @@ import datetime
 
 # LOAD DATA
 cwd = os.getcwd()
-motion_summary_fp = os.path.join(cwd,'./data/motion_summary_data.csv')
-vars_fp = os.path.join(cwd,'./data/VARS_no_motion.txt')
-subs_fp = os.path.join(cwd,'./data/final_subjects.txt')
+motion_summary_fp = os.path.join(cwd,'/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/motion_summary_data.csv')
+vars_fp = os.path.join(cwd,'/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/VARS_no_motion.txt')
+subs_fp = os.path.join(cwd,'/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/final_subjects.txt')
 
 
 df_vars = pd.read_csv(vars_fp, sep=',')
@@ -38,7 +38,7 @@ df_vars.sort_values('subjectid',inplace=True)
 df_vars.sort_index(axis=1, inplace=True, ascending=False)
 
 # Now save the final .txt file
-out_fp = os.path.join(cwd,'../data/VARS.txt')
+out_fp = os.path.join(cwd,'/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data/VARS.txt')
 df_vars.to_csv(out_fp, index=False)
 
 # Logging
