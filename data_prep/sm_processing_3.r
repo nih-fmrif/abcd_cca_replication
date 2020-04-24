@@ -93,7 +93,7 @@ for (i in 4:NCOL(nda_numeric)) {
         eq_vals <- tab[[1]] #size of largest equal-values group (ignoring NANs)
     } else {
         ## This col is just NANs, store the name and move on
-        col_inc_excl[[col]] <- 0
+        col_inc_excl[[col]] <- 1
         badcols <- c(badcols,col)
         next
     }
@@ -200,10 +200,6 @@ print_line = sprintf("F %s | M %s",table(nda4['sex'])[[1]],table(nda4['sex'])[[2
 write(print_line, file="log.txt", append=TRUE)
 print_line = sprintf("Age: mean %s | median %s | mode %s | range %s-%s | stddev %s", mean(nda4[['age']]), median(nda4[['age']]), mode(nda4[['age']]), range(nda4[['age']])[1], range(nda4[['age']])[2], sd(nda4[['age']]))
 write(print_line, file="log.txt", append=TRUE)
-print_line = table(nda4[['abcd_site']])
-write.table(print_line, file="log.txt", append=TRUE)
-print_line = table(nda4[['mri_info_manufacturer']])
-write.table(print_line, file="log.txt", append=TRUE)
 
 print_line = sprintf("-AFTER FILTERING-:")
 write(print_line, file="log.txt", append=TRUE)
@@ -211,10 +207,6 @@ print_line = sprintf("F %s | M %s",table(nda8['sex'])[[1]],table(nda8['sex'])[[2
 write(print_line, file="log.txt", append=TRUE)
 print_line = sprintf("Age: mean %s | median %s | mode %s | range %s-%s | stddev %s", mean(nda8[['age']]), median(nda8[['age']]), mode(nda8[['age']]), range(nda8[['age']])[1], range(nda8[['age']])[2], sd(nda8[['age']]))
 write(print_line, file="log.txt", append=TRUE)
-print_line = table(nda8[['abcd_site']])
-write.table(print_line, file="log.txt", append=TRUE)
-print_line = table(nda8[['mri_info_manufacturer']])
-write.table(print_line, file="log.txt", append=TRUE)
 
 # Now, we need to save this final matrix as a CSV or TSV file, either is fine.
 write.table(nda7,
