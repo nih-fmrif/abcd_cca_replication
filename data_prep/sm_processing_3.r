@@ -38,9 +38,6 @@ nda5 <- nda5[rowSums(is.na(nda5)) != ncol(nda5),]
 # breakdown of Zygosity field before dropping Zygosity = 'missing'  subjects
 table(nda4['Zygosity'])
 table(nda4['rel_relationship'])
-#After dropping the imaging filtered subjects
-table(nda5['Zygosity'])
-table(nda5['rel_relationship'])
 
 
 # Now, lets make a numeric copy
@@ -112,9 +109,9 @@ for (i in 4:NCOL(nda_numeric)) {
     ratio <- Ys_max/Ys_mean
 
     ## Note, this loop will flag zygosity fields incorrect, fix that here:
-    if (col == 'Zygosity' | col == "paired.subjectid"){
+    if (col == 'Zygosity' | col == "paired.subjectid" | col == "rel_relationship" | col == "rel_family_id" | col == "rel_group_id"){
         col_inc_excl[[col]] <- 4
-        badcols <- badcols[-c(col)]
+        # badcols <- badcols[-c(col)]
     } else if ( (num_nan/num_rows) > 0.5){
         ## Missing >50% data in this coliumn
         col_inc_excl[[col]] <- 1
@@ -170,15 +167,21 @@ nda6 <- nda_numeric[ , (names(nda_numeric) %in% sm_list)]
 print_line = sprintf("Final SMs in matrix (not including motion): %s", NCOL(nda6))
 write(print_line, file="log.txt", append=TRUE)
 
-## Drop any subjectd whose row is empty except for their subject id
-# print_line = sprintf("Number subjects BEFORE dropping any with all SMs missing: %s", NROW(nda5))
-# write(print_line, file="log.txt", append=TRUE)
-nda7 <- nda6[rowSums(is.na(nda6[,2:NCOL(nda6)])) != NCOL(nda6),]    #Drop the subjects
-# print_line = sprintf("Number subjects AFTER dropping any with all SMs missing: %s", NROW(nda7))
-# write(print_line, file="log.txt", append=TRUE)
+## Drop any subject who is missing more than 50% of the final 74 SMs
+nda7 <- nda6[rowSums(is.na(nda6[,tail(sm_list,-16)])) < (length(sm_list)/2),]    #Drop the subjects
+# make additional copy for statistics below
+nda8 <- nda5[ (nda5$subjectid %in% nda7$subjectid) ,]
+
+print_line = sprintf("Number subjects AFTER dropping those with >50pct of final 74 SMs missing: %s", NROW(nda7))
+print_line
+write(print_line, file="log.txt", append=TRUE)
+
+#After dropping the imaging filtered subjects
+table(nda7['Zygosity'])
+table(nda7['rel_relationship'])
 
 # Save the final .Rds
-saveRDS(nda7, "./data/nda2.0.1_full_proc_factored.Rds")
+saveRDS(nda7, "./data/nda2.0.1_full_proc.Rds")
 
 # Get basic demographics before and after
 # num subjects
@@ -187,7 +190,7 @@ saveRDS(nda7, "./data/nda2.0.1_full_proc_factored.Rds")
 # number scan sites
 # number scanner types
 # use nda4 for 11875 subjects
-# use nda5 for 7812 subjects
+# use nda8 for 7810 subjects
 print_line = sprintf("--SUMMARY STATS--:")
 write(print_line, file="log.txt", append=TRUE)
 
@@ -204,13 +207,13 @@ write.table(print_line, file="log.txt", append=TRUE)
 
 print_line = sprintf("-AFTER FILTERING-:")
 write(print_line, file="log.txt", append=TRUE)
-print_line = sprintf("F %s | M %s",table(nda5['sex'])[[1]],table(nda5['sex'])[[2]])
+print_line = sprintf("F %s | M %s",table(nda8['sex'])[[1]],table(nda8['sex'])[[2]])
 write(print_line, file="log.txt", append=TRUE)
-print_line = sprintf("Age: mean %s | median %s | mode %s | range %s-%s | stddev %s", mean(nda5[['age']]), median(nda5[['age']]), mode(nda5[['age']]), range(nda5[['age']])[1], range(nda5[['age']])[2], sd(nda5[['age']]))
+print_line = sprintf("Age: mean %s | median %s | mode %s | range %s-%s | stddev %s", mean(nda8[['age']]), median(nda8[['age']]), mode(nda8[['age']]), range(nda8[['age']])[1], range(nda8[['age']])[2], sd(nda8[['age']]))
 write(print_line, file="log.txt", append=TRUE)
-print_line = table(nda5[['abcd_site']])
+print_line = table(nda8[['abcd_site']])
 write.table(print_line, file="log.txt", append=TRUE)
-print_line = table(nda5[['mri_info_manufacturer']])
+print_line = table(nda8[['mri_info_manufacturer']])
 write.table(print_line, file="log.txt", append=TRUE)
 
 # Now, we need to save this final matrix as a CSV or TSV file, either is fine.
