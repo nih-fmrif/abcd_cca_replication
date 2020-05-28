@@ -157,7 +157,7 @@ F = unique(famid);
 famtype = zeros(N,1);
 for f = 1:numel(F),
     fidx = F(f) == famid;
-    famtype(fidx) = sum(sibtype(fidx)) + numel(unique(tab(fidx,2:3)));
+    famtype(fidx) = sum(sibtype(fidx)) + numel(unique(tab(fidx,2)));
 end
 
 % Twins which pair data isn't available should be treated as
@@ -167,7 +167,7 @@ idx = (sibtype == 100  & (famtype >= 100  & famtype <= 199)) ...
 sibtype(idx) = 10;
 for f = 1:numel(F),
     fidx = F(f) == famid;
-    famtype(fidx) = sum(sibtype(fidx)) + numel(unique(tab(fidx,2:3)));
+    famtype(fidx) = sum(sibtype(fidx)) + numel(unique(tab(fidx,2)));
 end
 
 % Append the new info to the table.
@@ -200,7 +200,7 @@ for f = 1:numel(F),
         
         % Some particular cases of complicated families
         if ft == 33,
-            tabx = tab(fidx,2:3);
+            tabx = tab(fidx,2);
             for s = 1:size(tabx,1),
                 if     (sum(tabx(:,1) == tabx(s,1)) == 2 && ...
                         sum(tabx(:,2) == tabx(s,2)) == 3) || ...
@@ -210,7 +210,7 @@ for f = 1:numel(F),
                 end
             end
         elseif ft == 53,
-            tabx = tab(fidx,2:3);
+            tabx = tab(fidx,2);
             for s = 1:size(tabx,1),
                 if     (sum(tabx(:,1) == tabx(s,1)) == 3 && ...
                         sum(tabx(:,2) == tabx(s,2)) == 5) || ...
@@ -220,7 +220,7 @@ for f = 1:numel(F),
                 end
             end
         elseif ft == 234,
-            tabx = tab(fidx,2:3);
+            tabx = tab(fidx,2);
             for s = 1:size(tabx,1),
                 if     (sum(tabx(:,1) == tabx(s,1)) == 1 && ...
                         sum(tabx(:,2) == tabx(s,2)) == 3) || ...
@@ -230,7 +230,7 @@ for f = 1:numel(F),
                 end
             end
         elseif ft == 54,
-            tabx = tab(fidx,2:3);
+            tabx = tab(fidx,2);
             for s = 1:size(tabx,1),
                 if      sum(tabx(:,1) == tabx(s,1)) == 4 && ...
                         sum(tabx(:,2) == tabx(s,2)) == 2,
@@ -241,7 +241,7 @@ for f = 1:numel(F),
                 end
             end
         elseif ft == 34,
-            tabx = tab(fidx,2:3);
+            tabx = tab(fidx,2);
             for s = 1:size(tabx,1),
                 if     (sum(tabx(:,1) == tabx(s,1)) == 2 && ...
                         sum(tabx(:,2) == tabx(s,2)) == 2),
@@ -250,7 +250,7 @@ for f = 1:numel(F),
                 end
             end
         elseif ft == 43,
-            tabx = tab(fidx,2:3);
+            tabx = tab(fidx,2);
             k = 0;
             for s = 1:size(tabx,1),
                 if tabx(s,1) == tabx(1,1) && ...
@@ -265,7 +265,7 @@ for f = 1:numel(F),
                 B{f}(:,1) = -B{f}(:,1);
             end
         elseif ft == 44,
-            tabx = tab(fidx,2:3);
+            tabx = tab(fidx,2);
             for s = 1:size(tabx,1),
                 if      sum(tabx(:,1) == tabx(s,1)) == 4 && ...
                         sum(tabx(:,2) == tabx(s,2)) == 2,
