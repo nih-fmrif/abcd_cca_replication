@@ -40,6 +40,37 @@ df_final = df_final[sms]
 # Sort columns in descending order (so Zygosity is last)
 # df_vars.sort_index(axis=1, inplace=True, ascending=False)
 
+# Now, make some slight modifications to the zygosity fields for compatibility with hcp2blocks package
+# KEY:
+# Zygosity:
+#   DZ = 1
+#   missing = 2
+#   MZ = 3
+# rel_relationship_id:
+#   0 = single
+#   1 = non-twin sibling
+#   2 = twin
+#   3 = triplet
+
+df_final.rename(columns={'Zygosity':'Zygosity_orig'},inplace=True)
+# df_final['Zygosity']=df_final['Zygosity_orig']
+
+# Logic used:
+#   CASE 1: single child or regular siblings
+#       IF rel_relationship_id==0 | rel_relationship_id==1, then set Zygosity='nottwin'
+df_final[df_final['rel_relationship_id']==0 | df_final['rel_relationship_id']==1,'Zygosity']='nottwin'
+#   CASE 2: MZ Twins
+#       IF rel_relationship_id==2 & Zygosity_orig==3, then set Zygosity='mz'
+df_final[df_final['rel_relationship_id']==2 & df_final['Zygosity_orig']==3,'Zygosity']='mz'
+#   CASE 3: DZ Twins
+#       IF rel_relationship_id==2 & Zygosity_orig==1, then set Zygosity='nottwin'
+df_final[df_final['rel_relationship_id']==2 & df_final['Zygosity_orig']==1,'Zygosity']='nottwin'
+#   CASE 4: Triplets
+#       IF rel_relationship_id==3 & Zygosity=2, then set Zygosity='nottwin'
+df_final[df_final['rel_relationship_id']==3 & df_final['Zygosity_orig']==2,'Zygosity']='nottwin'
+
+df_final.drop(columns='Zygosity_orig',inplace=True)
+
 # Now save the final .txt file
 out_fp = os.path.join(cwd,'/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data/VARS.txt')
 df_final.to_csv(out_fp, index=False)
