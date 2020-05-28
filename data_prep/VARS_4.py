@@ -58,16 +58,16 @@ df_final.rename(columns={'Zygosity':'Zygosity_orig'},inplace=True)
 # Logic used:
 #   CASE 1: single child or regular siblings
 #       IF rel_relationship==0 | rel_relationship==1, then set Zygosity='nottwin'
-df_final[df_final['rel_relationship']==0 | df_final['rel_relationship']==1,'Zygosity']='nottwin'
+df_final[(df_final['rel_relationship']==0) | (df_final['rel_relationship']==1),'Zygosity']='nottwin'
 #   CASE 2: MZ Twins
 #       IF rel_relationship==2 & Zygosity_orig==3, then set Zygosity='mz'
-df_final[df_final['rel_relationship']==2 & df_final['Zygosity_orig']==3,'Zygosity']='mz'
+df_final[(df_final['rel_relationship']==2) & (df_final['Zygosity_orig']==3),'Zygosity']='mz'
 #   CASE 3: DZ Twins
 #       IF rel_relationship==2 & Zygosity_orig==1, then set Zygosity='nottwin'
-df_final[df_final['rel_relationship']==2 & df_final['Zygosity_orig']==1,'Zygosity']='nottwin'
+df_final[(df_final['rel_relationship']==2) & (df_final['Zygosity_orig']==1),'Zygosity']='nottwin'
 #   CASE 4: Triplets
 #       IF rel_relationship==3 & Zygosity=2, then set Zygosity='nottwin'
-df_final[df_final['rel_relationship']==3 & df_final['Zygosity_orig']==2,'Zygosity']='nottwin'
+df_final[(df_final['rel_relationship']==3) & (df_final['Zygosity_orig']==2),'Zygosity']='nottwin'
 
 df_final.drop(columns='Zygosity_orig',inplace=True)
 
