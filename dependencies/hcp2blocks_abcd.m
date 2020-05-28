@@ -113,11 +113,11 @@ N = size(tab,1);
 % changes here.
 sibtype = zeros(N,1);
 for n = 1:N,
-    if strcmpi(tab{n,4},'nottwin'),
+    if strcmpi(tab{n,3},'nottwin'),
         sibtype(n) = 10;
-    elseif any(strcmpi(tab{n,4},{'notmz','dz'})),
+    elseif any(strcmpi(tab{n,3},{'notmz','dz'})),
         sibtype(n) = 100;
-    elseif strcmpi(tab{n,4},'mz'),
+    elseif strcmpi(tab{n,3},'mz'),
         sibtype(n) = 1000;
     end
 end
