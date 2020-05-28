@@ -55,25 +55,33 @@ df_final = df_final[sms]
 df_final.rename(columns={'Zygosity':'Zygosity_orig'},inplace=True)
 # df_final['Zygosity']=df_final['Zygosity_orig']
 
+
 # Logic used:
 #   CASE 0: for any subjects whose 'Zygosity' field is blank, set them to 'nottwin'
         # IF Zygosity_orig=='', then set Zygosity='nottwin'
-mask = df_final['Zygosity_orig'].isna()
-df_final.loc[mask,'Zygosity']='nottwin'
-#   CASE 1: single child or regular siblings, or triplets (Note, for some reason in the ABCD dataset no one has rel_relationship=0 despite being single chilren.)
-#       IF rel_relationship==1 | rel_relationship==2 | rel_relationship=4, then set Zygosity='nottwin'
-mask = (df_final['rel_relationship']==1) | (df_final['rel_relationship']==2) | (df_final['rel_relationship']==4)
-df_final.loc[mask,'Zygosity']='nottwin'
-#   CASE 2: MZ Twins
-#       IF rel_relationship==3 & Zygosity_orig==3, then set Zygosity='mz'
-mask = (df_final['rel_relationship']==3) & (df_final['Zygosity_orig']==3)
-df_final.loc[mask,'Zygosity']='mz'
-#   CASE 3: DZ Twins
-#       IF rel_relationship==3 & Zygosity_orig==1, then set Zygosity='nottwin'
-mask = (df_final['rel_relationship']==3) & (df_final['Zygosity_orig']==1)
-df_final.loc[mask,'Zygosity']='nottwin'
+# mask = df_final['Zygosity_orig'].isna()
+# df_final.loc[mask,'Zygosity']='nottwin'
+# #   CASE 1: single child or regular siblings, or triplets (Note, for some reason in the ABCD dataset no one has rel_relationship=0 despite being single chilren.)
+# #       IF rel_relationship==1 | rel_relationship==2 | rel_relationship=4, then set Zygosity='nottwin'
+# mask = (df_final['rel_relationship']==1) | (df_final['rel_relationship']==2) | (df_final['rel_relationship']==4)
+# df_final.loc[mask,'Zygosity']='nottwin'
+# #   CASE 2: MZ Twins
+# #       IF rel_relationship==3 & Zygosity_orig==3, then set Zygosity='mz'
+# mask = (df_final['rel_relationship']==3) & (df_final['Zygosity_orig']==3)
+# df_final.loc[mask,'Zygosity']='mz'
+# #   CASE 3: DZ Twins
+# #       IF rel_relationship==3 & Zygosity_orig==1, then set Zygosity='nottwin'
+# mask = (df_final['rel_relationship']==3) & (df_final['Zygosity_orig']==1)
+# df_final.loc[mask,'Zygosity']='nottwin'
 
-df_final.drop(columns='Zygosity_orig',inplace=True)
+#   CASE 1: Anything else is 'nottwin'
+df_final['Zygosity']='nottwin'  #this is for all other cases where the twins are not MZ.
+#   CASE 2: MZ Twins
+#       IF Zygosity_orig==3, then set Zygosity='mz'
+mask = (df_final['Zygosity_orig']==3)
+df_final.loc[mask,'Zygosity']='mz'
+
+# df_final.drop(columns='Zygosity_orig',inplace=True)
 
 # Now save the final .txt file
 out_fp = os.path.join(cwd,'/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data/VARS.csv')
