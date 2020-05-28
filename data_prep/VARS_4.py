@@ -42,15 +42,15 @@ df_final = df_final[sms]
 
 # Now, make some slight modifications to the zygosity fields for compatibility with hcp2blocks package
 # KEY:
-# Zygosity:
+# Zygosity (these codings are from the sm_processing_3.r script):
 #   DZ = 1
 #   missing = 2
 #   MZ = 3
-# rel_relationship:
-#   0 = single
-#   1 = non-twin sibling
-#   2 = twin
-#   3 = triplet
+# rel_relationship (defined in NDA, here https://nda.nih.gov/data_structure.html?short_name=acspsw03, but website is slightly wrong, correct codes are here):
+#   1 = single
+#   2 = non-twin sibling
+#   3 = twin
+#   4 = triplet
 
 df_final.rename(columns={'Zygosity':'Zygosity_orig'},inplace=True)
 # df_final['Zygosity']=df_final['Zygosity_orig']
@@ -61,16 +61,16 @@ df_final.rename(columns={'Zygosity':'Zygosity_orig'},inplace=True)
 mask = df_final['Zygosity_orig'].isna()
 df_final.loc[mask,'Zygosity']='nottwin'
 #   CASE 1: single child or regular siblings, or triplets (Note, for some reason in the ABCD dataset no one has rel_relationship=0 despite being single chilren.)
-#       IF rel_relationship==0 | rel_relationship==1, then set Zygosity='nottwin'
-mask = (df_final['rel_relationship']==0) | (df_final['rel_relationship']==1) | (df_final['rel_relationship']==3)
+#       IF rel_relationship==1 | rel_relationship==2 | rel_relationship=4, then set Zygosity='nottwin'
+mask = (df_final['rel_relationship']==1) | (df_final['rel_relationship']==2) | (df_final['rel_relationship']==4)
 df_final.loc[mask,'Zygosity']='nottwin'
 #   CASE 2: MZ Twins
-#       IF rel_relationship==2 & Zygosity_orig==3, then set Zygosity='mz'
-mask = (df_final['rel_relationship']==2) & (df_final['Zygosity_orig']==3)
+#       IF rel_relationship==3 & Zygosity_orig==3, then set Zygosity='mz'
+mask = (df_final['rel_relationship']==3) & (df_final['Zygosity_orig']==3)
 df_final.loc[mask,'Zygosity']='mz'
 #   CASE 3: DZ Twins
-#       IF rel_relationship==2 & Zygosity_orig==1, then set Zygosity='nottwin'
-mask = (df_final['rel_relationship']==2) & (df_final['Zygosity_orig']==1)
+#       IF rel_relationship==3 & Zygosity_orig==1, then set Zygosity='nottwin'
+mask = (df_final['rel_relationship']==3) & (df_final['Zygosity_orig']==1)
 df_final.loc[mask,'Zygosity']='nottwin'
 
 df_final.drop(columns='Zygosity_orig',inplace=True)
