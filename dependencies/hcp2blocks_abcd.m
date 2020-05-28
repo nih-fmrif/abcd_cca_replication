@@ -42,45 +42,27 @@ function varargout = hcp2blocks(restrfile,blocksfile,dz2sib,ids,showreport)
 warning off backtrace
 
 % Load the data and select what is now needed
-% tmp = strcsvread(restrfile);
 tmp = restrfile;
 
-% If there is no Zygosity field, create it from ZygSR and ZygGT
+% Pull column number for the zygosity
 zygo_idx = find(strcmpi(tmp(1,:),'Zygosity'));
-% if isempty(zygo_idx),
-%     zygoSR_idx = find(strcmpi(tmp(1,:),'ZygositySR'));
-%     zygoGT_idx = find(strcmpi(tmp(1,:),'ZygosityGT'));
-%     tmp(:,end+1) = cell(size(tmp,1),1);
-%     tmp{1,end} = 'Zygosity';
-%     for s = 2:size(tmp,1),
-%         if  (numel(tmp{s,zygoGT_idx}) == 1 && isnan(tmp{s,zygoGT_idx})) || ...
-%             (ischar(tmp{s,zygoGT_idx}) && strcmpi(tmp{s,zygoGT_idx},' ')) || ...
-%             isempty(tmp{s,zygoGT_idx}),
-%             tmp{s,end} = tmp{s,zygoSR_idx};
-%         else
-%             tmp{s,end} = tmp{s,zygoGT_idx};
-%         end
-%     end
-% end
 
 % Locate the columns with the relevant pieces of info, i.e.,
-% egoid, moid, faid, twin status and zygozity, in this exact
-% order, and take just them
+% egoid, famid, twin status and zygozity, in this order (we don't have individual mother/father ids in ABCD)
 egid_idx = find(strcmpi(tmp(1,:),'subjectid'));
-% moid_idx = find(strcmpi(tmp(1,:),'Mother ID')   | strcmpi(tmp(1,:),'Mother_ID'));
-% faid_idx = find(strcmpi(tmp(1,:),'Father ID')   | strcmpi(tmp(1,:),'Father_ID'));
 famid_idx = find(strcmpi(tmp(1,:),'rel_family_id'));
 zygo_idx = find(strcmpi(tmp(1,:),'Zygosity'));
 agey_idx = strcmpi(tmp(1,:),'age');
-% tab = tmp(2:end,[egid_idx moid_idx faid_idx zygo_idx]);
 tab = tmp(2:end,[egid_idx famid_idx zygo_idx]);
-age = cell2mat(tmp(2:end,agey_idx));
+age = tmp(2:end,agey_idx);
 
 % If subjects have these elementary info missing, remove them
+% SKIP ALL THIS, we know that this data is avail in ABCD
 % tab0a =  cellfun(@isnan, tab(:,1:2));
 % tab0b = ~cellfun(@ischar,tab(:,3));
 % tab0  = any(horzcat(tab0a,tab0b),2);
 % idstodel = cell2mat(tab(tab0,1));
+% tab0=horzcat(tab,num2cell(age));
 
 % if numel(idstodel),
 % %     warning([ ...
@@ -93,20 +75,18 @@ age = cell2mat(tmp(2:end,agey_idx));
 % if nargin >= 4 && ~ isempty(ids) && ~ isempty(idstodel),
 %     ids(any(bsxfun(@eq,ids(:),idstodel'),2)) = [];
 % end
-
-tab0=horzcat(tab,num2cell(age))
 % tab(tab0,:) = [];
 % age(tab0)   = [];
 N = size(tab,1);
 
 % Treat non-monozygotic twins as ordinary siblings.
-% if nargin >= 3 && dz2sib,
-%     for n = 1:N,
-%         if any(strcmpi(tab{n,4},{'notmz','dz'})),
-%             tab{n,4} = 'NotTwin';
-%         end
-%     end
-% end
+if nargin >= 3 && dz2sib,
+    for n = 1:N,
+        if any(strcmpi(tab{n,3},{'notmz','dz'})),
+            tab{n,3} = 'NotTwin';
+        end
+    end
+end
 
 % Instead of strings, use sib identifiers. These are based on the
 % fact that it's unlikely any family on the HCP have more than 10
@@ -122,47 +102,47 @@ for n = 1:N,
         sibtype(n) = 1000;
     end
 end
-tab = cell2mat(tab(:,1:3));
+tab = str2double(tab(:,1:2));
 
 % Subselect subjects as needed
-if nargin == 4 && ~isempty(ids) && islogical(ids(1)),
-    tab        = tab(ids,:);
-    sibtype    = sibtype(ids,:);
-elseif nargin == 4 && ~ isempty(ids),
-    idx = bsxfun(@eq,tab(:,1),ids');
-    idx = ~ any(idx,1);
-    if any(idx),
-        warning([ ...
-            'These subjects don''t exist in the restricted file and will be removed: \n' ...
-            repmat('         %d\n',1,sum(idx))],ids(idx));
-    end
-    ids(idx)   = [];
-    tabnew     = zeros(length(ids),size(tab,2));
-    sibtypenew = zeros(length(ids),1);
-    agenew     = zeros(length(ids),1);
-    for n = 1:length(ids),
-        idx = tab(:,1) == ids(n);
-        tabnew(n,:)     = tab(idx,:);
-        sibtypenew(n,:) = sibtype(idx);
-        agenew(n,:)     = age(idx);
-    end
-    tab        = tabnew;
-    sibtype    = sibtypenew;
-    age        = agenew;
-end
+% if nargin == 4 && ~isempty(ids) && islogical(ids(1)),
+%     tab        = tab(ids,:);
+%     sibtype    = sibtype(ids,:);
+% elseif nargin == 4 && ~ isempty(ids),
+%     idx = bsxfun(@eq,tab(:,1),ids');
+%     idx = ~ any(idx,1);
+%     if any(idx),
+%         warning([ ...
+%             'These subjects don''t exist in the restricted file and will be removed: \n' ...
+%             repmat('         %d\n',1,sum(idx))],ids(idx));
+%     end
+%     ids(idx)   = [];
+%     tabnew     = zeros(length(ids),size(tab,2));
+%     sibtypenew = zeros(length(ids),1);
+%     agenew     = zeros(length(ids),1);
+%     for n = 1:length(ids),
+%         idx = tab(:,1) == ids(n);
+%         tabnew(n,:)     = tab(idx,:);
+%         sibtypenew(n,:) = sibtype(idx);
+%         agenew(n,:)     = age(idx);
+%     end
+%     tab        = tabnew;
+%     sibtype    = sibtypenew;
+%     age        = agenew;
+% end
 N = size(tab,1);
 
 % Create family IDs
 famid = zeros(N,1);
-U = unique(tab(:,2:3),'rows');
+U = unique(tab(:,2),'rows');
 for u = 1:size(U,1),
-    uidx = all(bsxfun(@eq,tab(:,2:3),U(u,:)),2);
+    uidx = all(bsxfun(@eq,tab(:,2),U(u,:)),2);
     famid(uidx) = u;
 end
 
 % For parents that belong to more than one family, merge
 % their families into just one, the one with lowest famid.
-par = tab(:,2:3);
+par = tab(:,2);
 for p = par(:)', % for each parent
     pidx = any(par == p,2);
     famids = unique(famid(pidx)); % families that he/she belong to
