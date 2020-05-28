@@ -68,7 +68,7 @@ zygo_idx = find(strcmpi(tmp(1,:),'Zygosity'));
 egid_idx = find(strcmpi(tmp(1,:),'subjectid'));
 % moid_idx = find(strcmpi(tmp(1,:),'Mother ID')   | strcmpi(tmp(1,:),'Mother_ID'));
 % faid_idx = find(strcmpi(tmp(1,:),'Father ID')   | strcmpi(tmp(1,:),'Father_ID'));
-famid_idx = find(strcmpi(tmp(1,:),'rel_family_id');
+famid_idx = find(strcmpi(tmp(1,:),'rel_family_id'));
 zygo_idx = find(strcmpi(tmp(1,:),'Zygosity'));
 agey_idx = strcmpi(tmp(1,:),'age');
 % tab = tmp(2:end,[egid_idx moid_idx faid_idx zygo_idx]);
@@ -76,24 +76,26 @@ tab = tmp(2:end,[egid_idx famid_idx zygo_idx]);
 age = cell2mat(tmp(2:end,agey_idx));
 
 % If subjects have these elementary info missing, remove them
-tab0a =  cellfun(@isnan, tab(:,1:3));
-tab0b = ~cellfun(@ischar,tab(:,4));
-tab0  = any(horzcat(tab0a,tab0b),2);
-idstodel = cell2mat(tab(tab0,1));
+% tab0a =  cellfun(@isnan, tab(:,1:2));
+% tab0b = ~cellfun(@ischar,tab(:,3));
+% tab0  = any(horzcat(tab0a,tab0b),2);
+% idstodel = cell2mat(tab(tab0,1));
 
-if numel(idstodel),
-%     warning([ ...
-%         'These subjects have data missing in the restricted file and will be removed: \n' ...
-%         repmat('         %d\n',1,numel(idstodel))],idstodel);
-    warning('the following subjects have missing data in the restricted file and will be REMOVED: \n');
-    idstodel
-end
+% if numel(idstodel),
+% %     warning([ ...
+% %         'These subjects have data missing in the restricted file and will be removed: \n' ...
+% %         repmat('         %d\n',1,numel(idstodel))],idstodel);
+%     warning('the following subjects have missing data in the restricted file and will be REMOVED: \n');
+%     idstodel
+% end
 
-if nargin >= 4 && ~ isempty(ids) && ~ isempty(idstodel),
-    ids(any(bsxfun(@eq,ids(:),idstodel'),2)) = [];
-end
-tab(tab0,:) = [];
-age(tab0)   = [];
+% if nargin >= 4 && ~ isempty(ids) && ~ isempty(idstodel),
+%     ids(any(bsxfun(@eq,ids(:),idstodel'),2)) = [];
+% end
+
+tab0=horzcat(tab,num2cell(age))
+% tab(tab0,:) = [];
+% age(tab0)   = [];
 N = size(tab,1);
 
 % Treat non-monozygotic twins as ordinary siblings.
