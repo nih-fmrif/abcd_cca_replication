@@ -10,6 +10,12 @@ addpath(genpath('./data/'));
 
 % Read in data, set some variables, create confounds matrix
 VARS=strcsvread('./data/VARS.csv');  % Subjects X SMs text file
+
+% Now, change subject ids to just be numbers 0001 to 7810 (needed for hcp2blocks)
+% Create the lookup table
+sub_lookup_tab = horzcat(VARS(2:end,1),[1:7810]'
+
+tmp=VARS
 VARS=VARS(2:end,:);
 % NET=load('../data/NET.txt');          % Load the Subjects X Nodes matrix (should be size 461x19900)
 
@@ -19,7 +25,7 @@ N_dim=70;
 N_perm=10;
 
 % Generate permutations using the hcp2blocks package
-EB=hcp2blocks_abcd('./data/VARS.csv', [ ], false, VARS(:,1));
+EB=hcp2blocks_abcd(tmp, [ ], false, VARS(:,1));
 PAPset=palm_quickperms([ ], EB, Nperm); % the final matrix of permuations
 
 

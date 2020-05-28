@@ -42,7 +42,8 @@ function varargout = hcp2blocks(restrfile,blocksfile,dz2sib,ids,showreport)
 warning off backtrace
 
 % Load the data and select what is now needed
-tmp = strcsvread(restrfile);
+% tmp = strcsvread(restrfile);
+tmp = restrfile;
 
 % If there is no Zygosity field, create it from ZygSR and ZygGT
 zygo_idx = find(strcmpi(tmp(1,:),'Zygosity'));
