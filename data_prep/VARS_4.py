@@ -81,7 +81,7 @@ df_final['Zygosity']='nottwin'  #this is for all other cases where the twins are
 mask = (df_final['Zygosity_orig']==3)
 df_final.loc[mask,'Zygosity']='mz'
 
-# df_final.drop(columns='Zygosity_orig',inplace=True)
+df_final.drop(columns='Zygosity_orig',inplace=True)
 
 # Now save the final .txt file
 out_fp = os.path.join(cwd,'/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data/VARS.csv')
