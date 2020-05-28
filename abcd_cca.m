@@ -10,7 +10,7 @@ addpath(genpath('./data/'));
 
 % Read in data, set some variables, create confounds matrix
 VARS=strcsvread('./data/VARS.csv');  % Subjects X SMs text file
-
+VARS=VARS(2:end,:);
 % NET=load('../data/NET.txt');          % Load the Subjects X Nodes matrix (should be size 461x19900)
 
 % Number of PCA and CCA components
@@ -19,8 +19,8 @@ N_dim=70;
 N_perm=10;
 
 % Generate permutations using the hcp2blocks package
-EB=hcp2blocks_abcd('./data/VARS.csv', [ ], false, VARS(:,1));  % Input is the raw restricted file downloaded from Connectome DB
-PAPset=palm_quickperms([ ], EB, Nperm);                                 % the final matrix of permuations
+EB=hcp2blocks_abcd('./data/VARS.csv', [ ], false, VARS(:,1));
+PAPset=palm_quickperms([ ], EB, Nperm); % the final matrix of permuations
 
 
 % Set up confounds matrix. Confounds are demeaned, any missing data is set to 0
