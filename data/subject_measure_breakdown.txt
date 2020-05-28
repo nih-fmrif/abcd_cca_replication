@@ -2,9 +2,9 @@
 subjectid
 rel_relationship
 rel_family_id
-rel_group_id
+rel_group_id (NOT USED ANY MORE)
 Zygosity
-paired.subjectid
+paired.subjectid (NOT USED ANY MORE)
 
 ---CONFOUNDS (7 total)---
 abcd_site
