@@ -80,6 +80,10 @@ df_final['Zygosity']='nottwin'  #this is for all other cases where the twins are
 #       IF Zygosity_orig==3, then set Zygosity='mz'
 mask = (df_final['Zygosity_orig']==3)
 df_final.loc[mask,'Zygosity']='mz'
+# CASE 3: DZ Twins
+#       IF Zygosity_orig==1, then set Zygosity='dz'
+mask = (df_final['Zygosity_orig']==1)
+df_final.loc[mask,'Zygosity']='dz'
 
 df_final.drop(columns='Zygosity_orig',inplace=True)
 
