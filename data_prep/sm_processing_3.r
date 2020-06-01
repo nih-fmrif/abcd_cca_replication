@@ -181,6 +181,8 @@ table(nda7['Zygosity'])
 table(nda7['rel_relationship'])
 
 # Save the final .Rds
+# Add in the hashed scanner device IDs (mri_info_device.serial.number) (but NOT in factored form)
+nda7['mri_info_device.serial.number'] <- nda5[(nda5$subjectid %in% nda7$subjectid),'mri_info_device.serial.number']
 saveRDS(nda7, "./data/nda2.0.1_full_proc.Rds")
 
 # Get basic demographics before and after
