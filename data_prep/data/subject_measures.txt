@@ -6,6 +6,7 @@ Zygosity
 paired.subjectid
 abcd_site
 mri_info_manufacturer
+mri_info_deviceserialnumber
 remaining_frame_mean_FD
 anthro_weight_calc
 anthro_bmi_calc

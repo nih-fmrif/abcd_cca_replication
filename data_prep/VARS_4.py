@@ -38,7 +38,7 @@ df_final = df_vars.merge(df_motion.rename(columns={'sub':'subjectid'}),on='subje
 df_final.sort_values('subjectid',inplace=True)
 df_final = df_final[sms]
 # Sort columns in descending order (so Zygosity is last)
-# df_vars.sort_index(axis=1, inplace=True, ascending=False)
+df_vars.sort_index(axis=1, inplace=True, ascending=False)
 
 # Now, make some slight modifications to the zygosity fields for compatibility with hcp2blocks package
 # KEY:
