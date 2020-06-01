@@ -44,9 +44,6 @@ warning off backtrace
 % Load the data and select what is now needed
 tmp = restrfile;
 
-% Pull column number for the zygosity
-zygo_idx = find(strcmpi(tmp(1,:),'Zygosity'));
-
 % Locate the columns with the relevant pieces of info, i.e.,
 % egoid, famid, twin status and zygozity, in this order (we don't have individual mother/father ids in ABCD)
 egid_idx = find(strcmpi(tmp(1,:),'subjectid'));
