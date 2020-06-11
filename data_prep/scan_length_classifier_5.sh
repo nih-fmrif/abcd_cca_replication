@@ -41,7 +41,7 @@ show_example(){
 RAWDATA_PATH=$1
 # PROCDATA_PATH=$2
 
-if (( $# < 2 ))
+if (( $# < 1 ))
 then
     show_usage
     show_example
@@ -136,19 +136,22 @@ do
             ((subs_dropped++))
         else
             # Since we can still use this subject, write their ICA+FIX cmd and total tps to file
-            # format is cmd,#
+            # format is cmd,total_tps
             # Save the filename as sub-NDARINVxxxxxxxx.txt (easier to use when we generate the ICA+FIX swarm cmds)
-            echo $cmd_str,$total_tps >> $ICAFIX_CMDS/$subNDARINV.txt
-        fi
-    
-    done < $DATAFOLDER/${NDARINV}_scan_lengths.txt
+            echo $cmd_str,$total_tps > $ICAFIX_CMDS/$subNDARINV.txt
 
-    echo $NDARINV >> $DATAFOLDER/subjects.txt
+            # Since we can use this subject, save their name (won't bother cleaning censors for bad subjects)
+            echo $NDARINV >> $DATAFOLDER/subjects.txt
+            # echo $NDARINV >> $DATAFOLDER/NDARINV_subjects.txt
+            # echo $subNDARINV >> $DATAFOLDER/subNDARINV_subjects.txt
+        fi
+    done < $DATAFOLDER/${NDARINV}_scan_lengths.txt
 
 done < $PWD/data/final_subjects.txt
 echo "Lengths acquired, now cleaning censor files for all subjects available"
 
 # Now that scans are classified, clean the censors for subjects we have available
+# python clean_censors.py $DATAFOLDER/NDARINV_subjects.txt
 python clean_censors.py $DATAFOLDER/subjects.txt
 
 echo "Done cleaning censor files!"
