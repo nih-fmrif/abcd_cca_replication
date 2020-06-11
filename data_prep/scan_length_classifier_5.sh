@@ -36,7 +36,7 @@ show_example(){
 }
 
 # Verbose output (debugging)
-set -x
+# set -x
 
 RAWDATA_PATH=$1
 PROCDATA_PATH=$2
@@ -89,16 +89,16 @@ do
     do
         if [[ $len -lt 285 ]]; then
             echo 0 >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
-            echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
         elif [[ $len -ge 285 ]]; then
             echo 0 >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
-            echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
         else
             echo "An error occured classifying scan $count for subject $sub_id"
             echo "ERR" >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
         fi
         ((count++))
+    
     done < $DATAFOLDER/${sub_id_noprefix}_scan_lengths.txt
+    echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
 
 done < $DATAFOLDER/rawdata_folder_paths.txt
 echo "Lengths acquired, now cleaning censor files for all subjects available"
