@@ -50,12 +50,14 @@ fi
 
 if [[ -d $PWD/censoring_data_subset/ ]]; then
     rm -r $PWD/censoring_data_subset/
+    mkdir $PWD/censoring_data_subset/
 else
     mkdir $PWD/censoring_data_subset/
 fi
 
 if [[ -d $PWD/data/scan_length_proc/ ]]; then
     rm -r $PWD/data/scan_length_proc/
+    mkdir $PWD/data/scan_length_proc/
 else
     mkdir $PWD/data/scan_length_proc/
 fi
