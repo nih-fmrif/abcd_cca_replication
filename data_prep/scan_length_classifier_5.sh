@@ -48,8 +48,8 @@ then
 	exit 1
 fi
 
-# Data working dir
 DATAFOLDER=$PWD/data/scan_length_proc/
+ICAFIX_CMDS=$PWD/data/icafix_cmds/
 
 if [[ -d $PWD/censoring_data_subset/ ]]; then
     rm -r $PWD/censoring_data_subset/
@@ -58,12 +58,22 @@ else
     mkdir $PWD/censoring_data_subset/
 fi
 
+
 if [[ -d $DATAFOLDER ]]; then
     rm -r $DATAFOLDER
     mkdir $DATAFOLDER
 else
     mkdir $DATAFOLDER
 fi
+
+if [[ -d $ICAFIX_CMDS ]]; then
+    rm -r $ICAFIX_CMDS
+    mkdir $ICAFIX_CMDS
+else
+    mkdir $ICAFIX_CMDS
+fi
+
+
 
 # Get a list of the raw data folders (these are absolute paths since $RAWDATA_PATH is an absolute path)
 # find $RAWDATA_PATH -maxdepth 1 -type d -name "sub-NDARINV*" >> $DATAFOLDER/rawdata_folder_paths.txt
@@ -73,6 +83,7 @@ fi
 # Now, iterate over the subjects and collect their scan length data (this can collect data for scans labeled 00 to 99, assumes 2 digit naming convention)
 # format of subject id in final_subjects.txt is NDAR_INVxxxxxxxx
 echo "Fetching scan length data for each subject and classifying scans for inclusion/exclusion."
+subs_dropped=0
 while read NDAR_INV
 do
     # format sub-NDARINVxxxxxxxx
@@ -86,21 +97,49 @@ do
 
     # Pull scan lengths from all available scans (format sub-NDARINVFL02R0H4_ses-baselineYear1Arm1_task-rest_run-[0-9][0-9]_bold.nii.gz)
     # Note, values are written to file in ascending order (i.e. scan 1 length on line one, scan 2 on line 2, etc...)
-    find $RAWDATA_PATH/$subNDARINV/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINV}_scan_lengths.txt >/dev/null
+    find $RAWDATA_PATH/$subNDARINV/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINV}_scan_lengths.txt >/dev/null
     
     # Create classifier file for each subject
-    count=1
+
+    # Keep track of which scan we're looking at
+    count=1 
+    # total timepoints for valid scans for a subject
+    total_tps=0
+    cmd_str=""
     while read len
     do
         if [[ $len -lt 285 ]]; then
             echo 0 >> $DATAFOLDER/${NDARINV}_scans_classified.txt
         elif [[ $len -ge 285 ]]; then
             echo 1 >> $DATAFOLDER/${NDARINV}_scans_classified.txt
+
+            # Aggregate their cmd string
+            if [[ $count -lt 10 ]]; then
+                # Prepend a 0 
+                cmd_str=$cmd_str@task-rest0$count/task-rest0$count.nii.gz
+            else
+                # No need to prepend 0
+                cmd_str=$cmd_str@task-rest$count/task-rest$count.nii.gz
+            fi
+
+            # Sum their total timepoints to make sure they are still valid subjects
+            ((total_tps=total_tps+len))
+
         else
             echo "An error occured classifying scan $count for subject $sub_id"
             echo "ERR" >> $DATAFOLDER/${NDARINV}_scans_classified.txt
         fi
         ((count++))
+
+        if [[ $total_tps -lt 750 ]]; then
+            echo "WARNING: subject $subNDARINV has only $total_tps timepoints. Subject will be dropped."
+            ((subs_dropped++))
+        else
+            # Since we can still use this subject, write their ICA+FIX cmd and total tps to file
+            # format is cmd,#
+            # Save the filename as sub-NDARINVxxxxxxxx.txt (easier to use when we generate the ICA+FIX swarm cmds)
+            echo $cmd_str,$total_tps >> $ICAFIX_CMDS/$subNDARINV.txt
+        fi
     
     done < $DATAFOLDER/${NDARINV}_scan_lengths.txt
 
