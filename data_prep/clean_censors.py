@@ -15,7 +15,7 @@ import datetime
 filename=sys.argv[1]
 cwd = os.getcwd()
 subs_fp = os.path.join(cwd,filename+".txt")
-print(subs_fp)
+# print(subs_fp)
 
 # format of each line in text file is NDARINVxxxxxxx on each line (need to drop the sub- prefix)
 subs = [line.rstrip('\n') for line in open(subs_fp)]
