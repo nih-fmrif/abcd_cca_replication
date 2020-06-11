@@ -95,7 +95,7 @@ do
             echo "ERR" >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
         fi
         ((count++))
-    done < $DATAFOLDER${sub_id_noprefix}_scan_lengths.txt
+    done < $DATAFOLDER/${sub_id_noprefix}_scan_lengths.txt
 
 done < $DATAFOLDER/rawdata_folder_paths.txt
 echo "Lengths acquired, now cleaning censor files for all subjects available"
