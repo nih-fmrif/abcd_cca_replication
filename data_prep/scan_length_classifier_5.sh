@@ -17,22 +17,11 @@
 #   1. Absolute path to location of the sub-NDARINVxxxxxxxx/ RAW data folders (/data/ABCD_MBDU/abcd_bids/bids/)
 #   2. Absolute path to location of the sub-NDARINVxxxxxxxx/ PROCCESSED data folders (/abcd_bids/bids/derivatives/dcan_reproc/)
 
-# function average_scan_len {
-# PYTHON_ARG="$1" python - <<END
-# import os
-# with open(os.environ['PYTHON_ARG'],'r') as f:
-#     data = [float(line.rstrip()) for line in f.readlines()]
-#     f.close()
-# mean = float(sum(data))/len(data) if len(data) > 0 else float('nan')
-# print(int(mean))
-# END
-# }
-
 show_usage(){
-    echo "usage scan_length_classifier_5.sh <absolute/path/to/folder/with/RAW/subjectdata/> <absolute/path/to/folder/with/PROCESSED/subjectdata/>"
+    echo "usage scan_length_classifier_5.sh <absolute/path/to/folder/with/RAW/subjectdata/>"
 }
 show_example(){
-    echo "usage scan_length_classifier_5.sh /data/ABCD_MBDU/abcd_bids/bids/ /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/"
+    echo "usage scan_length_classifier_5.sh /data/ABCD_MBDU/abcd_bids/bids/"
 }
 
 # Verbose output (debugging)
@@ -114,9 +103,12 @@ do
             echo 1 >> $DATAFOLDER/${NDARINV}_scans_classified.txt
 
             # Aggregate their cmd string
-            if [[ $count -lt 10 ]]; then
-                # Prepend a 0 
-                cmd_str=$cmd_str@task-rest0$count/task-rest0$count.nii.gz
+            if [[ $count -eq 1 ]]; then
+                # Prepend a 0, remove @ at beginning
+                cmd_str=task-rest0$count/task-rest0$count.nii.gz
+            elif [[ $count -lt 10 ]]; then
+                # Prepend 0 since < 10, but include the @ at beginning
+                cmd_str=task-rest0$count/task-rest0$count.nii.gz
             else
                 # No need to prepend 0
                 cmd_str=$cmd_str@task-rest$count/task-rest$count.nii.gz
@@ -131,21 +123,22 @@ do
         fi
         ((count++))
 
-        if [[ $total_tps -lt 750 ]]; then
-            echo "WARNING: subject $subNDARINV has only $total_tps timepoints. Subject will be dropped."
-            ((subs_dropped++))
-        else
-            # Since we can still use this subject, write their ICA+FIX cmd and total tps to file
-            # format is cmd,total_tps
-            # Save the filename as sub-NDARINVxxxxxxxx.txt (easier to use when we generate the ICA+FIX swarm cmds)
-            echo $cmd_str,$total_tps > $ICAFIX_CMDS/$subNDARINV.txt
-
-            # Since we can use this subject, save their name (won't bother cleaning censors for bad subjects)
-            echo $NDARINV >> $DATAFOLDER/subjects.txt
-            # echo $NDARINV >> $DATAFOLDER/NDARINV_subjects.txt
-            # echo $subNDARINV >> $DATAFOLDER/subNDARINV_subjects.txt
-        fi
     done < $DATAFOLDER/${NDARINV}_scan_lengths.txt
+
+    if [[ $total_tps -lt 750 ]]; then
+        echo "WARNING: subject $subNDARINV has only $total_tps timepoints. Subject will be dropped."
+        ((subs_dropped++))
+    else
+        # Since we can still use this subject, write their ICA+FIX cmd and total tps to file
+        # format is cmd,total_tps
+        # Save the filename as sub-NDARINVxxxxxxxx.txt (easier to use when we generate the ICA+FIX swarm cmds)
+        echo $cmd_str,$total_tps > $ICAFIX_CMDS/$subNDARINV.txt
+
+        # Since we can use this subject, save their name (won't bother cleaning censors for bad subjects)
+        echo $NDARINV >> $DATAFOLDER/subjects.txt
+        # echo $NDARINV >> $DATAFOLDER/NDARINV_subjects.txt
+        # echo $subNDARINV >> $DATAFOLDER/subNDARINV_subjects.txt
+    fi
 
 done < $PWD/data/final_subjects.txt
 echo "Lengths acquired, now cleaning censor files for all subjects available"
