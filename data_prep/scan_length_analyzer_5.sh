@@ -1,6 +1,7 @@
 #! /bin/bash
 
-# Scan length crawler
+# scan_length_analyzer.sh - scan length crawler/classifier
+
 # Tool does the following:
 #   1.  Iterates over the scans (raw data) for all subjects, and determines how long their scans are (stores as one file per subject)
 #       [generate file: NDARINVxxxxxxx_scan_lengths.txt]
