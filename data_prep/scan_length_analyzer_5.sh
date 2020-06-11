@@ -1,32 +1,35 @@
 #! /bin/bash
 
 # scan_length_analyzer.sh - scan length crawler/classifier
+# Created: 6/11/20
+# Last edited: 6/11/20
+# Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
+
+# NOTE:
+#   this script must be called from the abcd_cca_replicaton/data_prep/ folder
+# Input:
+#   Absolute path to location of the sub-NDARINVxxxxxxxx/ RAW data folders (/data/ABCD_MBDU/abcd_bids/bids/)
 
 # Tool does the following:
 #   1.  Iterates over the scans (raw data) for all subjects, and determines how long their scans are (stores as one file per subject)
 #       [generate file: NDARINVxxxxxxx_scan_lengths.txt]
-#   2.  Determines a group average scan length (omitting scans with length < 50, based on observation these scans fail the ICA+FIX high pass stage)
-#   3.  Based on group average scan length calculated, it will classify scans as 0 (exclude, scan length < 0.75*380)
-#       or 1 (include, scan length >= 0.75*380) [generate file: NDARINVxxxxxxx_scan_classified.txt]
+#   2.  Based on a cutoff of 0.75*380=285, it will classify scans as 0 (exclude, scan length < thresh) or 1 (include, scan length >= thresh) 
+#       [generate file: NDARINVxxxxxxx_scan_classified.txt]
 #   4.  Based on the scan lengths [NDARINVxxxxxxx_scan_lengths.txt] and scan include/exclude [NDARINVxxxxxxx_scans_to_use.txt] clean their censor file
 #       (this calls a separate script called clean_censors.py, input is a list of subjects)
-# Based on scan length, scans will be classified as 0 for exclude (scan has less than ), 1 for include.
-
-# NOTE: this script must be called from the abcd_cca_replicaton/data_prep/ folder
-
-# Inputs:
-#   1. Absolute path to location of the sub-NDARINVxxxxxxxx/ RAW data folders (/data/ABCD_MBDU/abcd_bids/bids/)
-#   2. Absolute path to location of the sub-NDARINVxxxxxxxx/ PROCCESSED data folders (/abcd_bids/bids/derivatives/dcan_reproc/)
-
-show_usage(){
-    echo "usage scan_length_classifier_5.sh <absolute/path/to/folder/with/RAW/subjectdata/>"
-}
-show_example(){
-    echo "usage scan_length_classifier_5.sh /data/ABCD_MBDU/abcd_bids/bids/"
-}
+#   5.  Generate a file (abcd_cca_replication/data_prep/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/icafix_cmds/sub-NDARINVxxxxxxxx.txt)
+#       This file contains a string of the proper runs for an ICA+FIX cmd for this subject
+#   6.  Detect and report any subjects who need to be excluded because they no longer meet the 600 timepoint minimum requirement.
 
 # Verbose output (debugging)
 # set -x
+
+show_usage(){
+    echo "usage:    scan_length_classifier_5.sh <absolute/path/to/folder/with/RAW/subjectdata/>"
+}
+show_example(){
+    echo "example:  scan_length_classifier_5.sh /data/ABCD_MBDU/abcd_bids/bids/"
+}
 
 RAWDATA_PATH=$1
 # PROCDATA_PATH=$2
@@ -131,7 +134,8 @@ do
         ((subs_dropped++))
     else
         # Since we can still use this subject, write their ICA+FIX cmd and total tps to file
-        # format is cmd,total_tps
+        # format of fileis: cmd,total_tps
+        # Example: task-rest01/task-rest01.nii.gz@task-rest02/task-rest02.nii.gz@task-rest03/task-rest03.nii.gz@task-rest04/task-rest04.nii.gz,1564
         # Save the filename as sub-NDARINVxxxxxxxx.txt (easier to use when we generate the ICA+FIX swarm cmds)
         echo $cmd_str,$total_tps > $ICAFIX_CMDS/$subNDARINV.txt
 
