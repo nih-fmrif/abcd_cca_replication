@@ -109,7 +109,7 @@ do
                 cmd_str=task-rest0$count/task-rest0$count.nii.gz
             elif [[ $count -lt 10 ]]; then
                 # Prepend 0 since < 10, but include the @ at beginning
-                cmd_str=task-rest0$count/task-rest0$count.nii.gz
+                cmd_str=$cmd_str@task-rest0$count/task-rest0$count.nii.gz
             else
                 # No need to prepend 0
                 cmd_str=$cmd_str@task-rest$count/task-rest$count.nii.gz
