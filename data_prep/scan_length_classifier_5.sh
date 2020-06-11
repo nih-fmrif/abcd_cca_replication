@@ -65,45 +65,50 @@ fi
 DATAFOLDER=$PWD/data/scan_length_proc/
 
 # Get a list of the raw data folders (these are absolute paths since $RAWDATA_PATH is an absolute path)
-find $RAWDATA_PATH -maxdepth 1 -type d -name "sub-NDARINV*" >> $DATAFOLDER/rawdata_folder_paths.txt
+# find $RAWDATA_PATH -maxdepth 1 -type d -name "sub-NDARINV*" >> $DATAFOLDER/rawdata_folder_paths.txt
+
+# Now remove any subjects that are NOT in our list of 7810 to process
 
 # Now, iterate over the subjects and collect their scan length data (this can collect data for scans labeled 00 to 99, assumes 2 digit naming convention)
+# format of subject id in final_subjects.txt is NDAR_INVxxxxxxxx, we will convert to sub-NDARINVxxxxxxxx
 echo "Fetching scan length data for each subject and classifying scans for inclusion/exclusion."
-while read raw_path
+while read NDAR_INVxxxxxxxx
 do
     # Pull subjectid from the given path (format sub-NDARINVxxxxxxxx, and truncated format NDARINVxxxxxxxx)
-    sub_id=${raw_path##*/}
-    sub_id_noprefix=$(echo $sub_id | cut -d"-" -f2)
+    # sub_id=${raw_path##*/}
+
+    subNDARINVxxxxxxxx = $(echo $NDAR_INVxxxxxxxx | cut -d"_" -f2 | sed 's|^|sub-NDAR|g')
+    NDARINVxxxxxxxx=$(echo $sub_id | cut -d"-" -f2)
 
     # summary file, all subject ids + scan lengths
     echo $sub_id >> $PWD/data/timepoints_subs.txt
 
     # Pull scan lengths from all available scans (format sub-NDARINVFL02R0H4_ses-baselineYear1Arm1_task-rest_run-[0-9][0-9]_bold.nii.gz)
     # Note, values are written to file in ascending order (i.e. scan 1 length on line one, scan 2 on line 2, etc...)
-    # find $raw_path/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | -exec fslnvols {} \; tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${sub_id_noprefix}_scan_lengths.txt
-    find $raw_path/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${sub_id_noprefix}_scan_lengths.txt
+    # find $raw_path/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | -exec fslnvols {} \; tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt
+    find $raw_path/$subject/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt
 
     # Create classifier file for each subject
     count=1
     while read len
     do
         if [[ $len -lt 285 ]]; then
-            echo 0 >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
+            echo 0 >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
         elif [[ $len -ge 285 ]]; then
-            echo 0 >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
+            echo 0 >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
         else
             echo "An error occured classifying scan $count for subject $sub_id"
-            echo "ERR" >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
+            echo "ERR" >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
         fi
         ((count++))
     
-    done < $DATAFOLDER/${sub_id_noprefix}_scan_lengths.txt
-    echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
+    done < $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt
+    echo $NDARINVxxxxxxxx >> $DATAFOLDER/subjects.txt
 
-done < $DATAFOLDER/rawdata_folder_paths.txt
+done < $PWD/data/final_subjects.txt
 echo "Lengths acquired, now cleaning censor files for all subjects available"
 
-# Now that scans are classified, clean the censors for subjects
+# Now that scans are classified, clean the censors for subjects we have available
 python clean_censors.py $DATAFOLDER/subjects.txt
 
 echo "Done cleaning censor files!"
