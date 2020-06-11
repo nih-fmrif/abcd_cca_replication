@@ -12,7 +12,7 @@ import pandas as pd
 import datetime
 
 # Load data
-filename=sys.argv[0]
+filename=sys.argv[1]
 cwd = os.getcwd()
 subs_fp = os.path.join(cwd,filename+".txt")
 print(subs_fp)
