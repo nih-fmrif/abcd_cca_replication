@@ -71,40 +71,40 @@ fi
 # Now remove any subjects that are NOT in our list of 7810 to process
 
 # Now, iterate over the subjects and collect their scan length data (this can collect data for scans labeled 00 to 99, assumes 2 digit naming convention)
-# format of subject id in final_subjects.txt is NDAR_INVxxxxxxxx, we will convert to sub-NDARINVxxxxxxxx
+# format of subject id in final_subjects.txt is NDAR_INVxxxxxxxx
 echo "Fetching scan length data for each subject and classifying scans for inclusion/exclusion."
-while read NDAR_INVxxxxxxxx
+while read NDAR_INV
 do
-    # Pull subjectid from the given path (format sub-NDARINVxxxxxxxx, and truncated format NDARINVxxxxxxxx)
-    # sub_id=${raw_path##*/}
+    # format sub-NDARINVxxxxxxxx
+    subNDARINV=$(echo $NDAR_INV | cut -d"_" -f2 | sed 's|^|sub-NDAR|g')
 
-    subNDARINVxxxxxxxx=$(echo $NDAR_INVxxxxxxxx | cut -d"_" -f2 | sed 's|^|sub-NDAR|g')
-    NDARINVxxxxxxxx=$(echo $sub_id | cut -d"-" -f2)
+    # NDARINVxxxxxxxx
+    NDARINV=$(echo $subNDARINV | cut -d"-" -f2)
 
     # summary file, all subject ids + scan lengths
-    echo $subNDARINVxxxxxxxx >> $DATAFOLDER/timepoints_subs.txt
+    echo $subNDARINV >> $DATAFOLDER/timepoints_subs.txt
 
     # Pull scan lengths from all available scans (format sub-NDARINVFL02R0H4_ses-baselineYear1Arm1_task-rest_run-[0-9][0-9]_bold.nii.gz)
     # Note, values are written to file in ascending order (i.e. scan 1 length on line one, scan 2 on line 2, etc...)
-    find $RAWDATA_PATH/$subNDARINVxxxxxxxx/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt >/dev/null
+    find $RAWDATA_PATH/$subNDARINV/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINV}_scan_lengths.txt >/dev/null
     
     # Create classifier file for each subject
     count=1
     while read len
     do
         if [[ $len -lt 285 ]]; then
-            echo 0 >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
+            echo 0 >> $DATAFOLDER/${NDARINV}_scans_classified.txt
         elif [[ $len -ge 285 ]]; then
-            echo 1 >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
+            echo 1 >> $DATAFOLDER/${NDARINV}_scans_classified.txt
         else
             echo "An error occured classifying scan $count for subject $sub_id"
-            echo "ERR" >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
+            echo "ERR" >> $DATAFOLDER/${NDARINV}_scans_classified.txt
         fi
         ((count++))
     
-    done < $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt
+    done < $DATAFOLDER/${NDARINV}_scan_lengths.txt
 
-    echo $NDARINVxxxxxxxx >> $DATAFOLDER/subjects.txt
+    echo $NDARINV >> $DATAFOLDER/subjects.txt
 
 done < $PWD/data/final_subjects.txt
 echo "Lengths acquired, now cleaning censor files for all subjects available"
