@@ -79,11 +79,11 @@ do
     while read len
     do
         if [[ $len -lt 285 ]]; then
-            echo 0 >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt.txt
-            echo $sub_id >> $DATAFOLDER/subjects.txt
+            echo 0 >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt
+            echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
         elif [[ $len -ge 285 ]]; then
-            echo 0 >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt.txt
-            echo $sub_id >> $DATAFOLDER/subjects.txt
+            echo 0 >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt
+            echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
         else
             echo "An error occured classifying scan $count for subject $sub_id"
             echo "ERR" >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt
@@ -96,3 +96,5 @@ echo "Lengths acquired, now cleaning censor files for all subjects available"
 
 # Now that scans are classified, clean the censors for subjects
 python clean_censors.py $DATAFOLDER/subjects.txt
+
+echo "Done cleaning censor files!"
