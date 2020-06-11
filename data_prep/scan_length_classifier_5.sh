@@ -48,6 +48,9 @@ then
 	exit 1
 fi
 
+# Data working dir
+DATAFOLDER=$PWD/data/scan_length_proc/
+
 if [[ -d $PWD/censoring_data_subset/ ]]; then
     rm -r $PWD/censoring_data_subset/
     mkdir $PWD/censoring_data_subset/
@@ -55,14 +58,12 @@ else
     mkdir $PWD/censoring_data_subset/
 fi
 
-if [[ -d $PWD/data/scan_length_proc/ ]]; then
-    rm -r $PWD/data/scan_length_proc/
-    mkdir $PWD/data/scan_length_proc/
+if [[ -d $DATAFOLDER ]]; then
+    rm -r $DATAFOLDER
+    mkdir $DATAFOLDER
 else
-    mkdir $PWD/data/scan_length_proc/
+    mkdir $DATAFOLDER
 fi
-# Data working dir
-DATAFOLDER=$PWD/data/scan_length_proc/
 
 # Get a list of the raw data folders (these are absolute paths since $RAWDATA_PATH is an absolute path)
 # find $RAWDATA_PATH -maxdepth 1 -type d -name "sub-NDARINV*" >> $DATAFOLDER/rawdata_folder_paths.txt
@@ -81,15 +82,12 @@ do
     NDARINVxxxxxxxx=$(echo $sub_id | cut -d"-" -f2)
 
     # summary file, all subject ids + scan lengths
-    # echo $subNDARINVxxxxxxxx >> $DATAFOLDER/timepoints_subs.txt
+    echo $subNDARINVxxxxxxxx >> $DATAFOLDER/timepoints_subs.txt
 
     # Pull scan lengths from all available scans (format sub-NDARINVFL02R0H4_ses-baselineYear1Arm1_task-rest_run-[0-9][0-9]_bold.nii.gz)
     # Note, values are written to file in ascending order (i.e. scan 1 length on line one, scan 2 on line 2, etc...)
-    # find $raw_path/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | -exec fslnvols {} \; tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt
     find $RAWDATA_PATH/$subNDARINVxxxxxxxx/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt >/dev/null
     
-    # find $RAWDATA_PATH/$subNDARINVxxxxxxxx/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt >/dev/null
-
     # Create classifier file for each subject
     count=1
     while read len
@@ -97,7 +95,7 @@ do
         if [[ $len -lt 285 ]]; then
             echo 0 >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
         elif [[ $len -ge 285 ]]; then
-            echo 0 >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
+            echo 1 >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
         else
             echo "An error occured classifying scan $count for subject $sub_id"
             echo "ERR" >> $DATAFOLDER/${NDARINVxxxxxxxx}_scans_classified.txt
