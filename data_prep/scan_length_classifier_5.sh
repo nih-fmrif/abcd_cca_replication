@@ -81,12 +81,14 @@ do
     NDARINVxxxxxxxx=$(echo $sub_id | cut -d"-" -f2)
 
     # summary file, all subject ids + scan lengths
-    echo $subNDARINVxxxxxxxx >> $PWD/data/timepoints_subs.txt
+    # echo $subNDARINVxxxxxxxx >> $DATAFOLDER/timepoints_subs.txt
 
     # Pull scan lengths from all available scans (format sub-NDARINVFL02R0H4_ses-baselineYear1Arm1_task-rest_run-[0-9][0-9]_bold.nii.gz)
     # Note, values are written to file in ascending order (i.e. scan 1 length on line one, scan 2 on line 2, etc...)
     # find $raw_path/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | -exec fslnvols {} \; tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt
-    find $RAWDATA_PATH/$subNDARINVxxxxxxxx/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt
+    # find $RAWDATA_PATH/$subNDARINVxxxxxxxx/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt \;
+    
+    find $RAWDATA_PATH/$subNDARINVxxxxxxxx/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs  -L 1 fslnvols | tee $DATAFOLDER/${NDARINVxxxxxxxx}_scan_lengths.txt \;
 
     # Create classifier file for each subject
     count=1
