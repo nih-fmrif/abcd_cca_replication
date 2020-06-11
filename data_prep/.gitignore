@@ -9,8 +9,10 @@
 !motion_analysis_2.py
 !sm_processing_3.r
 !VARS_4.py
-!helper_functions
 !censoring_data
 !groupICA200.dr
 !groupICA200.gica
 !netmats.m
+!clean_censors.py
+!scan_length_classifier_5.sh
+!fix_cleanup.sh
