@@ -26,8 +26,8 @@ failed_subs = []
 for sub in subs:
     # Make sure all files are present, otherwise throw an error
     fp_censor=os.path,join(cwd,"censoring_data/"+sub+"_censor.txt")
-    fp_scan_class=os.path.join(cwd,"censoring_data/"+sub+"_scans_classified.txt")
-    fp_lens=os.path.join(cwd,"censoring_data/"+sub+"_scan_lengths.txt")
+    fp_scan_class=os.path.join(cwd,"data/scan_length_proc/"+sub+"_scans_classified.txt")
+    fp_lens=os.path.join(cwd,"data/scan_length_proc/"+sub+"_scan_lengths.txt")
 
     if (os.path.exists(fp_censor) & os.path.exists(fp_scan_class) & os.path.exists(fp_lens)):
         # load their NDARINVA354YMUE_censor.txt file
@@ -60,7 +60,7 @@ for sub in subs:
                     running_idx=stop_idx
 
             # Save the subsetted censor
-            with open(os.path.join(cwd,"censoring_data/"+sub+"_censor_subset.txt"), "w") as output:
+            with open(os.path.join(cwd,"censoring_data_subset/"+sub+"_censor_subset.txt"), "w") as output:
                 for item in censor_subset:
                     output.write('%s\n' % item)
 

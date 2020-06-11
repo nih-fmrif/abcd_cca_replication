@@ -48,6 +48,12 @@ then
 	exit 1
 fi
 
+if [[ -d $PWD/censoring_data_subset/ ]]; then
+    rm -r $PWD/censoring_data_subset/
+else
+    mkdir $PWD/censoring_data_subset/
+fi
+
 if [[ -d $PWD/data/scan_length_proc/ ]]; then
     rm -r $PWD/data/scan_length_proc/
 else
@@ -72,24 +78,24 @@ do
 
     # Pull scan lengths from all available scans (format sub-NDARINVFL02R0H4_ses-baselineYear1Arm1_task-rest_run-[0-9][0-9]_bold.nii.gz)
     # Note, values are written to file in ascending order (i.e. scan 1 length on line one, scan 2 on line 2, etc...)
-    find $raw_path/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | -exec fslnvols {} \; tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $PWD/censoring_data/${sub_id_noprefix}_scan_lengths.txt
+    find $raw_path/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | -exec fslnvols {} \; tee -a $DATAFOLDER/timepoints_subs.txt | tee -a $DATAFOLDER/timepoints_no_subs.txt | tee $DATAFOLDER/${sub_id_noprefix}_scan_lengths.txt
 
     # Create classifier file for each subject
     count=1
     while read len
     do
         if [[ $len -lt 285 ]]; then
-            echo 0 >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt
+            echo 0 >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
             echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
         elif [[ $len -ge 285 ]]; then
-            echo 0 >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt
+            echo 0 >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
             echo $sub_id_noprefix >> $DATAFOLDER/subjects.txt
         else
             echo "An error occured classifying scan $count for subject $sub_id"
-            echo "ERR" >> $PWD/censoring_data/${sub_id_noprefix}_scans_classified.txt
+            echo "ERR" >> $DATAFOLDER/${sub_id_noprefix}_scans_classified.txt
         fi
         ((count++))
-    done < $PWD/censoring_data/${sub_id_noprefix}_scan_lengths.txt
+    done < $DATAFOLDER${sub_id_noprefix}_scan_lengths.txt
 
 done < $DATAFOLDER/rawdata_folder_paths.txt
 echo "Lengths acquired, now cleaning censor files for all subjects available"
