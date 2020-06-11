@@ -77,7 +77,7 @@ do
     # Pull subjectid from the given path (format sub-NDARINVxxxxxxxx, and truncated format NDARINVxxxxxxxx)
     # sub_id=${raw_path##*/}
 
-    subNDARINVxxxxxxxx = $(echo $NDAR_INVxxxxxxxx | cut -d"_" -f2 | sed 's|^|sub-NDAR|g')
+    subNDARINVxxxxxxxx=$(echo $NDAR_INVxxxxxxxx | cut -d"_" -f2 | sed 's|^|sub-NDAR|g')
     NDARINVxxxxxxxx=$(echo $sub_id | cut -d"-" -f2)
 
     # summary file, all subject ids + scan lengths
