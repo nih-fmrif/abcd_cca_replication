@@ -20,7 +20,7 @@ fix_name <- function(x) {
     nx <- sub("NDAR_INV","sub-NDARINV",x)
 }
 
-args <- commandArgs()
+args <- commandArgs(trailingOnly = TRUE)
 rds_path <- args[1]
 sub_path <- args[2]
 out_path <- args[3]
