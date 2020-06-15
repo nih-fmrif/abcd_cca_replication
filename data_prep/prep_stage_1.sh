@@ -34,6 +34,7 @@ if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
     . $ABCD_CCA_REPLICATION/pipeline.config
 else
     echo "$ABCD_CCA_REPLICATION/pipeline.config does not exist! Please run create_config.sh."
+    exit 1
 fi
 # Logging
 if [[ -f $PREP_LOG ]]; then
@@ -47,7 +48,7 @@ if [[ -d $CENSOR_FILES ]]; then
     rm -r $CENSOR_FILES
     mkdir $CENSOR_FILES
 else
-    $CENSOR_FILES
+    mkdir $CENSOR_FILES
 fi
 
 echo "--- STAGE 1 LOG ---" >> $PREP_LOG
