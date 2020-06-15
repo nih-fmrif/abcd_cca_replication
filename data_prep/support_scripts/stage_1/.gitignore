@@ -1,0 +1,6 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!clean_rds_pull_scandata.r
+!pull_motion_data.py

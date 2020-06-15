@@ -4,6 +4,7 @@
 !.gitignore
 !data
 !logs
+!support_scripts
 !pull_filepaths_0.sh
 !pull_motion_data_1.py
 !motion_analysis_2.py
