@@ -93,7 +93,7 @@ NUM_MOT_SUBS=$(cat $STAGE_1_OUT/subjects_with_motion_files.txt | wc -l)
 echo "$(date) - Subjects with scan and motion data present: $NUM_MOT_SUBS" >> $PREP_LOG
 
 # STEP 3 - Get scan data
-$Rscript_exec $SUPPORT_SCRIPTS/stage_1/clean_rds_pull_scandata.r $NDA_RDS $STAGE_1_OUT/subjects_with_motion_files.txt $PWD/data/subject_measures.txt $STAGE_1_OUT
+Rscript .$SUPPORT_SCRIPTS/stage_1/clean_rds_pull_scandata.r $NDA_RDS $STAGE_1_OUT/subjects_with_motion_files.txt $STAGE_1_OUT
 
 # STEP 4
 # inputs, in order

@@ -23,12 +23,11 @@ fix_name <- function(x) {
 args <- commandArgs()
 rds_path <- args[1]
 sub_path <- args[2]
-sm_path <- args[3]
-out_path <- args[4]
+out_path <- args[3]
+# sm_path <- args[3]
 
 subject_list <- readLines(sub_path)
 subject_list <- factor(subject_list)
-sm_list <- readLines(sm_path)
 scan_sm_list <- list("subjectid","iqc_t1_good_ser","iqc_rsfmri_good_ser","iqc_rsfmri_total_ser")
 
 # Load original RDS file
