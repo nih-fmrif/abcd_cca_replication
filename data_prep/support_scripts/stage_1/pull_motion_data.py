@@ -77,7 +77,7 @@ FD = sys.argv[2]
 out_path = sys.argv[3]
 censor_out_path = sys.argv[4]
 
-fp = os.path.join(out_path,"motion_summary_data.csv')
+fp = os.path.join(out_path,"motion_summary_data.csv")
 fout1 = open(fp, 'a')
 fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
 
