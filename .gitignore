@@ -8,3 +8,4 @@
 !conda_requirements.txt
 !pip_requirements.txt
 !abcd_cca.m
+!create_config.sh
