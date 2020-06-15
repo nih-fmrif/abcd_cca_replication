@@ -20,10 +20,10 @@
 # R, connectome workbench
 
 # Example usage:
-#   ./prep_stage_1.sh /data/ABCD_MBDU/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds
+#   ./prep_stage_1.sh /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds
 
 # BIDS_PATH=$1
-# NDA_RDS=$2
+NDA_RDS=$1
 # DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 
 # Check for config
@@ -101,7 +101,7 @@ $Rscript_exec $SUPPORT_SCRIPTS/stage_1/clean_rds_pull_scandata.r $NDA_RDS $STAGE
 #   2.  desired FD threshold (default 0.30)
 #   3.  Output path (data_prep/data/stage_1/)
 #   4.  Where to save censor file data
-python $SUPPORT_SCRIPTS/stage_1/pull_motion_data,.py $STAGE_1_OUT/motion_mat_files.txt 0.30 $STAGE_1_OUT $CENSOR_FILES
+python $SUPPORT_SCRIPTS/stage_1/pull_motion_data.py $STAGE_1_OUT/motion_mat_files.txt 0.30 $STAGE_1_OUT $CENSOR_FILES
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 1 LOG ---" >> $PREP_LOG
