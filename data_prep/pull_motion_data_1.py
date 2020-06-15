@@ -69,8 +69,11 @@ def custom_loadmat(filename):
 
 cwd = os.getcwd()
 
-filepath = os.path.join(cwd,'data/motion_mat_files.txt')   # path to mat_files.txt (a text file with a list of paths to .mat files)
-FD = 0.30   # frame displacement threshold of interest (ex. 0.xx) (range 0.00 to 0.50)
+# path to mat_files.txt (a text file with a list of paths to .mat files)
+filepath = os.path.join(cwd,'data/motion_mat_files.txt')
+
+# frame displacement threshold of interest (ex. 0.xx) (range 0.00 to 0.50)
+FD = 0.30
 
 fp = os.path.join(cwd,'data/motion_summary_data.csv')
 fout1 = open(fp, 'a')

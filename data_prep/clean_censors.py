@@ -28,7 +28,7 @@ for sub in subs:
     fp_lens         = os.path.join(cwd,"data/scan_length_proc/"+sub+"_scan_lengths.txt")
 
     if (os.path.exists(fp_censor) & os.path.exists(fp_scan_class) & os.path.exists(fp_lens)):
-        # load their NDARINVA354YMUE_censor.txt file
+        # load their NDARINVxxxxxxxx_censor.txt file
         censor = [line.rstrip('\n') for line in open(fp_censor)]
         censor = [int(i) for i in censor]
 
