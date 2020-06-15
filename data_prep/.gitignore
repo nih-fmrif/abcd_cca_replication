@@ -16,3 +16,6 @@
 !clean_censors.py
 !scan_length_analyzer_5.sh
 !fix_cleanup.sh
+!classify_scans.py
+!prep_stage_1.sh
+!clean_rds_pull_scandata.r

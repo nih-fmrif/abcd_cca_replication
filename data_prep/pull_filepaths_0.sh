@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# Updated: 6/12/20
+
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 # pull_filepaths_0.sh - a script to determine subjects who have the resting state timeseries and motion .mat files for MELODIC group-ICA processing
 
@@ -70,26 +72,28 @@ while read sub; do
     fi
 done < data/all_release_subjects.txt
 
+NUMSUBS=$(cat data/subjects_with_files.txt | wc -l)
+
+# UPDATE 6/12/20: This code is no longer needed. We do not use these NIFTI files.
 # Conversion from CIFTI --> NIFTI
 # Before doing conversion, check if the file exists (so this script can be run multiple times, adding the new NIFTI files as they appear in subsequent releases)
-NUMSUBS=$(cat data/subjects_with_files.txt| wc -l)
-read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
-else
-    # Convert the CIFTI files to NIFTI, and store in the NIFTI folder
-    while read sub; do
-        fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
-        if test -f "$PWD/NIFTI/$sub.nii"; then
-            # This file exists, so skip
-            # echo "$PWD/NIFTI/$sub.nii exists"
-            true
-        else
-            wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
-        fi
-    done < data/subjects_with_files.txt
-fi
+# read -p "Generate NIFTI files for ${NUMSUBS} subjects, proceed? [y/n]: " -r
+# echo
+# if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+#     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
+# else
+#     # Convert the CIFTI files to NIFTI, and store in the NIFTI folder
+#     while read sub; do
+#         fname=${BIDS_PATH}/derivatives/abcd-hcp-pipeline/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
+#         if test -f "$PWD/NIFTI/$sub.nii"; then
+#             # This file exists, so skip
+#             # echo "$PWD/NIFTI/$sub.nii exists"
+#             true
+#         else
+#             wb_command -cifti-convert -to-nifti $fname $PWD/NIFTI/$sub.nii
+#         fi
+#     done < data/subjects_with_files.txt
+# fi
 
 # Finally, log results
 echo "--- RESULTS OF pull_filepaths_0.sh ---" >> log.txt
