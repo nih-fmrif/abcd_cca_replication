@@ -80,20 +80,13 @@ FD = float(sys.argv[2])
 out_path = sys.argv[3]
 censor_folder = sys.argv[4]
 
-print(motion_mat_files_fp)
-print(FD)
-print(out_path)
-print(censor_folder)
-
 fp = os.path.join(out_path,"motion_summary_data.csv")
-print(fp)
-# fout1 = open(fp, 'a')
-# fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
+fout1 = open(fp, 'a')
+fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
 
 # just the mean FD data
 fp = os.path.join(out_path,'mean_FDs.txt')
-print(fp)
-# fout2 = open(fp,'a')    
+fout2 = open(fp,'a')    
 
 print("Pulling motion data, please be patient..")
 i=0
@@ -107,21 +100,18 @@ for fp in file_list:
         # Now we can access the data like a matlab structure
         if struct.FD_threshold == FD:
             # found the correct structure for FD threshold
-
             # pull the subject id from each filepath
             # ex. path/to/the/sub-NDARINVxxxxxxxx_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
             # this extracts sub-NDARINVxxxxxxxx
             sub = fp.split('/')[-1].split('_')[0]
             print_str = '{},{},{},{},{}\n'.format(sub, struct.total_frame_count, struct.remaining_frame_count, struct.remaining_seconds, struct.remaining_frame_mean_FD)
-            print(print_str)
-            # fout1.write(print_str)
-            # fout2.write('{}\n'.format(struct.remaining_frame_mean_FD))
+            fout1.write(print_str)
+            fout2.write('{}\n'.format(struct.remaining_frame_mean_FD))
 
             # Finally, save the censoring data for this subject
             # data is in struct.frame_removal
             censor_out = os.path.join(censor_folder,sub+"_censor.txt")
-            print(censor_out)
-            # np.savetxt(censor_out, list(struct.frame_removal), fmt="%d")
+            np.savetxt(censor_out, list(struct.frame_removal), fmt="%d")
 
         else:
             continue
@@ -130,5 +120,5 @@ for fp in file_list:
 
 print("Finished extracting data for %d subjects.\n" % i)
 
-# fout1.close()
-# fout2.close()
+fout1.close()
+fout2.close()
