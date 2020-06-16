@@ -66,6 +66,7 @@ fi
 # collect their scan length data (this can collect data for scans labeled 00 to 99, assumes 2 digit naming convention)
 
 echo "Fetching scan length data for each subject and classifying scans for inclusion/exclusion."
+debug = 0
 subs_dropped=0
 while read sub
 do
@@ -137,7 +138,12 @@ do
         # Something else went wrong (maybe not needed?)
         echo "An unknown error occurred while processing $sub"
     fi
-    break
+
+    ((debug++))
+    if [[ $debug -ge 10 ]]; then
+        break
+    fi
+
 done < $DATA_PREP/data/stage_2/scan_and_motion_subjects.txt
 
 echo "WARNING: $subs_dropped subject dropped because they do not meet the timepoint threshold after censoring."
