@@ -82,7 +82,7 @@ censor_folder = sys.argv[4]
 
 fp = os.path.join(out_path,"motion_summary_data.csv")
 fout1 = open(fp, 'a')
-fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
+fout1.write("subjectid,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
 
 # just the mean FD data
 fp = os.path.join(out_path,'mean_FDs.txt')
