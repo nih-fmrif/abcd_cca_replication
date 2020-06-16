@@ -66,7 +66,7 @@ fi
 # collect their scan length data (this can collect data for scans labeled 00 to 99, assumes 2 digit naming convention)
 
 echo "Fetching scan length data for each subject and classifying scans for inclusion/exclusion."
-debug = 0
+debug=0
 subs_dropped=0
 while read sub
 do
@@ -90,7 +90,7 @@ do
     # Check that the subject has enough total time based on returned "result"
     if [[ $result -eq 2 ]]; then
         # Subject dropped from study, note this
-        echo "WARNING: DROPPING subject $sub, has less than 600 seconds of scan time post-censoring."
+        echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
         ((subs_dropped++))
     elif [[ $result -eq 1 ]]; then
         # subject still eligible, create its task-rest0 string for ICA+FIX cmd
