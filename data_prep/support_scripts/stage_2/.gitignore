@@ -3,3 +3,5 @@
 # Except this file
 !.gitignore
 !scan_and_motion_analysis.py
+!find_anomalies.py
+!plot_hist.py
