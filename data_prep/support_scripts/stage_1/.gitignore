@@ -4,3 +4,4 @@
 !.gitignore
 !clean_rds_pull_scandata.r
 !pull_motion_data.py
+!custom_loadmat.py

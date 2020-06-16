@@ -1,5 +1,5 @@
 
-# clean_rds.r
+# clean_rds_pull_scandata.r
 # Created: 6/15/20
 # Updated:
 

@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# pull_motion_data.py
+# Created: 6/15/20
+# Updated:
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 # This script is used to pull the mean frame displacement (along with other fields) for subjects for a given FD threshold
@@ -8,74 +11,74 @@
 # We pull motion data from these files:
 # sub-<NDAR ID>_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
 
+# import matplotlib.pyplot as plt
+# from matplotlib import colors
+# from matplotlib.ticker import PercentFormatter
+from custom_loadmat import custom_loadmat
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import colors
-from matplotlib.ticker import PercentFormatter
 import os
 import sys
 import scipy.io as spio
 import datetime
 
 # https://stackoverflow.com/questions/7008608/scipy-io-loadmat-nested-structures-i-e-dictionaries
-def custom_loadmat(filename):
-    '''
-    this function should be called instead of direct spio.loadmat
-    as it cures the problem of not properly recovering python dictionaries
-    from mat files. It calls the function check keys to cure all entries
-    which are still mat-objects
-    '''
-    def _check_keys(d):
-        '''
-        checks if entries in dictionary are mat-objects. If yes
-        todict is called to change them to nested dictionaries
-        '''
-        for key in d:
-            if isinstance(d[key], spio.matlab.mio5_params.mat_struct):
-                d[key] = _todict(d[key])
-        return d
+# def custom_loadmat(filename):
+#     '''
+#     this function should be called instead of direct spio.loadmat
+#     as it cures the problem of not properly recovering python dictionaries
+#     from mat files. It calls the function check keys to cure all entries
+#     which are still mat-objects
+#     '''
+#     def _check_keys(d):
+#         '''
+#         checks if entries in dictionary are mat-objects. If yes
+#         todict is called to change them to nested dictionaries
+#         '''
+#         for key in d:
+#             if isinstance(d[key], spio.matlab.mio5_params.mat_struct):
+#                 d[key] = _todict(d[key])
+#         return d
 
-    def _todict(matobj):
-        '''
-        A recursive function which constructs from matobjects nested dictionaries
-        '''
-        d = {}
-        for strg in matobj._fieldnames:
-            elem = matobj.__dict__[strg]
-            if isinstance(elem, spio.matlab.mio5_params.mat_struct):
-                d[strg] = _todict(elem)
-            elif isinstance(elem, np.ndarray):
-                d[strg] = _tolist(elem)
-            else:
-                d[strg] = elem
-        return d
+#     def _todict(matobj):
+#         '''
+#         A recursive function which constructs from matobjects nested dictionaries
+#         '''
+#         d = {}
+#         for strg in matobj._fieldnames:
+#             elem = matobj.__dict__[strg]
+#             if isinstance(elem, spio.matlab.mio5_params.mat_struct):
+#                 d[strg] = _todict(elem)
+#             elif isinstance(elem, np.ndarray):
+#                 d[strg] = _tolist(elem)
+#             else:
+#                 d[strg] = elem
+#         return d
 
-    def _tolist(ndarray):
-        '''
-        A recursive function which constructs lists from cellarrays
-        (which are loaded as numpy ndarrays), recursing into the elements
-        if they contain matobjects.
-        '''
-        elem_list = []
-        for sub_elem in ndarray:
-            if isinstance(sub_elem, spio.matlab.mio5_params.mat_struct):
-                elem_list.append(_todict(sub_elem))
-            elif isinstance(sub_elem, np.ndarray):
-                elem_list.append(_tolist(sub_elem))
-            else:
-                elem_list.append(sub_elem)
-        return elem_list
-    data = spio.loadmat(filename, struct_as_record=False, squeeze_me=True)
-    return _check_keys(data)
+#     def _tolist(ndarray):
+#         '''
+#         A recursive function which constructs lists from cellarrays
+#         (which are loaded as numpy ndarrays), recursing into the elements
+#         if they contain matobjects.
+#         '''
+#         elem_list = []
+#         for sub_elem in ndarray:
+#             if isinstance(sub_elem, spio.matlab.mio5_params.mat_struct):
+#                 elem_list.append(_todict(sub_elem))
+#             elif isinstance(sub_elem, np.ndarray):
+#                 elem_list.append(_tolist(sub_elem))
+#             else:
+#                 elem_list.append(sub_elem)
+#         return elem_list
+#     data = spio.loadmat(filename, struct_as_record=False, squeeze_me=True)
+#     return _check_keys(data)
 
-cwd = os.getcwd()
-
+# cwd = os.getcwd()
 # path to mat_files.txt (a text file with a list of paths to .mat files)
 motion_mat_files_fp = sys.argv[1]
 # frame displacement threshold of interest (ex. 0.xx) (range 0.00 to 0.50)
 FD = sys.argv[2]
 out_path = sys.argv[3]
-censor_out_path = sys.argv[4]
+censor_folder = sys.argv[4]
 
 fp = os.path.join(out_path,"motion_summary_data.csv")
 fout1 = open(fp, 'a')
@@ -97,10 +100,9 @@ for fp in file_list:
             # found the correct structure for FD threshold
 
             # pull the subject id from each filepath
-            # ex. path/to/the/sub-<NDAR_ID>_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
-            # this extracts just <NDAR_ID>
+            # ex. path/to/the/sub-NDARINVxxxxxxxx_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
+            # this extracts sub-NDARINVxxxxxxxx
             sub = fp.split('/')[-1].split('_')[0]
-
             print_str = '{},{},{},{},{}\n'.format(
                                             sub,
                                             struct.total_frame_count, 
@@ -112,8 +114,8 @@ for fp in file_list:
 
             # Finally, save the censoring data for this subject
             # data is in struct.frame_removal
-            censor_list = list(struct.frame_removal)
-            censor_out = os.path.join(censor_out_path,sub+"_censor.txt")
+            # censor_list = list(struct.frame_removal)
+            censor_out = os.path.join(censor_folder,sub+"_censor.txt")
             # censor_out = "censoring_data/sub-"+sub+"_censor.txt"
             np.savetxt(censor_out, list(struct.frame_removal), fmt="%d")
 
@@ -126,10 +128,3 @@ print("Finished extracting data for %d subjects.\n" % i)
 
 fout1.close()
 fout2.close()
-
-# fp = os.path.join(cwd,'log.txt')
-# f_log = open(fp, 'a')
-# f_log.write("--- RESULTS OF pull_motion_data_1.py ---\n")
-# f_log.write('%s\n' % datetime.datetime.now())
-# f_log.write("Extracted data for :\t%d subjects\n\n" % i)
-# f_log.close()
