@@ -54,3 +54,7 @@ else
     mkdir $STAGE_2_OUT
 fi
 
+# STEP 1 - call scan_and_motion_analysis.py to do basic subject exclusion
+python $SUPPORT_SCRIPTS/stage_2/scan_and_motion_analysis.py $DATA_PREP
+
+# STEP 2 - run more refined subject exclusion (elim subjects based on post-censoring total scan length)
