@@ -18,7 +18,7 @@ import datetime
 sub                 =   sys.argv[1]     # subjectid
 # INPUT FILES
 fp_lens             =   sys.argv[2]     # path to a subject's sub-NDARINVxxxxxxxx_scan_length.txt file
-fp_censor_file      =   sys.argv[3]     # path to a subjects data_prep/censor_files/sub-NDARINVxxxxxxxx_censor.txt file
+fp_censor           =   sys.argv[3]     # path to a subjects data_prep/censor_files/sub-NDARINVxxxxxxxx_censor.txt file
 # OUTPUT
 fp_class_out        =   sys.argv[4]     # filepath where to save the classified scans (data_prep/data/stage_2/scan_length_analyze_classify/sub-NDARINVxxxxxxxx_scans_classified.txt)
 fp_censored_lens    =   sys.argv[5]     # filepath where to save the post-censor scan legths (data_prep/data/stage_2/scan_length_analyze_classify/sub-NDARINVxxxxxxxx_censored_scan_lengths.txt)
