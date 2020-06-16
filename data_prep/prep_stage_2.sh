@@ -19,17 +19,17 @@
 # Example usage:
 #   ./prep_stage_2.sh
 
-usage()
-{
-	echo "usage: prep_stage_2.sh <path/to/nda2.0.1.Rds/>"
-    echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file nda2.0.1.Rds (or whichever version is being used)"
-}
+# usage()
+# {
+# 	echo "usage: prep_stage_2.sh <path/to/nda2.0.1.Rds/>"
+#     echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file nda2.0.1.Rds (or whichever version is being used)"
+# }
 
-if (( $# < 1 ))
-then
-    usage
-	exit 1
-fi
+# if (( $# < 1 ))
+# then
+#     usage
+# 	exit 1
+# fi
 
 # Check for config
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
@@ -58,3 +58,7 @@ fi
 python $SUPPORT_SCRIPTS/stage_2/scan_and_motion_analysis.py $DATA_PREP
 
 # STEP 2 - run more refined subject exclusion (elim subjects based on post-censoring total scan length)
+
+echo "$(date) - STOP" >> $PREP_LOG
+echo "--- END STAGE 2 LOG ---" >> $PREP_LOG
+echo "" >> $PREP_LOG
