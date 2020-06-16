@@ -103,20 +103,13 @@ for fp in file_list:
             # ex. path/to/the/sub-NDARINVxxxxxxxx_ses-baselineYear1Arm1_task-rest_desc-filtered_motion_mask.mat
             # this extracts sub-NDARINVxxxxxxxx
             sub = fp.split('/')[-1].split('_')[0]
-            print_str = '{},{},{},{},{}\n'.format(
-                                            sub,
-                                            struct.total_frame_count, 
-                                            struct.remaining_frame_count, 
-                                            struct.remaining_seconds,
-                                            struct.remaining_frame_mean_FD)
+            print_str = '{},{},{},{},{}\n'.format(sub, struct.total_frame_count, struct.remaining_frame_count, struct.remaining_seconds, struct.remaining_frame_mean_FD)
             fout1.write(print_str)
             fout2.write('{}\n'.format(struct.remaining_frame_mean_FD))
 
             # Finally, save the censoring data for this subject
             # data is in struct.frame_removal
-            # censor_list = list(struct.frame_removal)
             censor_out = os.path.join(censor_folder,sub+"_censor.txt")
-            # censor_out = "censoring_data/sub-"+sub+"_censor.txt"
             np.savetxt(censor_out, list(struct.frame_removal), fmt="%d")
 
         else:

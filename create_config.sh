@@ -17,13 +17,14 @@ then
 fi
 
 BIDS_PATH=$1
+
 DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 DATA_PREP=$PWD/data_prep/
 REPO_DATA_FOLDER=$PWD/data/
 PIPELINE_LOG_DIR=$DATA_PREP/logs/
 PREP_LOG=$DATA_PREP/logs/prep_log.txt
 SUPPORT_SCRIPTS=$DATA_PREP/support_scripts/
-CENSOR_FILES=$PWD/data_prep/data/censor_files/
+CENSOR_FILES=$PWD/data_prep/censor_files/
 CONFIG=$PWD/pipeline.config
 
 echo "---ABCD CCA Pipeline Config Setup---"
