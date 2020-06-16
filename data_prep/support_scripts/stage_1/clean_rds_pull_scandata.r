@@ -26,6 +26,9 @@ sub_path <- args[2]
 out_path <- args[3]
 # sm_path <- args[3]
 
+# rds_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
+# sub_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/stage_1/subjects_with_motion_files.txt"
+
 subject_list <- readLines(sub_path)
 subject_list <- factor(subject_list)
 scan_sm_list <- list("subjectid","iqc_t1_good_ser","iqc_rsfmri_good_ser","iqc_rsfmri_total_ser")
@@ -45,10 +48,15 @@ sub_ids_new <- lapply(sub_ids_orig, fix_name)
 # Now replace the existing subid column with this new one
 nda3[["subjectid"]] <- sub_ids_new[[1]]
 
+# Check which subjects from subject_list ARE NOT PRESENT in the RDS dataframe -- we drop these subjects!
+subs_not_in_rds <- setdiff(subject_list,nda3$subjectid)
+
 # Now remove all subjects who are missing their .mat files (specific by file /data/stage_1/subs_with_motion.txt)
 # Format of strings in these files are sub-NDARINVxxxxxxxx
 # Drop subjects not in our list
 nda4 <- nda3[nda3$subjectid %in% subject_list,]
+
+final_subs <- list(nda4$subjectid)
 
 # Finally, remove any completely empty rows which may have been introduced
 nda5 <- nda4[rowSums(is.na(nda4)) != ncol(nda4),]
@@ -68,4 +76,18 @@ write.table(nda_scan,
             sep  = ",",
             row.names = FALSE,
             col.names = TRUE,
+            quote = FALSE)
+
+# Save list of subjects available
+write.table(final_subs,
+            file = paste(out_path,"prep_stage_1_final_subjects.txt",sep="/"),
+            row.names = FALSE,
+            col.names = FALSE,
+            quote = FALSE)
+
+# Save list of missing subjects
+write.table(subs_not_in_rds,
+            file = paste(out_path,"prep_stage_1_missing_subjects.txt",sep="/"),
+            row.names = FALSE,
+            col.names = FALSE,
             quote = FALSE)

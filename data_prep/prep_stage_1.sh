@@ -110,6 +110,11 @@ echo "$(date): Step 3 - (R script) cleaning RDS file and pulling basic scan data
 echo "$(date) - calling clean_rds_pull_scandata.r" >> $PREP_LOG
 Rscript $SUPPORT_SCRIPTS/stage_1/clean_rds_pull_scandata.r $NDA_RDS $STAGE_1_OUT/subjects_with_motion_files.txt $STAGE_1_OUT
 
+NUM_MISSING=$(wc -l $STAGE_1_OUT/prep_stage_1_missing_subjects.txt)
+echo "$(date): WARNING: $NUM_MISSING subjects will be dropped because they are missing from the RDS file (see $STAGE_1_OUT/prep_stage_1_missing_subjects.txt)."
+
+echo "$(date) - WARNING: $NUM_MISSING subjects missing from RDS and dropped (see $STAGE_1_OUT/prep_stage_1_missing_subjects.txt)." >> $PREP_LOG
+
 # STEP 4
 # inputs, in order
 #   1.  absolute path to motion_mat_files.txt
@@ -120,6 +125,8 @@ echo " $(date): Step 4 - Extracting motion data for each subject (pull_motion_da
 echo "$(date) - calling pull_motion_data.py" >> $PREP_LOG
 python $SUPPORT_SCRIPTS/stage_1/pull_motion_data.py $STAGE_1_OUT/motion_mat_files.txt 0.30 $STAGE_1_OUT $CENSOR_FILES
 
+FINAL_NUM=$(wc -l $STAGE_1_OUT/prep_stage_1_final_subjects.txt)
+echo "$(date) - Number subjects at end of prep_stage_1: $FINAL_NUM" >> $PREP_LOG
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 1 LOG ---" >> $PREP_LOG
 echo "" >> $PREP_LOG
