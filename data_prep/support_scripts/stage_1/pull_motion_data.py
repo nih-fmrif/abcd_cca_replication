@@ -93,6 +93,7 @@ print(fp)
 print("Pulling motion data, please be patient..")
 i=0
 file_list = [line.rstrip('\n') for line in open(motion_mat_files_fp)]
+print(file_list)
 for fp in file_list:
     mat_contents = custom_loadmat(fp)           # load the .mat file (Version 5.0)
     motion_data = mat_contents['motion_data']   # array of mat_struct objects, need to iterate over them
