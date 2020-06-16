@@ -137,7 +137,7 @@ do
         # Something else went wrong (maybe not needed?)
         echo "An unknown error occurred while processing $sub"
     fi
-
+    break
 done < $DATA_PREP/data/stage_2/scan_and_motion_subjects.txt
 
 echo "WARNING: $subs_dropped subject dropped because they do not meet the timepoint threshold after censoring."
