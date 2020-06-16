@@ -75,6 +75,8 @@ else
     mkdir $ICAFIX_CMDS
 fi
 
+touch $DATA_PREP/data/stage_2/post_censor_subjects.txt
+
 # STEP 1 - call scan_and_motion_analysis.py to do basic subject exclusion
 echo "$(date): Step 1 - Broad subject filtering based on scan and motion summary data."
 echo "$(date) - calling scan_and_motion_analysis.py" >> $PREP_LOG
