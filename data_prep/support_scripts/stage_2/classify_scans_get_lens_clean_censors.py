@@ -55,7 +55,7 @@ if (os.path.exists(fp_censor) & os.path.exists(fp_lens)):
         # This is TIMEPOINTS, not TIME
         post_censor_length=censor_subset.count(0)
         # save the post-censor length of this scan
-        post_censor_len_file.write(post_censor_length)
+        post_censor_len_file.write(str(post_censor_length))
 
         if post_censor_length >= 285:
             # Sufficient length run
