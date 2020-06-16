@@ -23,7 +23,7 @@
 # set -x
 
 # Check for config
-ABCD_CCA_REPLICATION="$(dirname "$PWD")"
+ABCD_CCA_REPLICATION=$1
 if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
     # config exists, so run it
     # This will load BIDS_PATH, DERIVATIVES_PATH, DATA_PREP variables
