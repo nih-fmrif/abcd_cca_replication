@@ -97,6 +97,6 @@ if total_good_length >= 750:
 elif total_good_length < 750:
     # Subject has too little time
     sys.exit(2)
-else
+else:
     # something else went wrong
     sys.exit(0)
