@@ -19,4 +19,4 @@
 !fix_cleanup.sh
 !classify_scans.py
 !prep_stage_1.sh
-!clean_rds_pull_scandata.r
+!prep_stage_2.sh
