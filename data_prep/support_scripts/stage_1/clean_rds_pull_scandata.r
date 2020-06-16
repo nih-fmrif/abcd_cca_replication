@@ -64,7 +64,7 @@ saveRDS(nda5, paste(out_path,"nda2.0.1_stage_1.Rds",sep="/"))
 
 # Save scan data
 write.table(nda_scan,
-            file = paste(out_path,"scan_data.txt",sep="/"),
+            file = paste(out_path,"scan_data.csv",sep="/"),
             sep  = ",",
             row.names = FALSE,
             col.names = TRUE,
