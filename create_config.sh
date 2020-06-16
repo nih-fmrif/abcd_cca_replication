@@ -27,6 +27,7 @@ SUPPORT_SCRIPTS=$DATA_PREP/support_scripts/
 CENSOR_FILES=$PWD/data_prep/censor_files/
 CONFIG=$PWD/pipeline.config
 
+echo
 echo "---ABCD CCA Pipeline Config Setup---"
 echo "BIDS_PATH=$BIDS_PATH"
 echo "DERIVATIVES_PATH=$DERIVATES_PATH"
