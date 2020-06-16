@@ -20,9 +20,7 @@
 # R
 
 # Example usage:
-#   ./prep_stage_1.sh /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds
-
-NDA_RDS=$1
+# ./prep_stage_1.sh /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds
 
 usage()
 {
@@ -35,6 +33,8 @@ then
     usage
 	exit 1
 fi
+
+NDA_RDS=$1
 
 # Check for config
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
