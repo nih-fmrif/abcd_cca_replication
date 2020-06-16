@@ -1,9 +1,9 @@
 # clean_censors.py
-#   this code will cut out the relevant censoring points from a subject's motion censoring file, based on which of their scans are utilized in ICA+FIX
+
 # Created: 6/9/20
 # Last edited: 6/11/20
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
-
+# This code will cut out the relevant censoring points from a subject's motion censoring file, based on which of their scans are utilized in ICA+FIX
 # Argument: list of subjects in format NDARINVxxxxxxx (This must be provided on an ABSOLUTE PATH!)
 
 import sys
