@@ -61,8 +61,9 @@ echo "$(date) - calling scan_and_motion_analysis.py" >> $PREP_LOG
 python $SUPPORT_SCRIPTS/stage_2/scan_and_motion_analysis.py $DATA_PREP
 
 # STEP 2 - run more refined subject exclusion (elim subjects based on post-censoring total scan length)
+echo "$(date): Step 2 - Refined subject filtering based post-censoring scan length."
 echo "$(date) - calling scan_length_analyze_classify.sh" >> $PREP_LOG
-sh .$SUPPORT_SCRIPTS/stage_2/scan_length_analyze_classify.sh
+sh $SUPPORT_SCRIPTS/stage_2/scan_length_analyze_classify.sh
 
 # number subjects remaining post-censor
 NUM_SUBS=$(wc -l $STAGE_2_OUT/post_censor_subjects.txt)
