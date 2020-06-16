@@ -49,8 +49,7 @@ fi
 # Check if the following folders/files exist
 STAGE_2_OUT=$DATA_PREP/data/stage_2/
 if [[ -d $STAGE_2_OUT ]]; then
-    rm -r $STAGE_2_OUT
-    mkdir $STAGE_2_OUT
+    rm $STAGE_2_OUT/*.txt
 else
     mkdir $STAGE_2_OUT
 fi

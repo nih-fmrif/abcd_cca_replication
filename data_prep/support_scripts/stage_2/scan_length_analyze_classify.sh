@@ -44,22 +44,19 @@ DATAFOLDER=$DATA_PREP/data/stage_2/scan_length_analyze_classify/
 ICAFIX_CMDS=$DATA_PREP/data/stage_2/icafix_cmds/
 
 if [[ -d $CENSOR_FILES_CLEAN ]]; then
-    rm -r $CENSOR_FILES_CLEAN
-    mkdir $CENSOR_FILES_CLEAN
+    rm $CENSOR_FILES_CLEAN/*.txt
 else
     mkdir $CENSOR_FILES_CLEAN
 fi
 
 if [[ -d $DATAFOLDER ]]; then
-    rm -r $DATAFOLDER
-    mkdir $DATAFOLDER
+    rm $DATAFOLDER/*.txt
 else
     mkdir $DATAFOLDER
 fi
 
 if [[ -d $ICAFIX_CMDS ]]; then
-    rm -r $ICAFIX_CMDS
-    mkdir $ICAFIX_CMDS
+    rm $ICAFIX_CMDS/*.txt
 else
     mkdir $ICAFIX_CMDS
 fi
@@ -85,7 +82,7 @@ do
     # result = 0 --> an error occured, skip over the subject
     python $SUPPORT_SCRIPTS/stage_2/classify_scans_get_lens_clean_censors.py ${sub} $DATAFOLDER/${sub}_scan_lengths.txt $CENSOR_FILES/${sub}_censor.txt $DATAFOLDER/${sub}_scans_classified.txt $DATAFOLDER/${sub}_censored_scan_lengths.txt $CENSOR_FILES_CLEAN/${sub}_censor.txt
     result=$?
-    
+
     # echo "python $SUPPORT_SCRIPTS/stage_2/classify_scans_get_lens_clean_censors.py ${sub} $DATAFOLDER/${sub}_scan_lengths.txt $CENSOR_FILES/${sub}_censor.txt $DATAFOLDER/${sub}_scans_classified.txt $DATAFOLDER/${sub}_censored_scan_lengths.txt $CENSOR_FILES_CLEAN/${sub}_censor.txt"
 
     # # Check that the subject has enough total time based on returned "result"
