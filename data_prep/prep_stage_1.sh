@@ -22,9 +22,7 @@
 # Example usage:
 #   ./prep_stage_1.sh /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds
 
-# BIDS_PATH=$1
 NDA_RDS=$1
-# DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 
 usage()
 {
