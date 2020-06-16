@@ -54,8 +54,6 @@ scan_data_1 = scan_data.dropna(axis=0,how="any")
 subs = scan_data_1['subjectid']
 # Drop subjects missing either the remaining_seconds or remaining_frame_mean_FD pulled from .mat files
 msd_1 = msd[msd['subjectid'].isin(subs)]
-# msd_1['remaining_seconds'] = pd.to_numeric(msd_1['remaining_seconds'], errors='coerce')
-# msd_1['remaining_frame_mean_FD'] = pd.to_numeric(msd_1['remaining_frame_mean_FD'], errors='coerce')
 msd_1 = msd_1[~np.isnan(msd_1['remaining_seconds'])]
 msd_1 = msd_1[~np.isnan(msd_1['remaining_frame_mean_FD'])]
 subs_1 = msd_1['subjectid']

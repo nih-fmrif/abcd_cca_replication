@@ -31,6 +31,7 @@
 # 	exit 1
 # fi
 
+echo
 echo "--- PREP_STAGE_2 ---"
 echo "$(date) - START"
 
@@ -55,12 +56,14 @@ else
 fi
 
 # STEP 1 - call scan_and_motion_analysis.py to do basic subject exclusion
-echo "$(date): Step 2 - Broad subject filtering based on scan and motion summary data."
+echo "$(date): Step 1 - Broad subject filtering based on scan and motion summary data."
 echo "$(date) - calling scan_and_motion_analysis.py" >> $PREP_LOG
 python $SUPPORT_SCRIPTS/stage_2/scan_and_motion_analysis.py $DATA_PREP
 
 # STEP 2 - run more refined subject exclusion (elim subjects based on post-censoring total scan length)
 
+
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 2 LOG ---" >> $PREP_LOG
 echo "" >> $PREP_LOG
+echo
