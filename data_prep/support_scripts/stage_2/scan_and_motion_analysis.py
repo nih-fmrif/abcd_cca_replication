@@ -76,8 +76,8 @@ abcd_fd = msd_3['remaining_frame_mean_FD'].tolist()
 [anoms,upper_lim,lower_lim]=find_anomalies(abcd_fd)
 msd_4 = msd_3[~msd_3['remaining_frame_mean_FD'].isin(anoms)]
 subs_4 = msd_4['subjectid']
-print("Upper 0.25pct motion cutoff:\t{}\nLower 0.25pct motion cutoff:\t{}\n".format(upper_lim,lower_lim))
 print("Number subjects after dropping those excessive motion: {}".format(len(subs_4)))
+print("Upper 0.25pct motion cutoff:\t{}\nLower 0.25pct motion cutoff:\t{}\n".format(upper_lim,lower_lim))
 
 # Output final subject list
 f1=open(os.path.join(data_prep_dir,'data/stage_2/scan_and_motion_subjects.txt'),'w')
