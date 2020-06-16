@@ -5,3 +5,5 @@
 !scan_and_motion_analysis.py
 !find_anomalies.py
 !plot_hist.py
+!classify_scans_get_lens_clean_censors.py
+!scan_length_analyze_classify.sh
