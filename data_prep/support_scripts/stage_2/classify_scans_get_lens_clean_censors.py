@@ -20,6 +20,13 @@ fp_class_out        =   sys.argv[4]     # filepath where to save the classified 
 fp_censored_lens    =   sys.argv[5]     # filepath where to save the post-censor scan legths (data_prep/data/stage_2/scan_length_analyze_classify/sub-NDARINVxxxxxxxx_censored_scan_lengths.txt)
 fp_censor_clean     =   sys.argv[6]     # filepath where to save a subject's final, clean censor file (data_prep/censor_files_clean/sub-NDARINVxxxxxxxx_censor.txt)
 
+# sub="sub-NDARINV0CV2Y4YR"
+# fp_lens = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_2/scan_length_analyze_classify//sub-NDARINV0CV2Y4YR_scan_lengths.txt"
+# fp_censor = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/censor_files//sub-NDARINV0CV2Y4YR_censor.txt"
+# fp_class_out = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_2/scan_length_analyze_classify//sub-NDARINV0CV2Y4YR_scans_classified.txt"
+# fp_censored_lens = "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_2/scan_length_analyze_classify//sub-NDARINV0CV2Y4YR_censored_scan_lengths.txt"
+# fp_censor_clean= "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/censor_files_clean//sub-NDARINV0CV2Y4YR_censor.txt"
+
 if (os.path.exists(fp_censor) & os.path.exists(fp_lens)):
     # If the censor file and lengths files exist, proceed
 
@@ -35,13 +42,14 @@ if (os.path.exists(fp_censor) & os.path.exists(fp_lens)):
 
     classifier=[]       # list, stores 0 or 1 for each scan (in order of scans)
     agg_censor=[]       # aggregated censor list (used to output the final clean censor)
-    scan_num=1          # scan idx
+    scan_num=0          # scan idx
     running_idx=0       # idx for censor
     total_good_length=0 # sum up total good scan length, used to determine if subject include or exclude
     stop_idx=0
-    
+
     # Iterate over scan lengths for sub
     for length in scan_lengths:
+        scan_num+=1
 
         # Pull out censor data for this particular scan
         stop_idx = running_idx+length
@@ -67,8 +75,6 @@ if (os.path.exists(fp_censor) & os.path.exists(fp_lens)):
             # classify scan as fail
             classifier.append(0)
             continue
-        
-        scan_num+=1
     
     # Write the classifier results
     with open(fp_class_out, "w") as output:
@@ -80,20 +86,53 @@ if (os.path.exists(fp_censor) & os.path.exists(fp_lens)):
         for item in agg_censor:
             output.write('%s\n' % item)
 
+    post_censor_len_file.close()
+
+    # Successful code run, now return a code for whether or not this subject is usable
+    # Note, use 750 tps since tr=0.8s (750tps == 600sec = 10 min)
+    if total_good_length >= 750:
+        # Subject is good to use
+        sys.exit(1)
+    elif total_good_length < 750:
+        # Subject has too little time
+        sys.exit(2)
+    else:
+        # something else went wrong
+        sys.exit(0)
+
 else:
     print("ERROR: missing either censor file or lengths file for subject {}. Skipping subject!".format(sub))
     sys.exit(0)
 
-post_censor_len_file.close()
-
-# Successful code run, now return a code for whether or not this subject is usable
-# Note, use 750 tps since tr=0.8s (750tps == 600sec = 10 min)
-if total_good_length >= 750:
-    # Subject is good to use
-    sys.exit(1)
-elif total_good_length < 750:
-    # Subject has too little time
-    sys.exit(2)
-else:
-    # something else went wrong
-    sys.exit(0)
+# classifier=[]
+# agg_censor=[]
+# scan_num=0
+# running_idx=0
+# total_good_length=0
+# stop_idx=0
+# for length in scan_lengths:
+#     scan_num+=1
+#     stop_idx = running_idx+length
+#     censor_subset=censor[running_idx:stop_idx]
+#     print("run_idx,stop_idx")
+#     print(running_idx,stop_idx)
+#     print("len of censor")
+#     print(len(censor_subset))
+#     running_idx=stop_idx
+#     post_censor_length=censor_subset.count(0)
+#     print("post-censor scan len:")
+#     print(scan_num,post_censor_length)
+#     if post_censor_length >= 285:
+#         total_good_length = total_good_length + post_censor_length
+#         agg_censor.extend(censor_subset)
+#         classifier.append(1)
+#         continue
+#     else:
+#         classifier.append(0)
+#         continue
+# if total_good_length >= 750:
+#     print(1)
+# elif total_good_length < 750:
+#     print(2)
+# else:
+#     print(0)
