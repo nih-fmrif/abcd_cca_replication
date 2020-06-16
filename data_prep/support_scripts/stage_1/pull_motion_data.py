@@ -76,7 +76,7 @@ import datetime
 # path to mat_files.txt (a text file with a list of paths to .mat files)
 motion_mat_files_fp = sys.argv[1]
 # frame displacement threshold of interest (ex. 0.xx) (range 0.00 to 0.50)
-FD = sys.argv[2]
+FD = float(sys.argv[2])
 out_path = sys.argv[3]
 censor_folder = sys.argv[4]
 
