@@ -17,7 +17,7 @@
 #   2.  absolute path to the nda2.0.1.Rds (or other version?) R data structure
 
 # Expected tools on PATH:
-# R, connectome workbench
+# R
 
 # Example usage:
 #   ./prep_stage_1.sh /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds
@@ -25,6 +25,18 @@
 # BIDS_PATH=$1
 NDA_RDS=$1
 # DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
+
+usage()
+{
+	echo "usage: prep_stage_1.sh <path/to/nda2.0.1.Rds/>"
+    echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file nda2.0.1.Rds (or whichever version is being used)"
+}
+
+if (( $# < 1 ))
+then
+    usage
+	exit 1
+fi
 
 # Check for config
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
