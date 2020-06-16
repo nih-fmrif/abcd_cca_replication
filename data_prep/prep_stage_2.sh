@@ -31,6 +31,9 @@
 # 	exit 1
 # fi
 
+echo "--- PREP_STAGE_2 ---"
+echo "$(date) - START"
+
 # Check for config
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
 if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
@@ -41,9 +44,6 @@ else
     echo "$ABCD_CCA_REPLICATION/pipeline.config does not exist! Please run create_config.sh."
     exit 1
 fi
-
-echo "--- STAGE 2 LOG ---" >> $PREP_LOG
-echo "$(date) - START" >> $PREP_LOG
 
 # Check if the following folders/files exist
 STAGE_2_OUT=$DATA_PREP/data/stage_2/
