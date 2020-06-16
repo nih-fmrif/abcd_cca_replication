@@ -119,7 +119,7 @@ echo "$(date) - WARNING: $NUM_MISSING subjects missing from RDS and dropped (see
 #   2.  desired FD threshold (default 0.30)
 #   3.  Output path (data_prep/data/stage_1/)
 #   4.  Where to save censor file data
-echo " $(date): Step 4 - Extracting motion data for each subject (pull_motion_data.py)."
+echo "$(date): Step 4 - Extracting motion data for each subject (pull_motion_data.py)."
 echo "$(date) - calling pull_motion_data.py" >> $PREP_LOG
 python $SUPPORT_SCRIPTS/stage_1/pull_motion_data.py $STAGE_1_OUT/motion_mat_files.txt 0.30 $STAGE_1_OUT $CENSOR_FILES
 
