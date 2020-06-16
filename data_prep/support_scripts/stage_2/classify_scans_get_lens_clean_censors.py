@@ -5,10 +5,6 @@
 # Last edited:
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 
-# Argument 1: subjectid in format (NDARINVxxxxxxxx)
-# Argument 2: absolute path to file containing scan lengths for a subject
-# Argument 3: absolute path to the output location (NDARINVxxxxxxxx_scans_classified.txt)
-
 import sys
 import os
 import pandas as pd
@@ -42,7 +38,8 @@ if (os.path.exists(fp_censor) & os.path.exists(fp_lens)):
     scan_num=1          # scan idx
     running_idx=0       # idx for censor
     total_good_length=0 # sum up total good scan length, used to determine if subject include or exclude
-
+    stop_idx=0
+    
     # Iterate over scan lengths for sub
     for length in scan_lengths:
 
@@ -59,7 +56,7 @@ if (os.path.exists(fp_censor) & os.path.exists(fp_lens)):
 
         if post_censor_length >= 285:
             # Sufficient length run
-            total_good_length=total_good_length+post_censor_length
+            total_good_length = total_good_length + post_censor_length
             # save this censor component
             agg_censor.extend(censor_subset)
             # classify scan as pass
