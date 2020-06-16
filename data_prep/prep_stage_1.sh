@@ -55,10 +55,19 @@ else
 fi
 # Check if we have censor files directory
 if [[ -d $CENSOR_FILES ]]; then
-    rm -r $CENSOR_FILES
-    mkdir $CENSOR_FILES
+    # Delete the files inside here
+    rm $CENSOR_FILES/*.txt
 else
     mkdir $CENSOR_FILES
+fi
+
+# Check if the following folders exists
+STAGE_1_OUT=$DATA_PREP/data/stage_1/
+if [[ -d $STAGE_1_OUT ]]; then
+    rm $STAGE_1_OUT/*.txt
+    rm $STAGE_1_OUT/*.csv
+else
+    mkdir $STAGE_1_OUT
 fi
 
 echo "--- STAGE 1 LOG ---" >> $PREP_LOG
@@ -71,14 +80,6 @@ Rscript_exec=$(which Rscript)
     exit 1
  fi
 
-# Check if the following folders/files exist
-STAGE_1_OUT=$DATA_PREP/data/stage_1/
-if [[ -d $STAGE_1_OUT ]]; then
-    rm -r $STAGE_1_OUT
-    mkdir $STAGE_1_OUT
-else
-    mkdir $STAGE_1_OUT
-fi
 
 # STEP 1 - get list of subjects that have their .mat files, store in STAGE_1_OUT folder
 # find $BIDS_PATH -maxdepth 1 -type d -name "sub-NDARINV*" >> $STAGE_1_OUT/all_subjects.txt
