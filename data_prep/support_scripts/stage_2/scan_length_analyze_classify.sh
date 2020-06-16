@@ -85,57 +85,57 @@ do
     # result = 0 --> an error occured, skip over the subject
     result=`python $SUPPORT_SCRIPTS/stage_2/classify_scans_get_lens_clean_censors.py ${sub} $DATAFOLDER/${sub}_scan_lengths.txt $CENSOR_FILES/${sub}_censor.txt $DATAFOLDER/${sub}_scans_classified.txt $DATAFOLDER/${sub}_censored_scan_lengths.txt $CENSOR_FILES_CLEAN/${sub}_censor.txt`
 
-    # Check that the subject has enough total time based on returned "result"
-    if [[ $result -eq 2 ]]; then
-        # Subject dropped from study, note this
-        echo "WARNING: DROPPING subject $sub, has less than 600 seconds of scan time post-censoring."
-        ((subs_dropped++))
-    elif [[ $result -eq 1 ]]; then
-        # subject still eligible, create its task-rest0 string for ICA+FIX cmd
-        # add subject to final list of subjects
-        echo $sub >> $DATA_PREP/data/stage_2/post_censor_subjects.txt
+    # # Check that the subject has enough total time based on returned "result"
+    # if [[ $result -eq 2 ]]; then
+    #     # Subject dropped from study, note this
+    #     echo "WARNING: DROPPING subject $sub, has less than 600 seconds of scan time post-censoring."
+    #     ((subs_dropped++))
+    # elif [[ $result -eq 1 ]]; then
+    #     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
+    #     # add subject to final list of subjects
+    #     echo $sub >> $DATA_PREP/data/stage_2/post_censor_subjects.txt
 
-        # Now create their cmd
-        # Keep track of which scan we're looking at
-        count=1 
-        # total timepoints for valid scans for a subject
-        total_tps=0
-        cmd_str=""
-        while read len
-        do
-            if [[ $len -ge 285 ]]; then
-                # post-censor scan length meets minimum cutoff length to be compatible with ICA+FIX.
-                # Aggregate their cmd string
-                if [[ $count -eq 1 ]]; then
-                    # Prepend a 0, remove @ at beginning
-                    cmd_str=task-rest0$count/task-rest0$count.nii.gz
-                elif [[ $count -lt 10 ]]; then
-                    # Prepend 0 since < 10, but include the @ at beginning
-                    cmd_str=$cmd_str@task-rest0$count/task-rest0$count.nii.gz
-                else
-                    # No need to prepend 0
-                    cmd_str=$cmd_str@task-rest$count/task-rest$count.nii.gz
-                fi
-            elif [[ $len -lt 285 ]]; then
-                # Scan too short, skip this (i.e. do nothing)
-                :
-            else
-                # something went wrong
-                echo "An error occured while generating ICA+FIX cmd string for $sub scan $count."
-            fi
-            ((count++))
-        done < $DATAFOLDER/${sub}_censored_scan_lengths.txt
+    #     # Now create their cmd
+    #     # Keep track of which scan we're looking at
+    #     count=1 
+    #     # total timepoints for valid scans for a subject
+    #     total_tps=0
+    #     cmd_str=""
+    #     while read len
+    #     do
+    #         if [[ $len -ge 285 ]]; then
+    #             # post-censor scan length meets minimum cutoff length to be compatible with ICA+FIX.
+    #             # Aggregate their cmd string
+    #             if [[ $count -eq 1 ]]; then
+    #                 # Prepend a 0, remove @ at beginning
+    #                 cmd_str=task-rest0$count/task-rest0$count.nii.gz
+    #             elif [[ $count -lt 10 ]]; then
+    #                 # Prepend 0 since < 10, but include the @ at beginning
+    #                 cmd_str=$cmd_str@task-rest0$count/task-rest0$count.nii.gz
+    #             else
+    #                 # No need to prepend 0
+    #                 cmd_str=$cmd_str@task-rest$count/task-rest$count.nii.gz
+    #             fi
+    #         elif [[ $len -lt 285 ]]; then
+    #             # Scan too short, skip this (i.e. do nothing)
+    #             :
+    #         else
+    #             # something went wrong
+    #             echo "An error occured while generating ICA+FIX cmd string for $sub scan $count."
+    #         fi
+    #         ((count++))
+    #     done < $DATAFOLDER/${sub}_censored_scan_lengths.txt
 
-        # echo the ICA+FIX cmd to file
-        echo $cmd_str >> $ICAFIX_CMDS/$sub.txt
+    #     # echo the ICA+FIX cmd to file
+    #     echo $cmd_str >> $ICAFIX_CMDS/$sub.txt
 
-    elif [[ $result -eq 0 ]]; then
-        # Error handling
-        echo "Something went wrong when processing $sub in script classify_scans_get_lens_clean_censors.py. Omitting subject."
-    else
-        # Something else went wrong (maybe not needed?)
-        echo "An unknown error occurred while processing $sub"
-    fi
+    # elif [[ $result -eq 0 ]]; then
+    #     # Error handling
+    #     echo "Something went wrong when processing $sub in script classify_scans_get_lens_clean_censors.py. Omitting subject."
+    # else
+    #     # Something else went wrong (maybe not needed?)
+    #     echo "An unknown error occurred while processing $sub"
+    # fi
 
 done < $DATA_PREP/data/stage_2/scan_and_motion_subjects.txt
 
