@@ -54,6 +54,27 @@ else
     mkdir $STAGE_2_OUT
 fi
 
+DATAFOLDER=$DATA_PREP/data/stage_2/scan_length_analyze_classify/
+ICAFIX_CMDS=$DATA_PREP/data/stage_2/icafix_cmds/
+
+if [[ -d $CENSOR_FILES_CLEAN ]]; then
+    rm $CENSOR_FILES_CLEAN/*.txt
+else
+    mkdir $CENSOR_FILES_CLEAN
+fi
+
+if [[ -d $DATAFOLDER ]]; then
+    rm $DATAFOLDER/*.txt
+else
+    mkdir $DATAFOLDER
+fi
+
+if [[ -d $ICAFIX_CMDS ]]; then
+    rm $ICAFIX_CMDS/*.txt
+else
+    mkdir $ICAFIX_CMDS
+fi
+
 # STEP 1 - call scan_and_motion_analysis.py to do basic subject exclusion
 echo "$(date): Step 1 - Broad subject filtering based on scan and motion summary data."
 echo "$(date) - calling scan_and_motion_analysis.py" >> $PREP_LOG
@@ -62,7 +83,9 @@ python $SUPPORT_SCRIPTS/stage_2/scan_and_motion_analysis.py $DATA_PREP
 # STEP 2 - run more refined subject exclusion (elim subjects based on post-censoring total scan length)
 echo "$(date): Step 2 - Refined subject filtering based post-censoring scan length."
 echo "$(date) - calling scan_length_analyze_classify.sh" >> $PREP_LOG
-sh $SUPPORT_SCRIPTS/stage_2/scan_length_analyze_classify.sh $ABCD_CCA_REPLICATION
+# sh $SUPPORT_SCRIPTS/stage_2/scan_length_analyze_classify.sh $ABCD_CCA_REPLICATION
+sh $SUPPORT_SCRIPTS/stage_2/scan_length_analyze_classify.sh $ABCD_CCA_REPLICATION $DATAFOLDER $ICAFIX_CMDS
+
 
 # number subjects remaining post-censor
 NUM_SUBS=$(wc -l $STAGE_2_OUT/post_censor_subjects.txt)
