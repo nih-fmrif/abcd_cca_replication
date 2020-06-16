@@ -81,11 +81,14 @@ out_path = sys.argv[3]
 censor_folder = sys.argv[4]
 
 fp = os.path.join(out_path,"motion_summary_data.csv")
-fout1 = open(fp, 'a')
-fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
+print(fp)
+# fout1 = open(fp, 'a')
+# fout1.write("sub,total_frame_count,remaining_frame_count,remaining_seconds,remaining_frame_mean_FD\n")
 
+# just the mean FD data
 fp = os.path.join(out_path,'mean_FDs.txt')
-fout2 = open(fp,'a')    # just the mean FD data
+print(fp)
+# fout2 = open(fp,'a')    
 
 print("Pulling motion data, please be patient..")
 i=0
@@ -104,13 +107,15 @@ for fp in file_list:
             # this extracts sub-NDARINVxxxxxxxx
             sub = fp.split('/')[-1].split('_')[0]
             print_str = '{},{},{},{},{}\n'.format(sub, struct.total_frame_count, struct.remaining_frame_count, struct.remaining_seconds, struct.remaining_frame_mean_FD)
-            fout1.write(print_str)
-            fout2.write('{}\n'.format(struct.remaining_frame_mean_FD))
+            print(print_str)
+            # fout1.write(print_str)
+            # fout2.write('{}\n'.format(struct.remaining_frame_mean_FD))
 
             # Finally, save the censoring data for this subject
             # data is in struct.frame_removal
             censor_out = os.path.join(censor_folder,sub+"_censor.txt")
-            np.savetxt(censor_out, list(struct.frame_removal), fmt="%d")
+            print(censor_out)
+            # np.savetxt(censor_out, list(struct.frame_removal), fmt="%d")
 
         else:
             continue
@@ -119,5 +124,5 @@ for fp in file_list:
 
 print("Finished extracting data for %d subjects.\n" % i)
 
-fout1.close()
-fout2.close()
+# fout1.close()
+# fout2.close()
