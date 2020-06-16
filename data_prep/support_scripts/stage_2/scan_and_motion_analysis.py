@@ -13,7 +13,7 @@
 #   5.  Exports filtered subject list (data_prep/data/stage_2/scan_and_motion_subjects.txt)
 
 from find_anomalies import find_anomalies
-from plot_hist import plot_hist
+# from plot_hist import plot_hist
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
@@ -76,6 +76,6 @@ print("Upper 0.25pct motion cutoff:\t{}\nLower 0.25pct motion cutoff:\t{}\n".for
 
 # Output final subject list
 f1=open(os.path.join(data_prep_dir,'data/stage_2/scan_and_motion_subjects.txt'),'w')
-for ele in subs_4:
-    f1.write(ele+'\n')
+for sub in subs_4:
+    f1.write(sub+'\n')
 f1.close()
