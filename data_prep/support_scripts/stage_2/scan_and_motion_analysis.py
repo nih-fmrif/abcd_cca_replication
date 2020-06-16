@@ -36,6 +36,8 @@ hcp_fds=np.loadtxt(fp)
 # ABCD motion_summary_data.csv (abbreviated "msd")
 fp = os.path.join(data_prep_dir,'data/stage_1/motion_summary_data.csv')
 msd = pd.read_csv(fp, sep=',')
+numeric = ['remaining_seconds','remaining_frame_mean_FD']
+msd[numeric] = msd[numeric].apply(pd.to_numeric, errors='coerce')
 
 # ABCD scan_data.txt
 fp = os.path.join(data_prep_dir,'data/stage_1/scan_data.csv')
@@ -52,8 +54,8 @@ scan_data_1 = scan_data.dropna(axis=0,how="any")
 subs = scan_data_1['subjectid']
 # Drop subjects missing either the remaining_seconds or remaining_frame_mean_FD pulled from .mat files
 msd_1 = msd[msd['subjectid'].isin(subs)]
-msd_1['remaining_seconds'] = pd.to_numeric(msd_1['remaining_seconds'], errors='coerce')
-msd_1['remaining_frame_mean_FD'] = pd.to_numeric(msd_1['remaining_frame_mean_FD'], errors='coerce')
+# msd_1['remaining_seconds'] = pd.to_numeric(msd_1['remaining_seconds'], errors='coerce')
+# msd_1['remaining_frame_mean_FD'] = pd.to_numeric(msd_1['remaining_frame_mean_FD'], errors='coerce')
 msd_1 = msd_1[~np.isnan(msd_1['remaining_seconds'])]
 msd_1 = msd_1[~np.isnan(msd_1['remaining_frame_mean_FD'])]
 subs_1 = msd_1['subjectid']
