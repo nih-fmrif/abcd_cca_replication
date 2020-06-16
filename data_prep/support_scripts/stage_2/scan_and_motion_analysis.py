@@ -57,16 +57,19 @@ msd_1 = msd[msd['subjectid'].isin(subs)]
 msd_1 = msd_1[~np.isnan(msd_1['remaining_seconds'])]
 msd_1 = msd_1[~np.isnan(msd_1['remaining_frame_mean_FD'])]
 subs_1 = msd_1['subjectid']
+print("Number subjects after dropping those with missing scan or motion data: {}".format(len(subs_1)))
 
 # STEP 2 - Drop subjects with less than 600 seconds 'good' scan time
 msd_2 = msd_1[(msd_1['remaining_seconds'].astype('float')>=600)]
 subs_2 = msd_2['subjectid']
 scan_data_2 = scan_data_1[scan_data_1['subjectid'].isin(subs_2)]
+print("Number subjects after dropping those with <600 sec: {}".format(len(subs_2)))
 
 # STEP 3 - Drop subjects missing that don't meet the QC/PC minimum requirements for scan data
 scan_data_3 = scan_data_2.drop(scan_data_2[ ~( (scan_data_2['iqc_t1_good_ser'] > 0) & (scan_data_2['iqc_rsfmri_good_ser'] > 1) ) ].index)
 subs_3 = scan_data_3['subjectid']
 msd_3 = msd_2[msd_2['subjectid'].isin(subs_3)]
+print("Number subjects after dropping those that do not meet QC/PC minimums: {}".format(len(subs_3)))
 
 # STEP 4 - Drop subjects with anomalous amount of motion (outlier detection)
 abcd_fd = msd_3['remaining_frame_mean_FD'].tolist()
@@ -74,6 +77,7 @@ abcd_fd = msd_3['remaining_frame_mean_FD'].tolist()
 msd_4 = msd_3[~msd_3['remaining_frame_mean_FD'].isin(anoms)]
 subs_4 = msd_4['subjectid']
 print("Upper 0.25pct motion cutoff:\t{}\nLower 0.25pct motion cutoff:\t{}\n".format(upper_lim,lower_lim))
+print("Number subjects after dropping those excessive motion: {}".format(len(subs_4)))
 
 # Output final subject list
 f1=open(os.path.join(data_prep_dir,'data/stage_2/scan_and_motion_subjects.txt'),'w')
