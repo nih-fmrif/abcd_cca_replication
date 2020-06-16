@@ -131,7 +131,7 @@ do
 
     elif [[ $result -eq 0 ]]; then
         # Error handling
-        echo "Something went wrong when processing $sub in script classify_scans.py. Omitting subject."
+        echo "Something went wrong when processing $sub in script classify_scans_get_lens_clean_censors.py. Omitting subject."
     else
         # Something else went wrong (maybe not needed?)
         echo "An unknown error occurred while processing $sub"
