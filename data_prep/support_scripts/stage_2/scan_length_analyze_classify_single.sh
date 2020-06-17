@@ -21,7 +21,7 @@
 # fsl
 
 # Verbose output (debugging)
-# set -x
+set -x
 
 # Check for config
 sub=$1
