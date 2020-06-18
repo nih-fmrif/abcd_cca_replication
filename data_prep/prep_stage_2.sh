@@ -102,7 +102,7 @@ echo "$(date) - generating swarm commands for scan_length_analyze_classify_singl
 python $SUPPORT_SCRIPTS/stage_2/stage_2_swarm_gen.py $STAGE_2_OUT/scan_and_motion_subjects.txt $ABCD_CCA_REPLICATION $SWARM_DIR "$SUPPORT_SCRIPTS/stage_2/scan_length_analyze_classify_single.sh"
 echo "$(date): Swarm commands generated"
 echo "run swarm with command:"
-echo "\t swarm -f $SWARM_DIR/stage_2.swarm -b 50 --logdir $SWARM_DIR/logs --job-name stage_2"
+echo "        swarm -f $SWARM_DIR/stage_2.swarm -b 50 --logdir $SWARM_DIR/logs --job-name stage_2"
 
 # number subjects remaining post-censor
 # # NUM_SUBS=$(cat $STAGE_2_OUT/post_censor_subjects.txt | wc -l)
