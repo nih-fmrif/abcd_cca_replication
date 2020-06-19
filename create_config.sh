@@ -17,7 +17,7 @@ then
 fi
 
 BIDS_PATH=$1
-
+NDA_RDS_RAW=$2
 DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 DATA_PREP=$PWD/data_prep/
 MAIN_REPO_DATA_FOLDER=$PWD/data/
@@ -31,6 +31,7 @@ CONFIG=$PWD/pipeline.config
 echo
 echo "---ABCD CCA Pipeline Config Setup---"
 echo "BIDS_PATH=$BIDS_PATH"
+echo "NDA_RDS_RAW=$NDA_RDS_RAW"
 echo "DERIVATIVES_PATH=$DERIVATES_PATH"
 echo "DATA_PREP=$DATA_PREP"
 echo "MAIN_REPO_DATA_FOLDER=$_MAIN_REPO_DATA_FOLDER"
@@ -63,6 +64,7 @@ fi
 
 # Now write these variables
 echo "BIDS_PATH=$BIDS_PATH" >> $CONFIG
+echo "NDA_RDS_RAW=$NDA_RDS_RAW" >> $CONFIG
 echo "DERIVATIVES_PATH=$DERIVATES_PATH" >> $CONFIG
 echo "DATA_PREP=$DATA_PREP" >> $CONFIG
 echo "MAIN_REPO_DATA_FOLDER=$MAIN_REPO_DATA_FOLDER" >> $CONFIG
