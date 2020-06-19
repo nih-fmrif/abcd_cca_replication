@@ -22,7 +22,7 @@ import datetime
 pre_censor_lengths_fp   =   sys.argv[1]
 post_censor_lengths_fp  =   sys.argv[2]
 output_fp               =   sys.argv[3]
-min_tps                 =   sys.argv[4]
+min_tps                 =   int(sys.argv[4])
 
 # load pre- and post-censor scan lengths
 pre_censor_lengths = [line.rstrip('\n') for line in open(pre_censor_lengths_fp)]
