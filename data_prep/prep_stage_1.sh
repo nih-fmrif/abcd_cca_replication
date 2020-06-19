@@ -31,7 +31,6 @@ fi
 #     exit 1
 #  fi
 
-
 CLASSIFIERS=$DATA_PREP/data/stage_1/classifiers/
 if [[ -d $CLASSIFIERS ]]; then
     # Delete the files inside here
