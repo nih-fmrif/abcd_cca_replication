@@ -79,24 +79,27 @@ echo "$(date) - START" >> $PREP_LOG
 echo "$(date) - Step 1: Getting list of all subjects in raw data. Determining pre-censor scan lengths."
 echo "$(date) - Getting list of all subjects in raw data folder. Determining pre-censor scan lengths." >> $PREP_LOG
 ls $BIDS_PATH | grep sub- > $STAGE_0_OUT/all_subjects.txt
+
+# Now iterate over subjects, save names of those who have resting state scans (and save scan lengths)
+
+# check if a subject has > 0 resting state scans, if they do get lengths for scans, save subject id
 while read sub; do
-    tseries=${DERIVATIVES_PATH}/${sub}/ses-baselineYear1Arm1/func/${sub}_ses-baselineYear1Arm1_task-rest_bold_desc-filtered_timeseries.dtseries.nii
-    if [[ -f "$tseries" ]]; then
-        echo $sub >> $STAGE_0_OUT/subjects_with_rsfmri.txt
-    else
+    paths=`find $BIDS_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" 2> /dev/null`
+    
+    # check if path variable is an empty line (nothing except a newline terminator)
+    if [ -z "$paths" ]; then
+        # Skip this subject
         echo $sub >> $STAGE_0_OUT/subjects_missing_rsfmri.txt
+    else
+        num_scans=$(echo "$paths" | wc -l)
+        echo $sub >> $STAGE_0_OUT/subjects_with_rsfmri.txt
+        echo "$paths" | sort | xargs -L 1 fslnvols | tee -a $STAGE_0_OUT/subs_and_lengths.txt | tee $PRE_CENSOR_LENGTHS/${sub}.txt
+
     fi
 done < $STAGE_0_OUT/all_subjects.txt
 
-
-while read sub; do
-# Get scan lengths for all available scans
-    echo $sub >> $STAGE_0_OUT/subs_and_lengths.txt
-    find $BIDS_PATH/$sub/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs -L 1 fslnvols | tee -a $STAGE_0_OUT/subs_and_lengths.txt | tee $PRE_CENSOR_LENGTHS/${sub}.txt > /dev/null
-done < $STAGE_0_OUT/subjects_with_rsfmri.txt
-
 # STEP 2 - create censors, get post-censor lengths
-echo "$(date) - Step 2: Generating swarm file to calculate censors, post-censor length for each subject."
+# echo "$(date) - Step 2: Generating swarm file to calculate censors, post-censor length for each subject."
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 0 LOG ---" >> $PREP_LOG
