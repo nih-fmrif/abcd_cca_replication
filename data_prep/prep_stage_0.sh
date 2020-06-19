@@ -84,7 +84,10 @@ ls $BIDS_PATH | grep sub- > $STAGE_0_OUT/all_subjects.txt
 
 # check if a subject has > 0 resting state scans, if they do get lengths for scans, save subject id
 while read sub; do
-    paths=`find $BIDS_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" 2> /dev/null`
+    # detect files of format:
+    # sub-NDARINV53EP1G5X_ses-baselineYear1Arm1_task-rest_run-01_bold.nii.gz
+    # sub-NDARINVYTVCUEA2_ses-baselineYear1Arm1_task-rest_bold.nii.gz
+    paths=`find $BIDS_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -name "sub-*ses-baselineYear1Arm1_task-rest*bold.nii.gz" 2> /dev/null`
 
     # check if path variable is an empty line (nothing except a newline terminator)
     if [ -z "$paths" ]; then
@@ -93,6 +96,7 @@ while read sub; do
     else
         num_scans=$(echo "$paths" | wc -l)
         echo $sub >> $STAGE_0_OUT/subjects_with_rsfmri.txt
+        echo $sub >> $STAGE_0_OUT/subs_and_lengths.txt
         echo "$paths" | sort | xargs -L 1 fslnvols | tee -a $STAGE_0_OUT/subs_and_lengths.txt | tee $PRE_CENSOR_LENGTHS/${sub}.txt > /dev/null
 
     fi
