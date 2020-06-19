@@ -45,6 +45,7 @@ fi
 if [[ -d $CENSOR_FILES ]]; then
     # Delete the files inside here
     # rm $CENSOR_FILES/*.txt
+    :
 else
     mkdir $CENSOR_FILES
 fi
