@@ -52,8 +52,8 @@ if [[ -d $STAGE_1_OUT ]]; then
     rm $STAGE_1_OUT/swarm_logs/*.txt
 else
     mkdir $STAGE_1_OUT
-    rm $STAGE_1_OUT/icafix_cmds/
-    rm $STAGE_1_OUT/swarm_logs/
+    rm $STAGE_1_OUT/icafix_cmds/*.txt
+    rm $STAGE_1_OUT/swarm_logs/*.txt
 fi
 
 echo "--- STAGE 1 ---"
