@@ -25,8 +25,8 @@ MAIN_REPO_DATA_FOLDER=$PWD/data/
 PIPELINE_LOG_DIR=$DATA_PREP/logs/
 PREP_LOG=$DATA_PREP/logs/prep_log.txt
 SUPPORT_SCRIPTS=$DATA_PREP/support_scripts/
-CENSOR_FILES=$PWD/data_prep/censor_files/
-CENSOR_FILES_CLEAN=$PWD/data_prep/censor_files_clean/
+CENSOR_FILES=$PWD/data_prep/data/stage_0/censor_files/
+PRE_CENSOR_LENGTHS=$PWD/data_prep/data/stage_0/pre_censor_lengths/
 CONFIG=$PWD/pipeline.config
 
 echo
@@ -40,7 +40,7 @@ echo "PIPELINE_LOG_DIR=$PIPELINE_LOG_DIR"
 echo "PREP_LOG=$PREP_LOG"
 echo "SUPPORT_SCRIPTS=$SUPPORT_SCRIPTS"
 echo "CENSOR_FILES=$CENSOR_FILES"
-echo "CENSOR_FILES_CLEAN=$CENSOR_FILES_CLEAN"
+echo "PRE_CENSOR_LENGTHS=$PRE_CENSOR_LENGTHS"
 echo "CONFIG=$CONFIG"
 echo "------------------------------------"
 
@@ -73,5 +73,5 @@ echo "PIPELINE_LOG_DIR=$PIPELINE_LOG_DIR" >> $CONFIG
 echo "PREP_LOG=$PREP_LOG" >> $CONFIG
 echo "SUPPORT_SCRIPTS=$SUPPORT_SCRIPTS" >> $CONFIG
 echo "CENSOR_FILES=$CENSOR_FILES" >> $CONFIG
-echo "CENSOR_FILES_CLEAN=$CENSOR_FILES_CLEAN" >> $CONFIG
+echo "PRE_CENSOR_LENGTHS=$PRE_CENSOR_LENGTHS" >> $CONFIG
 echo "CONFIG=$CONFIG" >> $CONFIG
