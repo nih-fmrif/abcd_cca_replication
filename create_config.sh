@@ -19,6 +19,7 @@ fi
 
 BIDS_PATH=$1
 NDA_RDS_RAW=$2
+MIN_TPS=$3
 DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 DATA_PREP=$PWD/data_prep/
 MAIN_REPO_DATA_FOLDER=$PWD/data/
@@ -31,6 +32,7 @@ CONFIG=$PWD/pipeline.config
 
 echo
 echo "---ABCD CCA Pipeline Config Setup---"
+echo "--PATHS--"
 echo "BIDS_PATH=$BIDS_PATH"
 echo "NDA_RDS_RAW=$NDA_RDS_RAW"
 echo "DERIVATIVES_PATH=$DERIVATES_PATH"
@@ -42,6 +44,9 @@ echo "SUPPORT_SCRIPTS=$SUPPORT_SCRIPTS"
 echo "CENSOR_FILES=$CENSOR_FILES"
 echo "PRE_CENSOR_LENGTHS=$PRE_CENSOR_LENGTHS"
 echo "CONFIG=$CONFIG"
+echo
+echo "--VARIABLES--"
+echo "MIN_TPS=$MIN_TPS"
 echo "------------------------------------"
 
 if [[ -f $CONFIG ]]; then
@@ -75,3 +80,4 @@ echo "SUPPORT_SCRIPTS=$SUPPORT_SCRIPTS" >> $CONFIG
 echo "CENSOR_FILES=$CENSOR_FILES" >> $CONFIG
 echo "PRE_CENSOR_LENGTHS=$PRE_CENSOR_LENGTHS" >> $CONFIG
 echo "CONFIG=$CONFIG" >> $CONFIG
+echo "MIN_TPS=$MIN_TPS" >> $CONFIG
