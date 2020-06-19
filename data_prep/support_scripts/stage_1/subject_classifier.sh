@@ -84,7 +84,7 @@ fi
 
 
 # STEP 2 - 0.3mm FD
-good_TRs=$CENSOR_FILES/$sub/good_TRs_0.3mm.censor.txt
+post_censor_lens=$CENSOR_FILES/$sub/good_TRs_0.3mm.censor.txt
 python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $pre_censor_lens $post_censor_lens $CLASSIFIERS/0.3mm/$sub.txt $MIN_TPS
 result=$?
 
