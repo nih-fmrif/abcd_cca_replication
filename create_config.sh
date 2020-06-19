@@ -6,11 +6,12 @@
 
 usage()
 {
-	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/>"
+	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/raw/nda2.0.1.Rds>"
     echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
+    echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 }
 
-if (( $# < 1 ))
+if (( $# < 2 ))
 then
     usage
 	exit 1
