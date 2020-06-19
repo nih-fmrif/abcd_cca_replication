@@ -26,8 +26,8 @@ MAIN_REPO_DATA_FOLDER=$PWD/data/
 PIPELINE_LOG_DIR=$DATA_PREP/logs/
 PREP_LOG=$DATA_PREP/logs/prep_log.txt
 SUPPORT_SCRIPTS=$DATA_PREP/support_scripts/
-CENSOR_FILES=$PWD/data_prep/data/stage_0/censor_files/
-PRE_CENSOR_LENGTHS=$PWD/data_prep/data/stage_0/pre_censor_lengths/
+CENSOR_FILES=$DATA_PREP/data/stage_0/censor_files/
+PRE_CENSOR_LENGTHS=$DATA_PREP/data/stage_0/pre_censor_lengths/
 CONFIG=$PWD/pipeline.config
 
 echo
