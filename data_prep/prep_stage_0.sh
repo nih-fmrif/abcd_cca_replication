@@ -81,8 +81,8 @@ ls $BIDS_PATH | grep sub- > $STAGE_0_OUT/all_subjects.txt
 while read sub
 do
 # Get scan lengths for all available scans
-    echo $sub >> $STAGE_0_OUT/subs_and_lengths.txt &>/dev/null
-    find $BIDS_PATH/$sub/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs -L 1 fslnvols | tee -a $STAGE_0_OUT/subs_and_lengths.txt | tee $PRE_CENSOR_LENGTHS/${sub}.txt &>/dev/null
+    echo $sub >> $STAGE_0_OUT/subs_and_lengths.txt 2&1>/dev/null
+    find $BIDS_PATH/$sub/ses-baselineYear1Arm1/func/ -type f -name "*task-rest_run*[0-9][0-9]_bold.nii.gz" | sort | xargs -L 1 fslnvols | tee -a $STAGE_0_OUT/subs_and_lengths.txt | tee $PRE_CENSOR_LENGTHS/${sub}.txt 2&1>/dev/null
 done < $STAGE_0_OUT/all_subjects.txt
 
 # STEP 2 - create censors, get post-censor lengths
