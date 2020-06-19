@@ -2,6 +2,6 @@
 *
 # Except this file
 !.gitignore
-!clean_rds_pull_scandata.r
-!pull_motion_data.py
-!custom_loadmat.py
+!scan_subject_classifier.py
+!stage_1_swarm_gen.py
+!subject_classifier.sh
