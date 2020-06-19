@@ -49,11 +49,13 @@ if [[ -d $STAGE_1_OUT ]]; then
     rm $STAGE_1_OUT/*.txt
     rm $STAGE_1_OUT/*.csv
     rm $STAGE_1_OUT/icafix_cmds/*.txt
-    rm $STAGE_1_OUT/swarm_logs/*.txt
+    rm $STAGE_1_OUT/icafix_cmds/0.2mm/*.txt
+    rm $STAGE_1_OUT/icafix_cmds/0.3mm/*.txt
+    rm $STAGE_1_OUT/swarm_logs/*.{e,o}
 else
     mkdir $STAGE_1_OUT
-    mkdir $STAGE_1_OUT/icafix_cmds/
-    mkdir $STAGE_1_OUT/swarm_logs/
+    mkdir $STAGE_1_OUT/icafix_cmds/0.2mm/
+    mkdir $STAGE_1_OUT/swarm_logs/0.3mm/
 fi
 
 echo "--- STAGE 1 ---"

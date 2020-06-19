@@ -70,7 +70,7 @@ elif [[ $result -eq 1 ]]; then
         ((count++))
     done < $CLASSIFIERS/0.2mm/$sub.txt
     # echo the ICA+FIX cmd to file
-    echo $cmd_str >> $ICAFIX/$sub.txt
+    echo $cmd_str >> $ICAFIX/0.2mm/$sub.txt
 
 elif [[ $result -eq 0 ]]; then
     # Error handling
@@ -125,7 +125,7 @@ elif [[ $result -eq 1 ]]; then
     done < $CLASSIFIERS/0.3mm/$sub.txt
 
     # echo the ICA+FIX cmd to file
-    echo $cmd_str >> $ICAFIX/$sub.txt
+    echo $cmd_str >> $ICAFIX/0.3mm/$sub.txt
 
 elif [[ $result -eq 0 ]]; then
     # Error handling
