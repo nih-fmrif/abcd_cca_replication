@@ -2,6 +2,7 @@
 *
 # Except this file
 !.gitignore
+!stage_0
 !stage_1
 !stage_2
 !stage_3

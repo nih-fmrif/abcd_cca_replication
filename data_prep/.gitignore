@@ -18,5 +18,6 @@
 !scan_length_analyzer_5.sh
 !fix_cleanup.sh
 !classify_scans.py
+!prep_stage_0.sh
 !prep_stage_1.sh
 !prep_stage_2.sh
