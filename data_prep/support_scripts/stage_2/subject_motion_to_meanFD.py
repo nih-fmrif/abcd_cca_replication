@@ -36,5 +36,7 @@ for scan_class,tsv in zip(classifier,tsv_files):
     else:
         continue
 
+avg_fd = Average(motion_vals)
+
 with open(outfile, "a") as output:
-    output.write('{},{}\n'.format(sub,motion_val))
+    output.write('{},{}\n'.format(sub, avg_fd))
