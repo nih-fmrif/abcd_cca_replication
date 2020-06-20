@@ -2,11 +2,6 @@
 *
 # Except this file
 !.gitignore
-!scan_and_motion_analysis.py
-!find_anomalies.py
-!plot_hist.py
-!classify_scans_get_lens_clean_censors.py
-!scan_length_analyze_classify.sh
-!scan_length_analyze_classify_single.sh
-!stage_2_swarm_gen.py
+!calc_avg_motion.sh
 !clean_rds_pull_scandata.r
+!subject_motion_to_meanFD.py
