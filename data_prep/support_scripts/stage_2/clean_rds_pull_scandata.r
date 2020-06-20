@@ -65,7 +65,7 @@ nda_scan_2 <- nda_scan %>% drop_na(iqc_t1_good_ser)
 nda_scan_3 <- nda_scan_2[nda_scan_2["iqc_t1_good_ser"]>0, ]
 
 final_subs <- list(nda_scan_3$subjectid)
-dropped_scan_subs <- setdiff(nda_scan$subjectid,dropped_subs)
+dropped_scan_subs <- setdiff(nda_scan$subjectid,final_subs)
 
 nda6 <- nda5[nda5$subjectid %in% final_subs,]
 # Save updated RDS for later use
