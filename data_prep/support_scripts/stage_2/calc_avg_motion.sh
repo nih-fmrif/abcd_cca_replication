@@ -9,16 +9,11 @@
 # Example usage:
 #   ./calc_avg_motion.sh
 
-usage()
-{
-	echo "usage: calc_avg_motion.sh "
-}
-
-if (( $# < 1 ))
-then
-    usage
-	exit 1
-fi
+# if (( $# < 2 ))
+# then
+#     usage
+# 	exit 1
+# fi
 
 sub=$1
 ABCD_CCA_REPLICATION=$2
