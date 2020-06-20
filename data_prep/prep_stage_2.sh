@@ -51,11 +51,33 @@ else
 fi
 
 
-echo
 echo "--- PREP_STAGE_2 ---"
 echo "$(date) - START"
 
+echo "--- STAGE 2 LOG ---" >> $PREP_LOG
+echo "$(date) - START" >> $PREP_LOG
 
+
+stage_1_subjects=$DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
+
+echo "$(date) - STEP 1 - calling RDS cleaning script" >> $PREP_LOG
+echo "$(date) - STEP 1 - calling RDS cleaning script"
+# STEP 1 - Call R script to clean RDS, pull scan data, filter subjects missing scandata or not meeting QC/PC requirement for T1w scans
+Rscript $SUPPORT_SCRIPTS/stage_2/clean_rds_pull_scandata.r $NDA_RDS $stage_1_subjects $STAGE_2_OUT
+
+NUM_SUBS_MISSING=$(cat $STAGE_2_OUT/prep_stage_2_missing_subjects.txt)
+NUM_SUBS_DROPPED=$(cat $STAGE_2_OUT/prep_stage_2_dropped_scan_subjects.txt)
+NUM_SUBS_RDS=$(cat $STAGE_2_OUT/prep_stage_2_final_subjects.txt)
+echo "$(date) - Number subjects missing from RDS file: $NUM_SUBS_MISSING"
+echo "$(date) - Number subjects missing from RDS file: $NUM_SUBS_MISSING" >> $PREP_LOG
+echo "$(date) - Number subjects dropped due to missing scan data or not meeting requirements: $NUM_SUBS_DROPPED"
+echo "$(date) - Number subjects dropped due to missing scan data or not meeting requirements: $NUM_SUBS_DROPPED" >> $PREP_LOG
+echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS"
+echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS" >> $PREP_LOG
+
+# STEP 2 - Calculate average motion for subjects in $STAGE_2_OUT/prep_stage_2_final_subjects.txt
+
+# STEP 3 - Motion filtering
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 2 LOG ---" >> $PREP_LOG

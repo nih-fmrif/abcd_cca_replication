@@ -53,48 +53,49 @@ subs_not_in_rds <- setdiff(subject_list,nda3$subjectid)
 # Drop subjects not in our list
 nda4 <- nda3[nda3$subjectid %in% subject_list,]
 
-final_subs <- list(nda4$subjectid)
+subs_in_rds <- list(nda4$subjectid)
 
 # Finally, remove any completely empty rows which may have been introduced
 nda5 <- nda4[rowSums(is.na(nda4)) != ncol(nda4),]
 
-
-
-# --------------- RESUME WORK HERE ------------------
-# --------------- RESUME WORK HERE ------------------
 # Pull out scan data
 nda_scan <- nda5[ , (names(nda5) %in% scan_sm_list)]
 # Drop any rows that have NA in the iqc_t1_good_ser column
 nda_scan_2 <- nda_scan %>% drop_na(iqc_t1_good_ser)
 nda_scan_3 <- nda_scan_2[nda_scan_2["iqc_t1_good_ser"]>0, ]
-# --------------- RESUME WORK HERE ------------------
-# --------------- RESUME WORK HERE ------------------
 
+final_subs <- list(nda_scan_3$subjectid)
+dropped_scan_subs <- setdiff(nda_scan$subjectid,dropped_subs)
 
-# Now keep subject measures of interest
-# nda6 <- nda5[ , (names(nda5) %in% sm_list)]
-
+nda6 <- nda5[nda5$subjectid %in% final_subs,]
 # Save updated RDS for later use
-saveRDS(nda5, paste(out_path,"nda2.0.1_stage_1.Rds",sep="/"))
+saveRDS(nda6, paste(out_path,"nda2.0.1_stage_2.Rds",sep="/"))
 
 # Save scan data
-write.table(nda_scan,
+write.table(nda_scan_3,
             file = paste(out_path,"scan_data.csv",sep="/"),
             sep  = ",",
             row.names = FALSE,
             col.names = TRUE,
             quote = FALSE)
 
-# Save list of subjects available
-write.table(final_subs,
-            file = paste(out_path,"prep_stage_1_final_subjects.txt",sep="/"),
+# Save list of missing subjects
+write.table(subs_not_in_rds,
+            file = paste(out_path,"prep_stage_2_missing_subjects.txt",sep="/"),
             row.names = FALSE,
             col.names = FALSE,
             quote = FALSE)
 
-# Save list of missing subjects
-write.table(subs_not_in_rds,
-            file = paste(out_path,"prep_stage_1_missing_subjects.txt",sep="/"),
+# Save list of dropped subjects
+write.table(dropped_scan_subs,
+            file = paste(out_path,"prep_stage_2_dropped_scan_subjects.txt",sep="/"),
+            row.names = FALSE,
+            col.names = FALSE,
+            quote = FALSE)
+
+# Save list of subjects available
+write.table(final_subs,
+            file = paste(out_path,"prep_stage_2_final_subjects.txt",sep="/"),
             row.names = FALSE,
             col.names = FALSE,
             quote = FALSE)
