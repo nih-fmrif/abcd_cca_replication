@@ -9,3 +9,4 @@
 !scan_length_analyze_classify.sh
 !scan_length_analyze_classify_single.sh
 !stage_2_swarm_gen.py
+!clean_rds_pull_scandata.r
