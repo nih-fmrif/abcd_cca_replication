@@ -47,16 +47,20 @@ STAGE_2_OUT=$DATA_PREP/data/stage_2/
 if [[ -d $STAGE_2_OUT ]]; then
     rm $STAGE_2_OUT/*.txt
     rm $STAGE_2_OUT/*.Rds
+    rm $STAGE_2_OUT/motion_data/*.txt
 else
     mkdir $STAGE_2_OUT
+    rm $STAGE_2_OUT/motion_data/
 fi
-
 
 echo "--- PREP_STAGE_2 ---"
 echo "$(date) - START"
 
 echo "--- STAGE 2 LOG ---" >> $PREP_LOG
 echo "$(date) - START" >> $PREP_LOG
+
+
+touch $STAGE_2_OUT/subs_motion_values.txt
 
 stage_1_subjects=$DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
 
@@ -76,6 +80,13 @@ echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS"
 echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS" >> $PREP_LOG
 
 # STEP 2 - Calculate average motion for subjects in $STAGE_2_OUT/prep_stage_2_final_subjects.txt
+echo "$(date) - STEP 2 - Calculating average motion across valid runs for each subject" >> $PREP_LOG
+echo "$(date) - STEP 2 - Calculating average motion across valid runs for each subject"
+
+while read sub; do
+    # sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $sub_classifier $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ $STAGE_2_OUT/motion_data/ $STAGE_2_OUT/subs_motion_values.txt $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py
+    sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $ABCD_CCA_REPLICATION
+done < $STAGE_2_OUT/prep_stage_2_final_subjects.txt
 
 # STEP 3 - Motion filtering
 
