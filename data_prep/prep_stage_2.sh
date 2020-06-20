@@ -46,6 +46,7 @@ fi
 STAGE_2_OUT=$DATA_PREP/data/stage_2/
 if [[ -d $STAGE_2_OUT ]]; then
     rm $STAGE_2_OUT/*.txt
+    rm $STAGE_2_OUT/*.Rds
 else
     mkdir $STAGE_2_OUT
 fi
