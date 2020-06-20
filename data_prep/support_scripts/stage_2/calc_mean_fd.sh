@@ -1,13 +1,13 @@
 #! /bin/bash
 
-# calc_avg_motion.sh
+# calc_mean_fd.sh
 # Created: 6/20/20 (pipeline_version_1.2)
 # Updated:
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 
 # Example usage:
-#   ./calc_avg_motion.sh
+#   ./calc_mean_fd.sh
 
 # if (( $# < 2 ))
 # then
