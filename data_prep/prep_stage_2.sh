@@ -83,7 +83,7 @@ echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS" >> $PREP_LOG
 # STEP 2 - Calculate average motion for subjects in $STAGE_2_OUT/prep_stage_2_final_subjects.txt
 echo "$(date) - STEP 2 - Generating swarm to calculate average motion across valid runs for each subject (calling stage_2_swarm_gen.py)" >> $PREP_LOG
 echo "$(date) - STEP 2 - Generating swarm to calculate average motion across valid runs for each subject (calling stage_2_swarm_gen.py)"
-python $SUPPORT_SCRIPTS/stage_2/stage_2_swarm_gen.py $STAGE_2_OUT/prep_stage_2_final_subjects.txt $ABCD_CCA_REPLICATION $STAGE_2_OUT $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh
+python $SUPPORT_SCRIPTS/stage_2/stage_2_swarm_gen.py $STAGE_2_OUT/prep_stage_2_rds_subjects.txt $ABCD_CCA_REPLICATION $STAGE_2_OUT $SUPPORT_SCRIPTS/stage_2/calc_mean_fd.sh
 
 echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!"
 echo "          swarm -f $STAGE_2_OUT/stage_2.swarm -b 500 --logdir $STAGE_2_OUT/swarm_logs/ --time=00:01:00 --job-name stage_2"

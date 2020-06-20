@@ -95,7 +95,7 @@ write.table(dropped_scan_subs,
 
 # Save list of subjects available
 write.table(final_subs,
-            file = paste(out_path,"prep_stage_2_final_subjects.txt",sep="/"),
+            file = paste(out_path,"prep_stage_2_rds_subjects.txt",sep="/"),
             row.names = FALSE,
             col.names = FALSE,
             quote = FALSE)
