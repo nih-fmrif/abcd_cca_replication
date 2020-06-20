@@ -2,6 +2,6 @@
 *
 # Except this file
 !.gitignore
-!calc_avg_motion.sh
+!calc_mean_fd.sh
 !clean_rds_pull_scandata.r
 !subject_motion_to_meanFD.py
