@@ -43,7 +43,7 @@ else
         # correct number of tsv files for number of runs
 
         # Save the filepaths for .tsv files to the $stage_2_out directory
-        echo "$paths" > $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt
+        echo "$paths" >> $DATA_PREP/data/stage_2/motion_data/${sub}_tsv_paths.txt
 
         # Now call python script to calc
         python $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py $sub $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt $STAGE_2_OUT/subs_motion_values.txt
