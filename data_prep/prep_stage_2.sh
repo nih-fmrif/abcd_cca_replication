@@ -61,7 +61,6 @@ echo "$(date) - START"
 echo "--- STAGE 2 LOG ---" >> $PREP_LOG
 echo "$(date) - START" >> $PREP_LOG
 
-
 touch $STAGE_2_OUT/subs_motion_values.txt
 
 stage_1_subjects=$DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
@@ -86,14 +85,16 @@ echo "$(date) - STEP 2 - Generating swarm to calculate average motion across val
 echo "$(date) - STEP 2 - Generating swarm to calculate average motion across valid runs for each subject (calling stage_2_swarm_gen.py)"
 python $SUPPORT_SCRIPTS/stage_2/stage_2_swarm_gen.py $STAGE_2_OUT/prep_stage_2_final_subjects.txt $ABCD_CCA_REPLICATION $STAGE_2_OUT $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh
 
+echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!"
+echo "          swarm -f $STAGE_2_OUT/stage_2.swarm -b 500 --logdir $STAGE_2_OUT/swarm_logs/ --time=00:01:00 --job-name stage_2"
+
+echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!" >> $PREP_LOG
+echo "          swarm -f $STAGE_2_OUT/stage_2.swarm -b 500 --logdir $STAGE_2_OUT/swarm_logs/ --time=00:01:00 --job-name stage_2" >> $PREP_LOG
+
 # while read sub; do
 #     # sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $sub_classifier $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ $STAGE_2_OUT/motion_data/ $STAGE_2_OUT/subs_motion_values.txt $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py
 #     sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $ABCD_CCA_REPLICATION
 # done < $STAGE_2_OUT/prep_stage_2_final_subjects.txt
-
-
-
-# STEP 3 - Motion filtering
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 2 LOG ---" >> $PREP_LOG
