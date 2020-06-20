@@ -23,8 +23,8 @@ sub_path <- args[2]
 out_path <- args[3]
 # sm_path <- args[3]
 
-# rds_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
-# sub_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/stage_1/subjects_with_motion_files.txt"
+rds_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
+sub_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/stage_1/subjects_keep_0.3mm.txt"
 
 subject_list <- readLines(sub_path)
 subject_list <- factor(subject_list)
@@ -65,7 +65,7 @@ nda_scan_2 <- nda_scan %>% drop_na(iqc_t1_good_ser)
 nda_scan_3 <- nda_scan_2[nda_scan_2["iqc_t1_good_ser"]>0, ]
 
 final_subs <- list(nda_scan_3$subjectid)
-dropped_scan_subs <- setdiff(list(nda_scan$subjectid),final_subs)
+dropped_scan_subs <- setdiff(nda_scan$subjectid,nda_scan_3$subjectid)
 
 nda6 <- nda5[nda5$subjectid %in% final_subs,]
 # Save updated RDS for later use
