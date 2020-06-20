@@ -37,4 +37,4 @@ for scan_class,tsv in zip(classifier,tsv_files):
         continue
 
 with open(outfile, "a") as output:
-    output.write('%s,%s\n' % sub,motion_val)
+    output.write('{},{}\n'.format(sub,motion_val))
