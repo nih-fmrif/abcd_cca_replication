@@ -7,9 +7,6 @@
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 # 
 
-# Expected tools on PATH:
-# 
-
 # Example usage:
 # ./prep_stage_1.sh
 
@@ -24,12 +21,6 @@ else
     exit 1
 fi
 
-# Before proceeding, make sure everything we need is present:
-# Rscript_exec=$(which Rscript)
-#  if [ ! -x "$Rscript_exec" ] ; then
-#     echo "Error - Rscript is not on PATH. Exiting"
-#     exit 1
-#  fi
 
 CLASSIFIERS=$DATA_PREP/data/stage_1/classifiers/
 if [[ -d $CLASSIFIERS ]]; then

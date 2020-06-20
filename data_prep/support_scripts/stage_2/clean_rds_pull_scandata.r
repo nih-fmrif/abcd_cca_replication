@@ -1,15 +1,12 @@
 
 # clean_rds_pull_scandata.r
 # Created: 6/15/20
-# Updated:
+# Updated: 6/20/20 (pipeline_version_1.2)
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
-# This script does the following:
-#   1.  Keeps only baseline scans for subjects
-#   2.  Converts subject naming from NDAR_INVxxxxxxxx to sub-NDARINVxxxxxxxx
-#   3.  Exports some motion data needed in prep_stage_1 (saves to /data/stage_1/scan_data.txt)
 
 library(dplyr)
+library(tidyr)
 
 mode <- function(x) {
     ux <- unique(x)
@@ -31,7 +28,7 @@ out_path <- args[3]
 
 subject_list <- readLines(sub_path)
 subject_list <- factor(subject_list)
-scan_sm_list <- list("subjectid","iqc_t1_good_ser","iqc_rsfmri_good_ser","iqc_rsfmri_total_ser")
+scan_sm_list <- list("subjectid","iqc_t1_good_ser")
 
 # Load original RDS file
 nda <- readRDS(rds_path)
@@ -61,8 +58,18 @@ final_subs <- list(nda4$subjectid)
 # Finally, remove any completely empty rows which may have been introduced
 nda5 <- nda4[rowSums(is.na(nda4)) != ncol(nda4),]
 
+
+
+# --------------- RESUME WORK HERE ------------------
+# --------------- RESUME WORK HERE ------------------
 # Pull out scan data
 nda_scan <- nda5[ , (names(nda5) %in% scan_sm_list)]
+# Drop any rows that have NA in the iqc_t1_good_ser column
+nda_scan_2 <- nda_scan %>% drop_na(iqc_t1_good_ser)
+nda_scan_3 <- nda_scan_2[nda_scan_2["iqc_t1_good_ser"]>0, ]
+# --------------- RESUME WORK HERE ------------------
+# --------------- RESUME WORK HERE ------------------
+
 
 # Now keep subject measures of interest
 # nda6 <- nda5[ , (names(nda5) %in% sm_list)]
