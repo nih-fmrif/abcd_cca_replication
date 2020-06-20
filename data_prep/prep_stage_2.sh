@@ -48,9 +48,11 @@ if [[ -d $STAGE_2_OUT ]]; then
     rm $STAGE_2_OUT/*.txt
     rm $STAGE_2_OUT/*.Rds
     rm $STAGE_2_OUT/motion_data/*.txt
+    rm $STAGE_2_OUT/swarm_logs/*.{e,o}
 else
     mkdir $STAGE_2_OUT
     rm $STAGE_2_OUT/motion_data/
+    rm $STAGE_2_OUT/swarm_logs/
 fi
 
 echo "--- PREP_STAGE_2 ---"
@@ -80,13 +82,16 @@ echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS"
 echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS" >> $PREP_LOG
 
 # STEP 2 - Calculate average motion for subjects in $STAGE_2_OUT/prep_stage_2_final_subjects.txt
-echo "$(date) - STEP 2 - Calculating average motion across valid runs for each subject" >> $PREP_LOG
-echo "$(date) - STEP 2 - Calculating average motion across valid runs for each subject"
+echo "$(date) - STEP 2 - Generating swarm to calculate average motion across valid runs for each subject (calling stage_2_swarm_gen.py)" >> $PREP_LOG
+echo "$(date) - STEP 2 - Generating swarm to calculate average motion across valid runs for each subject (calling stage_2_swarm_gen.py)"
+python $SUPPORT_SCRIPTS/stage_2/stage_2_swarm_gen.py $STAGE_2_OUT/prep_stage_2_final_subjects.txt $ABCD_CCA_REPLICATION $STAGE_2_OUT $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh
 
-while read sub; do
-    # sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $sub_classifier $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ $STAGE_2_OUT/motion_data/ $STAGE_2_OUT/subs_motion_values.txt $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py
-    sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $ABCD_CCA_REPLICATION
-done < $STAGE_2_OUT/prep_stage_2_final_subjects.txt
+# while read sub; do
+#     # sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $sub_classifier $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ $STAGE_2_OUT/motion_data/ $STAGE_2_OUT/subs_motion_values.txt $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py
+#     sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $ABCD_CCA_REPLICATION
+# done < $STAGE_2_OUT/prep_stage_2_final_subjects.txt
+
+
 
 # STEP 3 - Motion filtering
 

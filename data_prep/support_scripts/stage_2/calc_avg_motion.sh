@@ -27,7 +27,6 @@ else
     exit 1
 fi
 
-
 STAGE_2_OUT=$DATA_PREP/data/stage_2
 # detect files of format:
 # sub-NDARINVxxxxxxxx_ses-baselineYear1Arm1_task-rest_run-<1,2,3...>_motion.tsv

@@ -5,6 +5,10 @@
 # Last edited:
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 
+
+# Generate commands of the form:
+# $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $ABCD_CCA_REPLICATION
+
 import os
 import sys
 
@@ -20,6 +24,6 @@ f_swarm = open(fp, 'w')
 
 for subject in subjects:
 
-    cmd = "module load fsl && {} {} {}".format(script_to_call,subject,abcd_cca_replication)
+    cmd = "{} {} {}".format(script_to_call, subject, abcd_cca_replication)
     f_swarm.write(cmd+'\n')
 f_swarm.close()
