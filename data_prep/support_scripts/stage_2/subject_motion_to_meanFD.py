@@ -19,10 +19,10 @@ def calc_fd(file):
     motion_val = round(np.mean(derv.mean())/len(derv_col),6)
     return motion_val
 
-sub_id                  =   sys.argv[1]
-scan_classifier         =   sys.argv[2]
-subject_tsv_files       =   sys.argv[3]
-outfile                 =   sys.argv[4]
+sub                 =   sys.argv[1]
+scan_classifier     =   sys.argv[2]
+subject_tsv_files   =   sys.argv[3]
+outfile             =   sys.argv[4]
 
 classifier = [line.rstrip('\n') for line in open(scan_classifier)]
 classifier = [int(i) for i in classifier]
