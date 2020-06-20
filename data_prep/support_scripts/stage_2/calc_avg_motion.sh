@@ -37,7 +37,7 @@ if [ -z "$paths" ]; then
     echo $sub >> $DATA_PREP/data/stage_2/subjects_missing_motion.txt
 else
     num_tsv_files=$(echo "$paths" | wc -l)
-    len_classifier=$(cat $2 | wc -l)
+    len_classifier=$(cat $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt | wc -l)
     # check for mis-match between the length of classifier file and number of motion.tsv files
     if [ $num_tsv_files -eq $len_classifier ]; then
         # correct number of tsv files for number of runs
