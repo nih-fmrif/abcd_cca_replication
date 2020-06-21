@@ -49,10 +49,12 @@ if [[ -d $STAGE_2_OUT ]]; then
     rm $STAGE_2_OUT/*.Rds
     rm $STAGE_2_OUT/motion_data/*.txt
     rm $STAGE_2_OUT/swarm_logs/*.{e,o}
+    rm $STAGE_2_OUT/subs_missing_motion_data/*
 else
     mkdir $STAGE_2_OUT
     mkdir $STAGE_2_OUT/motion_data/
     mkdir $STAGE_2_OUT/swarm_logs/
+    mkdir $STAGE_2_OUT/subs_missing_motion_data/
 fi
 
 echo "--- PREP_STAGE_2 ---"
@@ -60,8 +62,6 @@ echo "$(date) - START"
 
 echo "--- STAGE 2 LOG ---" >> $PREP_LOG
 echo "$(date) - START" >> $PREP_LOG
-
-touch $STAGE_2_OUT/subs_motion_values.txt
 
 # STEP 0 - determine which subjects can proceed from stage 1 (based on data/stage_1/subjects_classified/keep/sub*0.3mm)
 ls $DATA_PREP/data/stage_1/subjects_classified/keep/sub*_0.3mm | sed 's|0.3mm||' >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
