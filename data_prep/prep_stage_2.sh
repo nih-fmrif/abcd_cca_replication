@@ -72,7 +72,7 @@ Rscript $SUPPORT_SCRIPTS/stage_2/clean_rds_pull_scandata.r $NDA_RDS_RAW $stage_1
 
 NUM_SUBS_MISSING=$(cat $STAGE_2_OUT/prep_stage_2_missing_subjects.txt | wc -l)
 NUM_SUBS_DROPPED=$(cat $STAGE_2_OUT/prep_stage_2_dropped_scan_subjects.txt | wc -l)
-NUM_SUBS_RDS=$(cat $STAGE_2_OUT/prep_stage_2_final_subjects.txt | wc -l)
+NUM_SUBS_RDS=$(cat $STAGE_2_OUT/prep_stage_2_rds_subjects.txt | wc -l)
 echo "$(date) - Number subjects missing from RDS file: $NUM_SUBS_MISSING"
 echo "$(date) - Number subjects missing from RDS file: $NUM_SUBS_MISSING" >> $PREP_LOG
 echo "$(date) - Number subjects dropped due to missing scan data or not meeting requirements: $NUM_SUBS_DROPPED"
