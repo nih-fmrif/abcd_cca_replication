@@ -35,7 +35,8 @@ paths=`find $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -n
 # check if path variable is an empty line (nothing except a newline terminator)
 if [ -z "$paths" ]; then
     # Skip this subject
-    echo $sub >> $STAGE_2_OUT/subjects_missing_motion.txt
+    touch $STAGE_2_OUT/subs_missing_motion_data/$sub
+    # echo $sub >> $STAGE_2_OUT/subjects_missing_motion.txt
 else
     num_tsv_files=$(echo "$paths" | wc -l)
     len_classifier=$(cat $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt | wc -l)
