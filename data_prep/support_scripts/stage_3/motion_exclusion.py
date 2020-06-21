@@ -9,6 +9,7 @@
 #   absolute path to file:              /data/stage_3/subjects_mean_fds.txt
 #   absolute path to output folder:     /data/stage_3/
 
+import os
 import sys
 import pandas as pd
 import numpy as np
