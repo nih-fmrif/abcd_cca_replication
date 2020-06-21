@@ -43,10 +43,18 @@ if [[ -d $STAGE_1_OUT ]]; then
     rm $STAGE_1_OUT/icafix_cmds/0.2mm/*.txt
     rm $STAGE_1_OUT/icafix_cmds/0.3mm/*.txt
     rm $STAGE_1_OUT/swarm_logs/*.{e,o}
+    rm $STAGE_1_OUT/subjects_classified/*
+    rm $STAGE_1_OUT/subjects_classified/keep/*
+    rm $STAGE_1_OUT/subjects_classified/discard/*
+    rm $STAGE_1_OUT/subjects_classified/error/*
 else
     mkdir $STAGE_1_OUT
     mkdir $STAGE_1_OUT/icafix_cmds/0.2mm/
     mkdir $STAGE_1_OUT/swarm_logs/0.3mm/
+    mkdir $STAGE_1_OUT/subjects_classified/
+    mkdir $STAGE_1_OUT/subjects_classified/keep/
+    mkdir $STAGE_1_OUT/subjects_classified/discard/
+    mkdir $STAGE_1_OUT/subjects_classified/error/
 fi
 
 echo "--- STAGE 1 ---"
