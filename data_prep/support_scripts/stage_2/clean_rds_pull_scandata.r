@@ -81,14 +81,14 @@ write.table(nda_scan_3,
 
 # Save list of missing subjects
 write.table(subs_not_in_rds,
-            file = paste(out_path,"prep_stage_2_missing_subjects.txt",sep="/"),
+            file = paste(out_path,"prep_stage_2_missing_rds_subjects.txt",sep="/"),
             row.names = FALSE,
             col.names = FALSE,
             quote = FALSE)
 
 # Save list of dropped subjects
 write.table(dropped_scan_subs,
-            file = paste(out_path,"prep_stage_2_dropped_scan_subjects.txt",sep="/"),
+            file = paste(out_path,"prep_stage_2_dropped_rds_scan_subjects.txt",sep="/"),
             row.names = FALSE,
             col.names = FALSE,
             quote = FALSE)
