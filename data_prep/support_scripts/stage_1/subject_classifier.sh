@@ -29,6 +29,10 @@ CLASSIFIERS=$DATA_PREP/data/stage_1/classifiers/
 ICAFIX=$DATA_PREP/data/stage_1/icafix_cmds/
 pre_censor_lens=$PRE_CENSOR_LENGTHS/${sub}.txt
 
+KEEP_DIR=$DATA_PREP/data/stage_1/subjects_classified/keep/
+DISCARD_DIR=$DATA_PREP/data/stage_1/subjects_classified/discard/
+ERROR_DIR=$DATA_PREP/data/stage_1/subjects_classified/error/
+
 # STEP 1 - 0.2mm FD
 post_censor_lens=$CENSOR_FILES/$sub/good_TRs_0.2mm.censor.txt
 python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $pre_censor_lens $post_censor_lens $CLASSIFIERS/0.2mm/$sub.txt $MIN_TPS
@@ -38,12 +42,13 @@ result=$?
 if [[ $result -eq 2 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.2mm.txt
+    # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.2mm.txt
+    touch $DISCARD_DIR/${sub}_0.2mm
 elif [[ $result -eq 1 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.2mm.txt
-
+    # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.2mm.txt
+    touch $KEEP_DIR/${sub}_0.2mm
     # Now create their cmd
     # Keep track of which scan we're looking at
     count=1 
@@ -71,16 +76,11 @@ elif [[ $result -eq 1 ]]; then
     done < $CLASSIFIERS/0.2mm/$sub.txt
     # echo the ICA+FIX cmd to file
     echo $cmd_str >> $ICAFIX/0.2mm/$sub.txt
-
-elif [[ $result -eq 0 ]]; then
-    # Error handling
-    # echo "Something went wrong when processing $sub in script classify_scans_get_lens_clean_censors.py. Omitting subject."
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.2mm.txt
 else
     # Something else went wrong (maybe not needed?)
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.2mm.txt
+    # echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.2mm.txt
+    touch $ERROR_DIR/${sub}_0.2mm
 fi
-
 
 
 # STEP 2 - 0.3mm FD
@@ -92,12 +92,13 @@ result=$?
 if [[ $result -eq 2 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
+    # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
+    touch $DISCARD_DIR/${sub}_0.3mm
 elif [[ $result -eq 1 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
-
+    # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
+    touch $KEEP_DIR/${sub}_0.3mm
     # Now create their cmd
     # Keep track of which scan we're looking at
     count=1 
@@ -126,12 +127,7 @@ elif [[ $result -eq 1 ]]; then
 
     # echo the ICA+FIX cmd to file
     echo $cmd_str >> $ICAFIX/0.3mm/$sub.txt
-
-elif [[ $result -eq 0 ]]; then
-    # Error handling
-    # echo "Something went wrong when processing $sub in script classify_scans_get_lens_clean_censors.py. Omitting subject."
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.3mm.txt
 else
     # Something else went wrong (maybe not needed?)
-    echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
+    touch $ERROR_DIR/${sub}_0.3mm
 fi
