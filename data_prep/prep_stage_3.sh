@@ -53,7 +53,7 @@ motion_file=$DATA_PREP/data/stage_3/subjects_mean_fds.txt
 touch $motion_file
 echo "subjectid,mean_fd" >> $motion_file
 while read subject; do
-    cat $DATA_PREP/stage_2/motion_data/$subject.txt >> $motion_file
+    cat $DATA_PREP/data/stage_2/motion_data/$subject.txt >> $motion_file
 done < $stage_2_subjects
 
 # STEP 1 - Call python script to remove subjects who have anomalous amounts of data
