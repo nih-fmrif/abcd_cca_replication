@@ -51,8 +51,8 @@ if [[ -d $STAGE_2_OUT ]]; then
     rm $STAGE_2_OUT/swarm_logs/*.{e,o}
 else
     mkdir $STAGE_2_OUT
-    rm $STAGE_2_OUT/motion_data/
-    rm $STAGE_2_OUT/swarm_logs/
+    mkdir $STAGE_2_OUT/motion_data/
+    mkdir $STAGE_2_OUT/swarm_logs/
 fi
 
 echo "--- PREP_STAGE_2 ---"
@@ -65,12 +65,12 @@ touch $STAGE_2_OUT/subs_motion_values.txt
 
 # STEP 0 - determine which subjects can proceed from stage 1 (based on data/stage_1/subjects_classified/keep/sub*0.3mm)
 ls $DATA_PREP/data/stage_1/subjects_classified/keep/sub*_0.3mm | sed 's|0.3mm||' >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
-ls $DATA_PREP/data/stage_1/subjects_classified/keep/sub*_0.2mm | sed 's|0.2mm||' >> $DATA_PREP/data/stage_1/subjects_keep_0.2mm.txt
+# ls $DATA_PREP/data/stage_1/subjects_classified/keep/sub*_0.2mm | sed 's|0.2mm||' >> $DATA_PREP/data/stage_2/subjects_keep_0.2mm.txt
 stage_1_subjects=$DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
 
+# STEP 1 - Call R script to clean RDS, pull scan data, filter subjects missing scandata or not meeting QC/PC requirement for T1w scans
 echo "$(date) - STEP 1 - calling RDS cleaning script" >> $PREP_LOG
 echo "$(date) - STEP 1 - calling RDS cleaning script"
-# STEP 1 - Call R script to clean RDS, pull scan data, filter subjects missing scandata or not meeting QC/PC requirement for T1w scans
 Rscript $SUPPORT_SCRIPTS/stage_2/clean_rds_pull_scandata.r $NDA_RDS_RAW $stage_1_subjects $STAGE_2_OUT
 
 NUM_SUBS_MISSING=$(cat $STAGE_2_OUT/prep_stage_2_missing_subjects.txt | wc -l)
@@ -93,11 +93,6 @@ echo "          swarm -f $STAGE_2_OUT/stage_2.swarm -b 500 --logdir $STAGE_2_OUT
 
 echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!" >> $PREP_LOG
 echo "          swarm -f $STAGE_2_OUT/stage_2.swarm -b 500 --logdir $STAGE_2_OUT/swarm_logs/ --time=00:01:00 --job-name stage_2" >> $PREP_LOG
-
-# while read sub; do
-#     # sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $sub_classifier $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ $STAGE_2_OUT/motion_data/ $STAGE_2_OUT/subs_motion_values.txt $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py
-#     sh $SUPPORT_SCRIPTS/stage_2/calc_avg_motion.sh $sub $ABCD_CCA_REPLICATION
-# done < $STAGE_2_OUT/prep_stage_2_final_subjects.txt
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 2 LOG ---" >> $PREP_LOG
