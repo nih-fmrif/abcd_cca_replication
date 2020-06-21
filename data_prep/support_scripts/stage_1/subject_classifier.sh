@@ -42,12 +42,12 @@ result=$?
 if [[ $result -eq 2 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
-    # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.2mm.txt
+    echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.2mm.txt
     touch $DISCARD_DIR/${sub}_0.2mm
 elif [[ $result -eq 1 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
-    # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.2mm.txt
+    echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.2mm.txt
     touch $KEEP_DIR/${sub}_0.2mm
     # Now create their cmd
     # Keep track of which scan we're looking at
@@ -78,7 +78,7 @@ elif [[ $result -eq 1 ]]; then
     echo $cmd_str >> $ICAFIX/0.2mm/$sub.txt
 else
     # Something else went wrong (maybe not needed?)
-    # echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.2mm.txt
+    echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.2mm.txt
     touch $ERROR_DIR/${sub}_0.2mm
 fi
 
@@ -92,12 +92,12 @@ result=$?
 if [[ $result -eq 2 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
-    # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
+    echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
     touch $DISCARD_DIR/${sub}_0.3mm
 elif [[ $result -eq 1 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
-    # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
+    echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
     touch $KEEP_DIR/${sub}_0.3mm
     # Now create their cmd
     # Keep track of which scan we're looking at
@@ -129,5 +129,6 @@ elif [[ $result -eq 1 ]]; then
     echo $cmd_str >> $ICAFIX/0.3mm/$sub.txt
 else
     # Something else went wrong (maybe not needed?)
+    echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.3mm.txt
     touch $ERROR_DIR/${sub}_0.3mm
 fi
