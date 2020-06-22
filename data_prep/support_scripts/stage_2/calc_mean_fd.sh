@@ -24,7 +24,7 @@ STAGE_2_OUT=$DATA_PREP/data/stage_2
 tsv_paths=`find $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -name "sub-*ses-baselineYear1Arm1_task-rest*motion.tsv" ! -name "*desc-filtered*" 2> /dev/null | sort | uniq`
 
 # check if path variable is an empty line (nothing except a newline terminator)
-if [ -z "$tsv_paths" ] || [ -z "$censor_paths" ]; then
+if [ -z "$tsv_paths" ]; then
     # Skip this subject
     touch $STAGE_2_OUT/subs_missing_motion_data/$sub
 else
