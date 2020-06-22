@@ -45,10 +45,10 @@ if [ -z "$tsv_paths" ]; then
     exit
 else
     num_tsv_files=$(echo "$tsv_paths" | wc -l)
-    num_scans=$(cat $num_scans | wc -l)
+    num_scans=$(cat $pre_censor_lens | wc -l)
 
     # check for mis-match between the length of classifier file and number of motion.tsv files
-    if [ $num_tsv_files -eq $len_classifier ]; then
+    if [ $num_tsv_files -eq $num_scans ]; then
         # correct number of tsv files for number of runs
 
         # Save the filepaths for .tsv files to the $stage_2_out directory
