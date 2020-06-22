@@ -14,7 +14,7 @@ out_path <- args[5]
 
 subject_list <- readLines(sub_path)
 subject_list <- factor(subject_list)
-sm_list <- readLines(sm_path))
+sm_list <- readLines(sm_path)
 ica_sm_list <- readLines(ica_sm_path)
 
 nda <- readRDS(rds_path)
