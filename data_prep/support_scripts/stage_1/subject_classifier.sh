@@ -34,7 +34,7 @@ SUBJECT_MEAN_FD_DIR=$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/
 
 # Define paths to two files we will need
 pre_censor_lens=$STAGE_0_OUT/pre_censor_lengths/${sub}.txt
-post_censor_lens=$STAGE_0_OUT/censor_files/$sub/good_TRs_${FD_THRESH}.censor.txt
+post_censor_lens=$STAGE_0_OUT/censor_files/$sub/good_TRs_${FD_THRESH}mm.censor.txt
 
 tsv_paths=`find $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -name "sub-*ses-baselineYear1Arm1_task-rest*motion.tsv" ! -name "*desc-filtered*" 2> /dev/null | sort | uniq`
 
