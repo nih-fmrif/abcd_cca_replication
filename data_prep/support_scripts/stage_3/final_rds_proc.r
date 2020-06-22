@@ -112,7 +112,7 @@ if (length(badcols) > 0){
     sprintf("Number of SMs that fail quantitative exclusion: %s", length(badcols))
     sprintf("SMs that failed:")
     badcols
-else{
+} else{
     sprintf("All SMs passed quantitative inclusion.")
 }
 
