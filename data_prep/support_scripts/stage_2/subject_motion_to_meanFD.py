@@ -36,7 +36,7 @@ tsv_files       =   [line.rstrip('\n') for line in open(subject_tsv_files)]
 censor_files    =   [line.rstrip('\n') for line in open(subject_censor_files)]
 
 motion_vals=[]
-for scan_class,tsv,censor in zip(classifier,tsv_files,censor):
+for scan_class,tsv,censor in zip(classifier, tsv_files, censor_files):
     if scan_class == 1:
         scan_fd = calc_fd(tsv,censor)
         motion_vals.append(scan_fd)
