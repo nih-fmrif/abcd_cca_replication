@@ -23,8 +23,8 @@ sub_path <- args[2]
 out_path <- args[3]
 # sm_path <- args[3]
 
-rds_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
-sub_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/stage_1/subjects_keep_0.3mm.txt"
+# rds_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
+# sub_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/stage_1/subjects_keep_0.3mm.txt"
 
 subject_list <- readLines(sub_path)
 subject_list <- factor(subject_list)
