@@ -82,8 +82,8 @@ try:
         output.write('{},{}\n'.format(sub, avg_fd))
 except ZeroDivisionError as err:
     print("Subject had no valid scans for scan fd threshold of {}".format(scan_fd_thresh))
-    sys.exit(303)
-    
+    sys.exit(202)
+
 # Return code to parent shell script for decision making (based on total good scan length)
 if total_post_censor_len >= 750:
     # subject can proceed in pipeline
