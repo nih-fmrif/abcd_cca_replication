@@ -61,10 +61,13 @@ echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_
 echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_proc)"
 Rscript $SUPPORT_SCRIPTS/stage_3/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $stage_2_subjects $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txt $STAGE_3_OUT
 
+NUM_SUBS=$(cat $STAGE_3_OUT/final_subjects.txt | wc -l)
+echo "Final number of subjects: $NUM_SUBS"
+
 # STEP 2 - Generate final VARS.txt matrix
 echo "$(date) - STEP 2 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)" >> $PREP_LOG
 echo "$(date) - STEP 2 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)"
-python $SUPPORT_SCRIPTS/stage_3/vars.py $STAGE_3_OUT/final_subjects.txt $DATA_PREP/data/subject_measures.txt $motion_file $STAGE_3_OUT/VARS_no_motion.txt $ABCD_CCA_REPLICATION/data/VARS.txt
+python $SUPPORT_SCRIPTS/stage_3/vars.py $STAGE_3_OUT/final_subjects.txt $STAGE_3_OUT/final_sm_list $motion_file $STAGE_3_OUT/VARS_no_motion.txt $ABCD_CCA_REPLICATION/data/VARS.txt
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 3 LOG ---" >> $PREP_LOG

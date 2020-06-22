@@ -113,22 +113,25 @@ for (i in 2:NCOL(nda_numeric)) {
 }
 
 if (length(badcols) > 0){
-    sprintf("Number of SMs that fail quantitative exclusion: %s", length(badcols))
-    sprintf("SMs that failed:")
-    badcols
+    sprintf("WARNING: One or more SMs did NOT PASS quantitative filtering. Check file col_inc_excl.txt for details.")
 } else{
     sprintf("All SMs passed quantitative inclusion.")
 }
 
 ## Drop any subject who is missing more than 50% of the final 74 SMs
-nda_final <- nda_numeric[rowSums(is.na(nda_numeric[,ica_sm_list])) < (length(ica_sm_list)/2),]    #Drop the subjects
+nda_final_1 <- nda_numeric[rowSums(is.na(nda_numeric[,ica_sm_list])) < (length(ica_sm_list)/2),]    #Drop the subjects
+
+# Drop any bad cols
+nda_final_2 <- nda_final_1[ , !(names(nda_final_1) %in% badcols)]
+
+# Final subject list
+final_subs <- list(nda_final_2$subjectid)
+
+# Final SM list
+final_sms <- list(names(nda_final_2))
 
 # Save final rds
 saveRDS(nda_final, paste(out_path,"nda2.0.1_final.Rds",sep="/"))
-
-final_subs <- list(nda_final$subjectid)
-
-sprintf("Final number of subjects: %s", length(final_subs))
 
 # Save final RDS matrix as a csv
 write.table(nda_final,
@@ -142,5 +145,19 @@ write.table(nda_final,
 write.table(final_subs,
             file = paste(out_path,"final_subjects.txt",sep="/"),
             row.names = FALSE,
+            col.names = FALSE,
+            quote = FALSE)
+
+# Save final SM list
+write.table(final_sms, 
+            file = "./data/final_sm_list.txt", 
+            row.names = FALSE, 
+            col.names = FALSE,
+            quote = FALSE)
+
+# write info about each SM to file (classification of each)
+write.table(t(as.data.frame(col_inc_excl)), 
+            file = paste(out_path,"col_incl_excl.txt",sep="/"),
+            row.names = TRUE, 
             col.names = FALSE,
             quote = FALSE)
