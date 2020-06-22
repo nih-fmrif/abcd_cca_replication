@@ -66,7 +66,8 @@ nda_scan_3 <- nda_scan_2[nda_scan_2["iqc_t1_good_ser"]>0, ]
 final_subs <- list(nda_scan_3$subjectid)
 dropped_scan_subs <- setdiff(nda_scan$subjectid,nda_scan_3$subjectid)
 
-nda6 <- nda5[nda5$subjectid %in% final_subs,]
+nda6 <- nda5[nda5$subjectid %in% nda_scan_3$subjectid, ]
+
 # Save updated RDS for later use
 saveRDS(nda6, paste(out_path,"nda2.0.1_stage_2.Rds",sep="/"))
 
