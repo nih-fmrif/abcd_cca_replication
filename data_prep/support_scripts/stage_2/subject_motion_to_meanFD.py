@@ -11,7 +11,7 @@ import numpy as np
 import sys
 
 def Average(lst):
-    return sum(lst) / len(lst)
+    return (sum(lst)/len(lst))
 
 def calc_fd(motion_tsv):
     mot = pd.read_csv(motion_tsv, sep='\t+', engine='python')

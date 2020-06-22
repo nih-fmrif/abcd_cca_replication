@@ -17,7 +17,10 @@ subject_list <- factor(subject_list)
 sm_list <- readLines(sm_path)
 ica_sm_list <- readLines(ica_sm_path)
 
-nda <- readRDS(rds_path)
+nda0 <- readRDS(rds_path)
+
+# Drop subjects not in our list
+nda <- nda0[nda0$subjectid %in% subject_list,]
 
 # Extract SMs (listed in /data_prep/data/subject_measures.txt
 nda1 <- nda[ , (names(nda) %in% sm_list)]
