@@ -1,9 +1,11 @@
-
 # final_rds_proc.r
 # Created: 6/22/20 (pipeline_version_1.3)
 # Updated:
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
+
+library(dplyr)
+library(tidyr)
 
 args <- commandArgs(trailingOnly = TRUE)
 rds_path <- args[1]
@@ -39,7 +41,6 @@ for (i in 1:NCOL(nda1)) {
 }
 
 # Now verify that all the SMs meet our requirements
-
 col_inc_excl <- list()
 badcols <- list()
 
