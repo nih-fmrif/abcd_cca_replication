@@ -2,7 +2,7 @@
 
 # prep_stage_1.sh
 # Created: 6/15/20
-# Updated: 6/19/20 (pipeline_version_1.1)
+# Updated: 6/22/20 (pipeline_version_1.4)
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 # 
@@ -22,39 +22,58 @@ else
 fi
 
 
-CLASSIFIERS=$DATA_PREP/data/stage_1/classifiers/
-if [[ -d $CLASSIFIERS ]]; then
-    # Delete the files inside here
-    rm $CLASSIFIERS/*.txt
-    rm $CLASSIFIERS/0.2mm/*.txt
-    rm $CLASSIFIERS/0.3mm/*.txt
-else
-    mkdir $CLASSIFIERS
-    mkdir $CLASSIFIERS/0.2mm/
-    mkdir $CLASSIFIERS/0.3mm/
-fi
-
 # Check if the following folders exists
-STAGE_1_OUT=$DATA_PREP/data/stage_1/
 if [[ -d $STAGE_1_OUT ]]; then
     rm $STAGE_1_OUT/*.txt
     rm $STAGE_1_OUT/*.csv
-    # rm $STAGE_1_OUT/icafix_cmds/*.txt
-    rm $STAGE_1_OUT/icafix_cmds/0.2mm/*.txt
-    rm $STAGE_1_OUT/icafix_cmds/0.3mm/*.txt
     rm $STAGE_1_OUT/swarm_logs/*.{e,o}
-    # rm $STAGE_1_OUT/subjects_classified/*
-    rm $STAGE_1_OUT/subjects_classified/keep/*
-    rm $STAGE_1_OUT/subjects_classified/discard/*
-    rm $STAGE_1_OUT/subjects_classified/error/*
+
+    rm $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/*.txt
+    rm $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_2/*.txt
+
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_1/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_2/*
+
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_1/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_2/*
+
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_1/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_2/*
+
+    rm $STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_1/*.txt
+    rm $STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_2/*.txt
+
+    rm $STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_1/*.txt
+    rm $STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_2/*.txt
+
+    rm $STAGE_1_OUT/subjects_missing_motion_data/*
+
+    rm $STAGE_1_OUT/motion_tsv_files/*.txt
+
 else
     mkdir $STAGE_1_OUT
-    mkdir $STAGE_1_OUT/icafix_cmds/0.2mm/
-    mkdir $STAGE_1_OUT/swarm_logs/0.3mm/
+    mkdir $STAGE_1_OUT/swarm_logs/
+
+    mkdir $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/
+    mkdir $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_2/
+
     mkdir $STAGE_1_OUT/subjects_classified/
-    mkdir $STAGE_1_OUT/subjects_classified/keep/
-    mkdir $STAGE_1_OUT/subjects_classified/discard/
-    mkdir $STAGE_1_OUT/subjects_classified/error/
+    mkdir $STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_1/
+    mkdir $STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_2/
+
+    mkdir $STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_1/
+    mkdir $STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_2/
+
+    mkdir $STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_1/
+    mkdir $STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_2/
+
+    mkdir $STAGE_1_OUT/classifiers/
+    mkdir $STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_1/
+    mkdir $STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_2/
+
+    mkdir $STAGE_1_OUT/subjects_missing_motion_data/
+
+    mkdir $STAGE_1_OUT/motion_tsv_files/
 fi
 
 echo "--- STAGE 1 ---"
@@ -66,7 +85,7 @@ echo "$(date) - START" >> $PREP_LOG
 # STEP 1
 # Generate swarm commands
 echo "$(date) - Generating .swarm file with commands for classifying scans and subjects for use."
-python $SUPPORT_SCRIPTS/stage_1/stage_1_swarm_gen.py $DATA_PREP/data/stage_0/subjects_with_rsfmri.txt $ABCD_CCA_REPLICATION $SUPPORT_SCRIPTS/stage_1/subject_classifier.sh $STAGE_1_OUT
+python $SUPPORT_SCRIPTS/stage_1/stage_1_swarm_gen.py $STAGE_0_OUT/subjects_with_rsfmri.txt $ABCD_CCA_REPLICATION $SUPPORT_SCRIPTS/stage_1/subject_classifier.sh $STAGE_1_OUT
 
 echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!"
 echo "          swarm -f $STAGE_1_OUT/stage_1.swarm -b 500 --logdir $STAGE_1_OUT/swarm_logs/ --time=00:10:00 --job-name stage_1"
