@@ -25,9 +25,9 @@ scan_classifier         =   sys.argv[2]
 subject_tsv_files       =   sys.argv[3]
 outfile                 =   sys.argv[4]
 
-classifier      =   [line.rstrip('\n') for line in open(scan_classifier)]
-classifier      =   [int(i) for i in classifier]
-tsv_files       =   [line.rstrip('\n') for line in open(subject_tsv_files)]
+classifier  =   [line.rstrip('\n') for line in open(scan_classifier)]
+classifier  =   [int(i) for i in classifier]
+tsv_files   =   [line.rstrip('\n') for line in open(subject_tsv_files)]
 
 motion_vals=[]
 for scan_class,tsv in zip(classifier, tsv_files):
