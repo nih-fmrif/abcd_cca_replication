@@ -6,15 +6,6 @@
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 
-# Example usage:
-#   ./calc_mean_fd.sh
-
-# if (( $# < 2 ))
-# then
-#     usage
-# 	exit 1
-# fi
-
 sub=$1
 ABCD_CCA_REPLICATION=$2
 
@@ -31,33 +22,28 @@ STAGE_2_OUT=$DATA_PREP/data/stage_2
 # detect files of format:
 # sub-NDARINVxxxxxxxx_ses-baselineYear1Arm1_task-rest_run-<1,2,3...>_motion.tsv
 tsv_paths=`find $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -name "sub-*ses-baselineYear1Arm1_task-rest*motion.tsv" ! -name "*desc-filtered*" 2> /dev/null | sort | uniq`
-censor_paths=`find $DATA_PREP/data/stage_0/censor_files/$sub/ -type f -name "run*_0.3mm.censor.txt" 2> /dev/null | sort | uniq`
 
 # check if path variable is an empty line (nothing except a newline terminator)
 if [ -z "$tsv_paths" ] || [ -z "$censor_paths" ]; then
     # Skip this subject
     touch $STAGE_2_OUT/subs_missing_motion_data/$sub
-    # echo $sub >> $STAGE_2_OUT/subjects_missing_motion.txt
 else
     num_tsv_files=$(echo "$tsv_paths" | wc -l)
-    num_censors=$(echo "$censor_paths" | wc -l)
     len_classifier=$(cat $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt | wc -l)
 
     # check for mis-match between the length of classifier file and number of motion.tsv files
-    if [ $num_tsv_files -eq $len_classifier ] && [ $len_classifier -eq $num_censors ]; then
+    if [ $num_tsv_files -eq $len_classifier; then
         # correct number of tsv files for number of runs
 
         # Save the filepaths for .tsv files to the $stage_2_out directory
         echo "$tsv_paths" > $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt
-        # Save paths to censor files
-        echo "$censor_paths" > $STAGE_2_OUT/motion_data/${sub}_censor_paths.txt
 
         # Now call python script to calc
-        python $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py $sub $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt $STAGE_2_OUT/motion_data/${sub}_censor_paths.txt $STAGE_2_OUT/motion_data/$sub.txt
+        python $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py $sub $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt $STAGE_2_OUT/motion_data/$sub.txt
 
     else
         # Error, skip this subject
-        echo "ERROR: subject $sub mismatch between number of rsfMRI runs ($len_classifier) number of motion.tsv files ($num_files), and number of censor files ($num_censors)."
+        echo "ERROR: subject $sub mismatch between number of rsfMRI runs ($len_classifier) number of motion.tsv files ($num_files)."
         exit
     fi
 fi
