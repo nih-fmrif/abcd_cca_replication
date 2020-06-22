@@ -75,18 +75,22 @@ with open(classifier_output_fp, "w") as output:
     for item in classifier:
         output.write('%s\n' % item)
 
-# Write the average fd to file (for the given scan_fd_thresh)
-avg_fd = Average(motion_vals)
-with open(subject_mean_fd_outp_fp, "a") as output:
-    output.write('{},{}\n'.format(sub, avg_fd))
-
+# Write the average fd to file (for the given scan_fd_thresh) (if any scans passed)
+try:
+    avg_fd = Average(motion_vals)
+    with open(subject_mean_fd_outp_fp, "a") as output:
+        output.write('{},{}\n'.format(sub, avg_fd))
+except ZeroDivisionError as err:
+    print("Subject had no valid scans for scan fd threshold of {}".format(scan_fd_thresh))
+    sys.exit(303)
+    
 # Return code to parent shell script for decision making (based on total good scan length)
 if total_post_censor_len >= 750:
     # subject can proceed in pipeline
-    sys.exit(1)
+    sys.exit(101)
 elif total_post_censor_len < 750:
     # drop subject
-    sys.exit(2)
+    sys.exit(202)
 else:
     # something went wrong, throw an error and store this subject id
-    sys.exit(0)
+    sys.exit(303)

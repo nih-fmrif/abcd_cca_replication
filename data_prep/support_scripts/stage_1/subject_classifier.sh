@@ -78,12 +78,12 @@ python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens
 result=$?
 
 # Check that the subject has enough total time based on returned "result"
-if [[ $result -eq 2 ]]; then
+if [[ $result -eq 202 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
     touch $DISCARD_DIR/$THRESH_TO_USE/discard/${sub}
-elif [[ $result -eq 1 ]]; then
+elif [[ $result -eq 101 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
@@ -128,12 +128,12 @@ python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens
 result=$?
 
 # Check that the subject has enough total time based on returned "result"
-if [[ $result -eq 2 ]]; then
+if [[ $result -eq 202 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
     touch $DISCARD_DIR/$THRESH_TO_USE/discard/${sub}
-elif [[ $result -eq 1 ]]; then
+elif [[ $result -eq 101 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
