@@ -32,7 +32,7 @@ else
     len_classifier=$(cat $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt | wc -l)
 
     # check for mis-match between the length of classifier file and number of motion.tsv files
-    if [ $num_tsv_files -eq $len_classifier; then
+    if [ $num_tsv_files -eq $len_classifier ]; then
         # correct number of tsv files for number of runs
 
         # Save the filepaths for .tsv files to the $stage_2_out directory
