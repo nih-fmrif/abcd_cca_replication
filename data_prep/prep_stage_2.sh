@@ -64,7 +64,7 @@ echo "--- STAGE 2 LOG ---" >> $PREP_LOG
 echo "$(date) - START" >> $PREP_LOG
 
 # STEP 0 - determine which subjects can proceed from stage 1 (based on data/stage_1/subjects_classified/keep/sub*0.3mm)
-ls $DATA_PREP/data/stage_1/subjects_classified/keep/sub*_0.3mm | sed 's|0.3mm||' >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
+ls $DATA_PREP/data/stage_1/subjects_classified/keep/sub*_0.3mm | sed 's|_0.3mm||' | sed "s|${DATA_PREP}/data/stage_1/subjects_classified/keep/||" >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
 # ls $DATA_PREP/data/stage_1/subjects_classified/keep/sub*_0.2mm | sed 's|0.2mm||' >> $DATA_PREP/data/stage_2/subjects_keep_0.2mm.txt
 stage_1_subjects=$DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
 
