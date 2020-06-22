@@ -19,6 +19,13 @@ import numpy as np
 import pandas as pd
 import datetime
 
+def calc_fd(motion_tsv):
+    mot = pd.read_csv(motion_tsv, sep='\t+', engine='python')
+    derv_col = ['XDt', 'YDt', 'ZDt', 'RotXDt', 'RotYDt', 'RotZDt']
+    derv = mot[derv_col].abs()
+    motion_val = derv.sum(axis=1).mean()
+    return motion_val
+
 pre_censor_lengths_fp   =   sys.argv[1]
 post_censor_lengths_fp  =   sys.argv[2]
 output_fp               =   sys.argv[3]
