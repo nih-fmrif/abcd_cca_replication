@@ -13,8 +13,8 @@ import sys
 def Average(lst):
     return sum(lst) / len(lst)
 
-def calc_fd(motion_list,censor_path):
-    mot = pd.read_csv(motion_list, sep='\t+', engine='python')
+def calc_fd(motion_tsv):
+    mot = pd.read_csv(motion_tsv, sep='\t+', engine='python')
     derv_col = ['XDt', 'YDt', 'ZDt', 'RotXDt', 'RotYDt', 'RotZDt']
     derv = mot[derv_col].abs()
     motion_val = derv.sum(axis=1).mean()
