@@ -27,9 +27,9 @@ fi
 # Define some paths (FOLDERS) we need
 CLASSIFIERS=$STAGE_1_OUT/classifiers/$FD_THRESH/
 ICAFIX=$STAGE_1_OUT/icafix_cmds/$FD_THRESH/
-KEEP_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
-DISCARD_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
-ERROR_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
+KEEP_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/
+DISCARD_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/
+ERROR_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/
 SUBJECT_MEAN_FD_DIR=$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/
 
 # Define paths to two files we will need
