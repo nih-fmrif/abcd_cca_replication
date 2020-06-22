@@ -27,9 +27,9 @@ fi
 # Define some paths (FOLDERS) we need
 CLASSIFIERS=$STAGE_1_OUT/classifiers/$FD_THRESH/
 ICAFIX=$STAGE_1_OUT/icafix_cmds/$FD_THRESH/
-KEEP_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/
-DISCARD_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/
-ERROR_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/
+KEEP_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
+DISCARD_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
+ERROR_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
 SUBJECT_MEAN_FD_DIR=$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/
 
 # Define paths to two files we will need
@@ -82,12 +82,12 @@ if [[ $result -eq 2 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
-    touch $DISCARD_DIR/$THRESH_TO_USE/${sub}
+    touch $DISCARD_DIR/$THRESH_TO_USE/discard/${sub}
 elif [[ $result -eq 1 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
-    touch $KEEP_DIR/$THRESH_TO_USE/${sub}
+    touch $KEEP_DIR/$THRESH_TO_USE/keep/${sub}
     # Now create their cmd
     # Keep track of which scan we're looking at
     count=1 
@@ -119,7 +119,7 @@ elif [[ $result -eq 1 ]]; then
 else
     # Something else went wrong (maybe not needed?)
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.3mm.txt
-    touch $ERROR_DIR/$THRESH_TO_USE/${sub}
+    touch $ERROR_DIR/$THRESH_TO_USE/error/${sub}
 fi
 
 # STEP 2 - 0.3mm (FD_THRESH), SCAN_FD_THRESH_2
@@ -132,12 +132,12 @@ if [[ $result -eq 2 ]]; then
     # Subject dropped from study, note this
     # echo "Dropping subject $sub, has less than 600 seconds of scan time post-censoring."
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_drop_0.3mm.txt
-    touch $DISCARD_DIR/$THRESH_TO_USE/${sub}
+    touch $DISCARD_DIR/$THRESH_TO_USE/discard/${sub}
 elif [[ $result -eq 1 ]]; then
     # subject still eligible, create its task-rest0 string for ICA+FIX cmd
     # add subject to final list of subjects
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_keep_0.3mm.txt
-    touch $KEEP_DIR/$THRESH_TO_USE/${sub}
+    touch $KEEP_DIR/$THRESH_TO_USE/keep/${sub}
     # Now create their cmd
     # Keep track of which scan we're looking at
     count=1 
@@ -169,5 +169,5 @@ elif [[ $result -eq 1 ]]; then
 else
     # Something else went wrong (maybe not needed?)
     # echo $sub >> $DATA_PREP/data/stage_1/subjects_error_0.3mm.txt
-    touch $ERROR_DIR/$THRESH_TO_USE/${sub}
+    touch $ERROR_DIR/$THRESH_TO_USE/error/${sub}
 fi
