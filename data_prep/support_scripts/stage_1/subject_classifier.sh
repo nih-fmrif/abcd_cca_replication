@@ -124,7 +124,7 @@ fi
 
 # STEP 2 - 0.3mm (FD_THRESH), SCAN_FD_THRESH_2
 THRESH_TO_USE=$SCAN_FD_THRESH_2
-python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
+python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
 result=$?
 
 # Check that the subject has enough total time based on returned "result"
