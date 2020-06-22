@@ -61,7 +61,7 @@ for pre_len,post_len,tsv in zip(pre_censor_lengths,post_censor_lengths,tsv_files
             motion_vals.append(scan_fd)
             classifier.append(1)
             total_post_censor_len+=post_len
-        else
+        else:
             # scan has too much motion, drop the scan
             classifier.append(0)
 
