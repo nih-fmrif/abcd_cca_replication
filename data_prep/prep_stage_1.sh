@@ -54,27 +54,24 @@ else
     mkdir "$STAGE_1_OUT/"
     mkdir "$STAGE_1_OUT/swarm_logs/"
 
-    mkdir "$STAGE_1_OUT/icafix_cmds/"
-    mkdir "$STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/"
-    mkdir "$STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/"
+    mkdir -p "$STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_2/"
 
-    mkdir "$STAGE_1_OUT/subjects_classified/"
-    mkdir "$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_1/"
-    mkdir "$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_1/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_2/"
 
-    mkdir "$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_1/"
-    mkdir "$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_1/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_2/"
 
-    mkdir "$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_1/"
-    mkdir "$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_1/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_2/"
 
-    mkdir "$STAGE_1_OUT/classifiers/"
-    mkdir "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_1/"
-    mkdir "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_1/"
+    mkdir -p "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_2/"
 
-    mkdir "$STAGE_1_OUT/subjects_missing_motion_data/"
+    mkdir -p "$STAGE_1_OUT/subjects_missing_motion_data/"
 
-    mkdir "$STAGE_1_OUT/motion_tsv_files/"
+    mkdir -p "$STAGE_1_OUT/motion_tsv_files/"
 fi
 
 echo "--- STAGE 1 ---"
