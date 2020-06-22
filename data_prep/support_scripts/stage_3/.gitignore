@@ -4,3 +4,5 @@
 !.gitignore
 !motion_exclusion.py
 !find_anomalies.py
+!final_rds_proc.r
+!vars.py

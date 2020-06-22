@@ -56,33 +56,15 @@ while read subject; do
     cat $DATA_PREP/data/stage_2/motion_data/$subject.txt >> $motion_file
 done < $stage_2_subjects
 
-# STEP 1 - Call python script to remove subjects who have anomalous amounts of data
-echo "$(date) - STEP 1 - Dropping subjects via motion exclusion script" >> $PREP_LOG
-echo "$(date) - STEP 1 - Dropping subjects via motion exclusion script"
-python $SUPPORT_SCRIPTS/stage_3/motion_exclusion.py $motion_file $STAGE_3_OUT
+# STEP 1 - Call R script to extract final subjects and SMs
+echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_proc)" >> $PREP_LOG
+echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_proc)"
+Rscript $SUPPORT_SCRIPTS/stage_3/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $stage_2_subjects $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txr $STAGE_3_OUT
 
-post_motion_filtering_subjects=$STAGE_3_OUT/motion_filtered_subjects.txt
-NUM_SUBS=$(cat $stage_2_subjects | wc -l)
-echo "$(date) - Number subjects BEFORE motion exclusion: $NUM_SUBS"
-echo "$(date) - Number subjects BEFORE motion exclusion: $NUM_SUBS" >> $PREP_LOG
-NUM_SUBS=$(cat $post_motion_filtering_subjects | wc -l)
-echo "$(date) - Number subjects AFTER motion exclusion: $NUM_SUBS"
-echo "$(date) - Number subjects AFTER motion exclusion: $NUM_SUBS" >> $PREP_LOG
-
-# ---------- TODO ----------
-# ---------- TODO ----------
-# STEP 2 - Call R script to extract final subject set and subject measure set
-# Rscript $SUPPORT_SCRIPTS/stage_3/final_rds_proc.r
-
-# NUM_SUBS_DROPPED_RDS=$(cat $STAGE_3_OUT/rds_subjects_dropped.txt | wc -l)
-# NUM_SUBS_RDS=$(cat $STAGE_3_OUT/final_subjects.txt | wc -l)
-
-# echo "$(date) - Number subjects dropped due from RDS to missing SM data: $NUM_SUBS_DROPPED"
-# echo "$(date) - Number subjects dropped due from RDS to missing SM data: $NUM_SUBS_DROPPED" >> $PREP_LOG
-# echo "$(date) - Number subjects after final RDS cleaning: $NUM_SUBS_RDS"
-# echo "$(date) - Number subjects after final RDS cleaning: $NUM_SUBS_RDS" >> $PREP_LOG
-# ---------- TODO ----------
-# ---------- TODO ----------
+# STEP 2 - Generate final VARS.txt matrix
+echo "$(date) - STEP 2 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)" >> $PREP_LOG
+echo "$(date) - STEP 2 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)"
+python $SUPPORT_SCRIPTS/stage_3/vars.py $STAGE_3_OUT/final_subjects.txt $DATA_PREP/data/subject_measures.txt $motion_file $STAGE_3_OUT/VARS_no_motion.txt $ABCD_CCA_REPLICATION/data/VARS.txt
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 3 LOG ---" >> $PREP_LOG
