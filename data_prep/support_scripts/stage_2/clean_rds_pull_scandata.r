@@ -21,7 +21,6 @@ args <- commandArgs(trailingOnly = TRUE)
 rds_path <- args[1]
 sub_path <- args[2]
 out_path <- args[3]
-# sm_path <- args[3]
 
 # rds_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 # sub_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/stage_1/subjects_keep_0.3mm.txt"
@@ -72,12 +71,12 @@ nda6 <- nda5[nda5$subjectid %in% final_subs,]
 saveRDS(nda6, paste(out_path,"nda2.0.1_stage_2.Rds",sep="/"))
 
 # Save scan data
-write.table(nda_scan_3,
-            file = paste(out_path,"scan_data.csv",sep="/"),
-            sep  = ",",
-            row.names = FALSE,
-            col.names = TRUE,
-            quote = FALSE)
+# write.table(nda_scan_3,
+#             file = paste(out_path,"scan_data.csv",sep="/"),
+#             sep  = ",",
+#             row.names = FALSE,
+#             col.names = TRUE,
+#             quote = FALSE)
 
 # Save list of missing subjects
 write.table(subs_not_in_rds,
