@@ -57,14 +57,14 @@ else
     mkdir -p "$STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/"
     mkdir -p "$STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_2/"
 
-    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_1/"
-    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/keep"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_2/keep/"
 
-    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_1/"
-    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/discard/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_2/discard/"
 
-    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_1/"
-    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_2/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/error/"
+    mkdir -p "$STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_2/error/"
 
     mkdir -p "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_1/"
     mkdir -p "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_2/"
