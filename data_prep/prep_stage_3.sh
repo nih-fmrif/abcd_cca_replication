@@ -59,7 +59,7 @@ done < $stage_2_subjects
 # STEP 1 - Call R script to extract final subjects and SMs
 echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_proc)" >> $PREP_LOG
 echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_proc)"
-Rscript $SUPPORT_SCRIPTS/stage_3/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $stage_2_subjects $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txr $STAGE_3_OUT
+Rscript $SUPPORT_SCRIPTS/stage_3/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $stage_2_subjects $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txt $STAGE_3_OUT
 
 # STEP 2 - Generate final VARS.txt matrix
 echo "$(date) - STEP 2 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)" >> $PREP_LOG
