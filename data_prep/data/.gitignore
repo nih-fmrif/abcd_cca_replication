@@ -4,3 +4,4 @@
 !.gitignore
 !HCP500_rfMRI_motion.txt
 !subject_measures.txt
+!ica_subject_measures.txt
