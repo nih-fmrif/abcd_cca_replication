@@ -119,6 +119,9 @@ else{
 ## Drop any subject who is missing more than 50% of the final 74 SMs
 nda_final <- nda_numeric[rowSums(is.na(nda_numeric[,ica_sm_list])) < (length(ica_sm_list)/2),]    #Drop the subjects
 
+# Save final rds
+saveRDS(nda_final, paste(out_path,"nda2.0.1_final.Rds",sep="/"))
+
 final_subs <- list(nda_final$subjectid)
 
 sprintf("Final number of subjects: %s", length(final_subs))
