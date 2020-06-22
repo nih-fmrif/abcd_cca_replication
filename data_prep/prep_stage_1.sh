@@ -69,6 +69,9 @@ else
     mkdir -p "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_1/"
     mkdir -p "$STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_2/"
 
+    mkdir -p "$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_1/"
+    mkdir -p "$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_2/"
+
     mkdir -p "$STAGE_1_OUT/subjects_missing_motion_data/"
 
     mkdir -p "$STAGE_1_OUT/motion_tsv_files/"
