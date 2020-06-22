@@ -31,14 +31,14 @@ if [[ -d "$STAGE_1_OUT" ]]; then
     rm $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/*.txt
     rm $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_2/*.txt
 
-    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_1/*
-    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/keep/$SCAN_FD_THRESH_2/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/keep/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_2/keep/*
 
-    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_1/*
-    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/discard/$SCAN_FD_THRESH_2/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/discard/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_2/discard/*
 
-    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_1/*
-    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/error/$SCAN_FD_THRESH_2/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/error/*
+    rm $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_2/error/*
 
     rm $STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_1/*.txt
     rm $STAGE_1_OUT/classifiers/$FD_THRESH/$SCAN_FD_THRESH_2/*.txt
