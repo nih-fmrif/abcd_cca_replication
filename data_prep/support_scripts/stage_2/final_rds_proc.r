@@ -134,7 +134,7 @@ final_sms <- list(names(nda_final_2))
 saveRDS(nda_final_2, paste(out_path,"nda2.0.1_final.Rds",sep="/"))
 
 # Save final RDS matrix as a csv
-write.table(nda_final,
+write.table(nda_final_2,
             file = paste(out_path,"VARS_no_motion.txt",sep="/"),
             sep  = ",",
             row.names = FALSE,
