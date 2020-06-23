@@ -42,7 +42,7 @@ echo "--- STAGE 2 LOG ---" >> $PREP_LOG
 echo "$(date) - START" >> $PREP_LOG
 
 # STEP 0 - Get list of subjects which can proceed from stage 1, get aggregated list of motion
-ls $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/keep/sub-* | sort | sed "s|${STAGE_1_OUT}/subjects_classified/${FD_THRESH}/${SCAN_FD_THRESH_1}/keep||" >> $STAGE_2_OUT/motion_filt_subjects.txt
+ls $STAGE_1_OUT/subjects_classified/$FD_THRESH/$SCAN_FD_THRESH_1/keep/sub-* | sort | sed "s|${STAGE_1_OUT}/subjects_classified/${FD_THRESH}/${SCAN_FD_THRESH_1}/keep/||" >> $STAGE_2_OUT/motion_filt_subjects.txt
 
 subjects=$STAGE_2_OUT/motion_filt_subjects.txt
 
