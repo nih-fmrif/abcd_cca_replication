@@ -79,7 +79,7 @@ Rscript $SUPPORT_SCRIPTS/stage_2/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0
 NUM_SUBS=$(cat $STAGE_2_OUT/final_subjects.txt | wc -l)
 echo "Final number of subjects: $NUM_SUBS"
 NUM_SMS=$(cat $STAGE_2_OUT/final_subject_measures.txt | wc -l)
-echo "Final number of subjects: $NUM_SMS"
+echo "Final number of SMs: $NUM_SMS"
 
 # STEP 3 - Generate final VARS.txt matrix
 echo "$(date) - STEP 3 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)" >> $PREP_LOG
