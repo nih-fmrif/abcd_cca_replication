@@ -131,7 +131,7 @@ final_subs <- list(nda_final_2$subjectid)
 final_sms <- list(names(nda_final_2))
 
 # Save final rds
-saveRDS(nda_final, paste(out_path,"nda2.0.1_final.Rds",sep="/"))
+saveRDS(nda_final_2, paste(out_path,"nda2.0.1_final.Rds",sep="/"))
 
 # Save final RDS matrix as a csv
 write.table(nda_final,
