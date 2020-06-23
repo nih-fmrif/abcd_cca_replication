@@ -71,14 +71,6 @@ nda6 <- nda5[nda5$subjectid %in% nda_scan_3$subjectid, ]
 # Save updated RDS for later use
 saveRDS(nda6, paste(out_path,"nda2.0.1_stage_2.Rds",sep="/"))
 
-# Save scan data
-# write.table(nda_scan_3,
-#             file = paste(out_path,"scan_data.csv",sep="/"),
-#             sep  = ",",
-#             row.names = FALSE,
-#             col.names = TRUE,
-#             quote = FALSE)
-
 # Save list of missing subjects
 write.table(subs_not_in_rds,
             file = paste(out_path,"prep_stage_2_missing_rds_subjects.txt",sep="/"),

@@ -161,3 +161,9 @@ write.table(t(as.data.frame(col_inc_excl)),
             row.names = TRUE, 
             col.names = FALSE,
             quote = FALSE)
+
+write.table(badcols, 
+            file = paste(out_path,"dropped_subject_measures.txt",sep="/"),
+            row.names = FALSE, 
+            col.names = FALSE,
+            quote = FALSE)
