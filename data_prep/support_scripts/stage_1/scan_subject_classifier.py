@@ -52,6 +52,14 @@ tsv_files   =   [line.rstrip('\n') for line in open(tsv_files_fp)]
 classifier=[]
 motion_vals=[]
 total_post_censor_len=0
+
+# Check that all three lists pre_censor_lengths, post_censor_lengths, tsv_files are same length (otherwise return 303)
+
+l1 = len(pre_censor_lengths)
+if any(len(lst) != l1 for lst in [post_censor_lengths,tsv_files]):
+    # ERROR, not all the same length
+    sys.exit(303)
+
 for pre_len,post_len,tsv in zip(pre_censor_lengths,post_censor_lengths,tsv_files):
     if pre_len >= min_tps:
         scan_fd = calc_fd(tsv)
@@ -71,7 +79,7 @@ for pre_len,post_len,tsv in zip(pre_censor_lengths,post_censor_lengths,tsv_files
         continue
 
 # Write the classifier data to file
-with open(classifier_output_fp, "w") as output:
+with open(classifier_output_fp, "a") as output:
     for item in classifier:
         output.write('%s\n' % item)
 
