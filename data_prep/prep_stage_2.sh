@@ -60,7 +60,7 @@ done < $subjects
 # STEP 1 - Call R script to clean RDS, pull scan data, filter subjects missing scandata or not meeting QC/PC requirement for T1w scans
 echo "$(date) - STEP 1 - calling RDS cleaning script" >> $PREP_LOG
 echo "$(date) - STEP 1 - calling RDS cleaning script"
-Rscript $SUPPORT_SCRIPTS/stage_2/clean_rds_pull_scandata.r $NDA_RDS_RAW $stage_1_subjects $STAGE_2_OUT
+Rscript $SUPPORT_SCRIPTS/stage_2/clean_rds_pull_scandata.r $NDA_RDS_RAW $subjects $STAGE_2_OUT
 
 NUM_SUBS_MISSING=$(cat $STAGE_2_OUT/prep_stage_2_missing_rds_subjects.txt | wc -l)
 NUM_SUBS_DROPPED=$(cat $STAGE_2_OUT/prep_stage_2_dropped_rds_scan_subjects.txt | wc -l)
