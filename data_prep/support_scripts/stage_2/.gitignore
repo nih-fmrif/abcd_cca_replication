@@ -5,3 +5,5 @@
 !calc_mean_fd.sh
 !clean_rds_pull_scandata.r
 !subject_motion_to_meanFD.py
+!vars.py
+!final_rds_proc.r
