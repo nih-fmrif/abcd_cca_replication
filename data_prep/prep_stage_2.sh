@@ -75,7 +75,7 @@ echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS" >> $PREP_LOG
 # STEP 2 - Call final RDS proc script, extract final subjects and SMs
 echo "$(date) - STEP 2 - Call final RDS proc script, extract final subjects and SMs" >> $PREP_LOG
 echo "$(date) - STEP 2 - Call final RDS proc script, extract final subjects and SMs"
-Rscript $SUPPORT_SCRIPTS/stage_2/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $stage_2_subjects $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txt $STAGE_2_OUT
+Rscript $SUPPORT_SCRIPTS/stage_2/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $STAGE_2_OUT/prep_stage_2_rds_subjects.txt $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txt $STAGE_2_OUT
 NUM_SUBS=$(cat $STAGE_2_OUT/final_subjects.txt | wc -l)
 echo "Final number of subjects: $NUM_SUBS"
 NUM_SMS=$(cat $STAGE_2_OUT/final_subject_measures.txt | wc -l)
