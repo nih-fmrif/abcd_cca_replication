@@ -90,7 +90,8 @@ elif [[ $result -eq 101 ]]; then
     touch $KEEP_DIR/$THRESH_TO_USE/keep/${sub}
     # Now create their cmd
     # Keep track of which scan we're looking at
-    count=1 
+    count=1
+    scan_number=1
     # total timepoints for valid scans for a subject
     cmd_str=""
     while read classification
@@ -98,20 +99,33 @@ elif [[ $result -eq 101 ]]; then
         if [[ $classification -eq 1 ]]; then
             # scan flagged as keep
             if [[ $count -eq 1 ]]; then
+                # First scan we are writing to string, so make sure no @ sign is put at front
                 # Prepend a 0, remove @ at beginning
-                cmd_str=task-rest0$count/task-rest0$count.nii.gz
-            elif [[ $count -lt 10 ]]; then
-                # Prepend 0 since < 10, but include the @ at beginning
-                cmd_str=$cmd_str@task-rest0$count/task-rest0$count.nii.gz
+
+                if [[ $scan_number -lt 10 ]]; then
+                    # First scan we are writing to string, so make sure no @ sign is put at front
+                    # Prepend a 0, remove @ at beginning
+                    cmd_str=task-rest0$scan_number/task-rest0$scan_number.nii.gz
+                else
+                    # No need to prepend 0 since number is 10 or greater
+                    cmd_str=task-rest$scan_number/task-rest$scan_number.nii.gz
+                fi
             else
-                # No need to prepend 0 since number is 10 or greater
-                cmd_str=$cmd_str@task-rest$count/task-rest$count.nii.gz
+                # Not first scan, so append @ at beginning
+                if [[ $scan_number -lt 10 ]]; then
+                    # Prepend 0 since < 10, but include the @ at beginning
+                    cmd_str=$cmd_str@task-rest0$scan_number/task-rest0$scan_number.nii.gz
+                else
+                    # No need to prepend 0 since number is 10 or greater
+                    cmd_str=$cmd_str@task-rest$scan_number/task-rest$scan_number.nii.gz
+                fi
             fi
+            ((count++))
         else
             # Not using this scan
             :
         fi
-        ((count++))
+        ((scan_number++))
     done < $CLASSIFIERS/$THRESH_TO_USE/$sub.txt
 
     # echo the ICA+FIX cmd to file
