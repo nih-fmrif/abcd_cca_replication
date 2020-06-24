@@ -46,9 +46,14 @@ if [[ -d "$STAGE_1_OUT" ]]; then
     rm $STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_1/*.txt
     rm $STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_2/*.txt
 
-    rm $STAGE_1_OUT/subjects_missing_motion_data/*
+    rm $STAGE_1_OUT/concat_censors/$FD_THRESH/$SCAN_FD_THRESH_1/*.txt
+    rm $STAGE_1_OUT/concat_censors/$FD_THRESH/$SCAN_FD_THRESH_2/*.txt
+
+    rm $STAGE_1_OUT/subjects_missing_data/*
 
     rm $STAGE_1_OUT/motion_tsv_files/*.txt
+
+    rm $STAGE_1_OUT/censor_file_paths/*.txt
 
 else
     mkdir "$STAGE_1_OUT/"
@@ -72,9 +77,14 @@ else
     mkdir -p "$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_1/"
     mkdir -p "$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/$SCAN_FD_THRESH_2/"
 
-    mkdir -p "$STAGE_1_OUT/subjects_missing_motion_data/"
+    mkdir -p "$STAGE_1_OUT/concat_censors/$FD_THRESH/$SCAN_FD_THRESH_1/"
+    mkdir -p "$STAGE_1_OUT/concat_censors/$FD_THRESH/$SCAN_FD_THRESH_2/"
+
+    mkdir -p "$STAGE_1_OUT/subjects_missing_data/"
 
     mkdir -p "$STAGE_1_OUT/motion_tsv_files/"
+
+    mkdir -p "$STAGE_1_OUT/censor_file_paths/"
 fi
 
 echo "--- STAGE 1 ---"

@@ -31,6 +31,7 @@ KEEP_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
 DISCARD_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
 ERROR_DIR=$STAGE_1_OUT/subjects_classified/$FD_THRESH/
 SUBJECT_MEAN_FD_DIR=$STAGE_1_OUT/subject_mean_fd/$FD_THRESH/
+CONCAT_CENSORS=$STAGE_1_OUT/concat_censors/$FD_THRESH/
 
 # Define paths to two files we will need
 pre_censor_lens=$STAGE_0_OUT/pre_censor_lengths/${sub}.txt
@@ -38,24 +39,28 @@ post_censor_lens=$STAGE_0_OUT/censor_files/$sub/good_TRs_${FD_THRESH}mm.censor.t
 
 tsv_paths=`find $DERIVATIVES_PATH/$sub/ses-baselineYear1Arm1/ -maxdepth 2 -type f -name "sub-*ses-baselineYear1Arm1_task-rest*motion.tsv" ! -name "*desc-filtered*" 2> /dev/null | sort | uniq`
 
+# get paths to censors (format of each filename is run-04_0.3mm.censor.txt)
+censor_paths=`find $STAGE_0_OUT/censor_files/$sub/ -type f -name "run-*_${FD_THRESH}mm.censor.txt" 2> /dev/null | sort | uniq`
+
 # check if path variable is an empty line (nothing except a newline terminator)
-if [ -z "$tsv_paths" ]; then
+if [ -z "$tsv_paths" ] || [ -z "$censor_paths" ]; then
     # Skip this subject
-    touch $STAGE_1_OUT/subjects_missing_motion_data/$sub
+    touch $STAGE_1_OUT/subjects_missing_data/$sub
     exit
 else
     num_tsv_files=$(echo "$tsv_paths" | wc -l)
     num_scans=$(cat $pre_censor_lens | wc -l)
+    num_censors=$(echo "$censor_paths" | wc -l)
 
     # check for mis-match between the length of classifier file and number of motion.tsv files
-    if [ $num_tsv_files -eq $num_scans ]; then
+    if [ $num_tsv_files -eq $num_scans ] && [ $num_scans -eq $num_censors ]; then
         # correct number of tsv files for number of runs
 
-        # Save the filepaths for .tsv files to the $stage_2_out directory
+        # Save the filepaths for .tsv files to the $STAGE_2_OUT directory
         echo "$tsv_paths" > $STAGE_1_OUT/motion_tsv_files/${sub}.txt
 
-        # Now call python script to calc
-        # python $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py $sub $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt $STAGE_2_OUT/motion_data/$sub.txt
+        # Save the filepaths for censor files to 
+        echo "$censor_paths" > $STAGE_1_OUT/censor_file_paths/${sub}.txt
 
     else
         # Error, skip this subject
@@ -70,11 +75,13 @@ THRESH_TO_USE=$SCAN_FD_THRESH_1
 # pre_censor_lengths_fp   =   sys.argv[2]
 # post_censor_lengths_fp  =   sys.argv[3]
 # tsv_files_fp            =   sys.argv[4]
-# classifier_output_fp    =   sys.argv[5]
-# subject_mean_fd_outp_fp =   sys.argv[6]
-# min_tps                 =   int(sys.argv[7])
-# scan_fd_thresh          =   float(sys.argv[8])
-python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
+# censor_files_fp         =   sys.argv[5]
+# classifier_output_fp    =   sys.argv[6]
+# subject_mean_fd_out_fp  =   sys.argv[7]
+# concat_censor_out_fp    =   sys.argv[8]
+# min_tps                 =   int(sys.argv[9])
+# scan_fd_thresh          =   float(sys.argv[10])
+python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $STAGE_1_OUT/censor_file_paths/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $CONCAT_CENSORS/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
 result=$?
 
 # Check that the subject has enough total time based on returned "result"
@@ -138,7 +145,7 @@ fi
 
 # STEP 2 - 0.3mm (FD_THRESH), SCAN_FD_THRESH_2
 THRESH_TO_USE=$SCAN_FD_THRESH_2
-python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
+python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $STAGE_1_OUT/censor_file_paths/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $CONCAT_CENSORS/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
 result=$?
 
 # Check that the subject has enough total time based on returned "result"
