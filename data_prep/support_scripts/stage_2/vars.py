@@ -15,13 +15,14 @@ motion_data =   sys.argv[3]
 vars_txt    =   sys.argv[4]
 out_fp      =   sys.argv[5]
 
-df_vars = pd.read_csv(vars_txt, sep=',')
 
 final_subs = [line.rstrip('\n') for line in open(sub_fp)]
 sms = [line.rstrip('\n') for line in open(sm_fp)]
 
+df_vars = pd.read_csv(vars_txt, sep=',')
 df_motion = pd.read_csv(motion_data, sep=',')
-# Extract the appropriate subjects from the motion file
+# Extract the appropriate subjects from the motion and VARS files
+df_vars = df_vars[df_vars['subjectid'].isin(final_subs)]
 df_motion = df_motion[df_motion['subjectid'].isin(final_subs)]
 
 # Merge the df_vars and df_motion
