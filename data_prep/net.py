@@ -10,7 +10,6 @@ import sys
 import pandas as pd
 
 def is_symmetric(a):
-    return (np.abs(a - a.T) <= tol).all()
 	return (np.abs(a - a.T) <= tol).all()
 
 in_path = sys.argv[1]
