@@ -9,6 +9,8 @@ import os
 import sys
 import pandas as pd
 
+tol=1e-8
+
 def is_symmetric(a):
 	return (np.abs(a - a.T) <= tol).all()
 
