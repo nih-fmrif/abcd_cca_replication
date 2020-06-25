@@ -9,15 +9,16 @@ import os
 import sys
 import pandas as pd
 
-netmat_fp = sys.argv[1]
+in_path = sys.argv[1]
 ICA = int(sys.argv[2]) #number of ICA components (ex. 200)
 num_subs = int(sys.argv[3])
+out_path= sys.argv[4]
 
 expected_cols = int((ICA * (ICA-1))/2)
 
 print('Expected matrix shape: ({}, {})'.format(num_subs, expected_cols))
 
-netmat = pd.read_csv(netmat_fp, header=None)
+netmat = pd.read_csv(in_path, header=None)
 
 myList = [] # list of the subject x 200*199/2 matrix enties (the lower diagonal)
 col = 200
@@ -35,7 +36,7 @@ matrix = np.array(myList)
 
 if( (matrix.shape[0]==num_subs) & (matrix.shape[1]==expected_cols) ):
 	print("NET Successfully generated! Resulting matrix shape:", matrix.shape)
-	np.savetxt(fname="../processed_data/NET.txt", X=matrix, delimiter=',')
+	np.savetxt(fname=out_path, X=matrix, delimiter=',')
 else:
 	print('Error occured, resulting matrix shape is: {}, but expected ({},{})'.format(matrix.shape, num_subs, expected_cols))
 	print("NET not generated!")
