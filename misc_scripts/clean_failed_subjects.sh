@@ -19,10 +19,10 @@ while read sub; do
 
     if test -f "$FILE"; then
         # file exists, skip subject
-        echo $subject >> $out_dir/successful_subjects.txt 
+        echo $sub >> $out_dir/successful_subjects.txt 
     else
         # File does not exist, add to list of subjects that need cleaning
-        echo $subject >> $out_dir/remaining_subjects.txt
+        echo $sub >> $out_dir/remaining_subjects.txt
     fi
 done < $subjects_run
 
