@@ -30,7 +30,7 @@ NUM_DONE=$(cat $out_dir/successful_subjects.txt | wc -l)
 NUM_FAIL=$(cat $out_dir/remaining_subjects.txt | wc -l)
 echo "Successful=$NUM_DONE, failed=$NUM_FAIL"
 
-while read subj; do
+while read sub; do
 
     # Create swarm command
     echo $PWD/fix_cleanup.sh $dcan_reproc/$sub/ >> $out_dir/cleanup.swarm
