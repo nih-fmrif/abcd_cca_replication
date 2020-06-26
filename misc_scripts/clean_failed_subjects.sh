@@ -13,7 +13,7 @@ dcan_reproc=$2
 # Where to save text files
 out_dir=$3
 
-while read subject; do
+while read sub; do
     # Check if subject has a file
     FILE=$dcan_reproc/$sub/ses-baselineYear1Arm1/files/MNINonLinear/Results/fix_proc/task-rest_concat_hp2000_clean.nii.gz
 
@@ -30,7 +30,7 @@ NUM_DONE=$(cat $out_dir/successful_subjects.txt | wc -l)
 NUM_FAIL=$(cat $out_dir/remaining_subjects.txt | wc -l)
 echo "Successful=$NUM_DONE, failed=$NUM_FAIL"
 
-while read subject; do
+while read subj; do
 
     # Create swarm command
     echo $PWD/fix_cleanup.sh $dcan_reproc/$sub/ >> $out_dir/cleanup.swarm
