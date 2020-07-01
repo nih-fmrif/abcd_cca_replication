@@ -2,12 +2,19 @@
 *
 # Except this file
 !.gitignore
+
+# Folders
 !data/
 !dependencies/
 !data_prep/
 !conda_requirements.txt
+!pipeline_diagrams/
+!misc_scripts/
+
+# Files
 !pip_requirements.txt
-!abcd_cca.m
+
+# Scripts
 !create_config.sh
-!pipeline_diagrams
-!misc_scripts
+!abcd_cca_analysis.m
+!abcd_perm_gen.m

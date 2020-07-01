@@ -1,21 +1,23 @@
-% abcd_cca.m
+% abcd_cca_analysis.m
 % Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
+% Created: June 2020
+% Modified: 7/1/2020
 
 % CCA processing script for the ABCD connectome and SM data
 % Required inputs are the NET.txt and VARS.txt files.
+
+%% Add the dependencies folders to the PATH, and read in necessary data
+addpath(genpath('./dependencies/'));
+addpath(genpath('./data/'));
 
 % Number of PCA and CCA components
 N_dim=70;
 % Number of permutations
 N_perm=100;
 
-%% Add the dependencies folders to the PATH, and read in necessary data
-addpath(genpath('./dependencies/'));
-addpath(genpath('./data/'));
-
 % Read in data, set some variables, create confounds matrix
-VARS_0=strcsvread('./data/VARS_500.txt');   % Subjects X SMs text file
-N0=load('./data/NET_500.txt');          % Load the Subjects X Nodes matrix (should be size 461x19900)
+VARS_0=strcsvread('./data/VARS.txt');   % Subjects X SMs text file
+N0=load('./data/NET.txt');          % Load the Subjects X Nodes matrix (should be size 461x19900)
 ica_sms_0=fileread('./data/ica_subject_measures.txt')
 ica_sms = strsplit(ica_sms_0)
 
