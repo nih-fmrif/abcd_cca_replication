@@ -16,27 +16,32 @@ N_dim=70;
 N_perm=100;
 
 % Read in data, set some variables, create confounds matrix
-VARS_0=strcsvread('./data/VARS.txt');   % Subjects X SMs text file
-N0=load('./data/NET.txt');          % Load the Subjects X Nodes matrix (should be size 461x19900)
+VARS0=strcsvread('./data/VARS_500.txt');   % Subjects X SMs text file
+N0=load('./data/NET_500.txt');          % Load the Subjects X Nodes matrix (should be size 461x19900)
+
+sms_0 = fileread('./data/subject_measures.txt')
+sms = strsplit(sms_0)
+
 ica_sms_0=fileread('./data/ica_subject_measures.txt')
 ica_sms = strsplit(ica_sms_0)
 
 % Drop subject col and device serial number col (they are strings)
-egid_col    = find(strcmpi(VARS_0(1,:),'subjectid'));
-serial_col  = find(strcmpi(VARS_0(1,:),'mri_info_device.serial.number'));
-VARS_0(:,[egid_col serial_col])=[]
+egid_col    = find(strcmpi(VARS0(1,:),'subjectid'));
+serial_col  = find(strcmpi(VARS0(1,:),'mri_info_device.serial.number'));
+VARS0(:,[egid_col serial_col])=[]
 
-site_col        = find(strcmpi(VARS_0(1,:),'abcd_site'));
-mri_man_col     = find(strcmpi(VARS_0(1,:),'mri_info_manufacturer'));
-mean_fd_col     = find(strcmpi(VARS_0(1,:),'mean_fd'));
-bmi_col         = find(strcmpi(VARS_0(1,:),'anthro_bmi_calc'));
-weight_col      = find(strcmpi(VARS_0(1,:),'anthro_weight_calc'));
-wholebrain_col  = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_wholebrain'));
-intracran_col   = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_intracranialvolume'));
+site_col        = find(strcmpi(VARS0(1,:),'abcd_site'));
+mri_man_col     = find(strcmpi(VARS0(1,:),'mri_info_manufacturer'));
+mean_fd_col     = find(strcmpi(VARS0(1,:),'mean_fd'));
+bmi_col         = find(strcmpi(VARS0(1,:),'anthro_bmi_calc'));
+weight_col      = find(strcmpi(VARS0(1,:),'anthro_weight_calc'));
+wholebrain_col  = find(strcmpi(VARS0(1,:),'smri_vol_subcort.aseg_wholebrain'));
+intracran_col   = find(strcmpi(VARS0(1,:),'smri_vol_subcort.aseg_intracranialvolume'));
 
-[sharedvals,idx]=intersect(VARS_0(1,:),ica_sms)
+[sharedvals,idx]=intersect(VARS0(1,:),ica_sms)
+sms_original_order = VARS0(1,:)
 
-VARS=cell2mat(VARS_0(2:end,:));
+VARS=cell2mat(VARS0(2:end,:));
 
 % --- GENERATE PERMUTATIONS ---
 % Generate permutations using the hcp2blocks package
@@ -73,7 +78,7 @@ conf(isnan(conf)|isinf(conf))=0;                % again convert NaN/inf to 0 (ab
 
 % --- SM PROCESSING ---
 % Matrix S1 (only ICA sms)
-S1=[VARS(:,idx)]
+S1=[VARS(:,idx)];
 
 % Now, prepare the final SM matrix and run the PCA
 % S2, formed by gaussianizing the SMs we keep
@@ -151,5 +156,57 @@ for i=1:size(varsgrot,2)
 end
 grotBBd = corr(grotV(:,1),varsgrot,'rows','pairwise')'; % weights after deconfounding
 
+scatter(grotU(:,1),grotV(:,1))
 
-scatter(grotU(:,1),grotV(:,1)) % NOTE: negated vectors are plotted
+
+
+% --- PositiveNegative Axis ---
+
+%%% actually this is the CORRECT thing to do (instead of CorCCA below) - but makes almost no difference
+%varsgrot=inormal(vars);
+%for i=1:size(varsgrot,2)
+%  grot=(isnan(varsgrot(:,i))==0); grotconf=demean(conf(grot,:)); varsgrot(grot,i)=normalise(varsgrot(grot,i)-grotconf*(pinv(grotconf)*varsgrot(grot,i)));
+%end
+%CorCCAd = corr(grotV(:,I),varsgrot)';
+
+I=1;
+
+CorCCA=corr(grotV(:,I), palm_inormal(VARS), 'rows','pairwise');
+figure; plot(CorCCA);   % correlate CCA component 1 with original set of SMs
+
+ZCCA=12*0.5*log((1+CorCCA)./(1-CorCCA));    % r2z  -  factor x12 gets close to "real" zstats. Bonferroni gives significance at abs(Z)>3.9
+[grotY,grotI]=sort(CorCCA,'ascend'); 
+toplist=[];
+strlist={};
+
+% Iterate over the SMs
+for i=1:length(grotI)
+
+  % Since we sort the values, we use ii to index into the unsorted list and get the proper index of the column from VARS
+  ii=grotI(i);
+
+  % Pull the values for the column associated with the SM being looked at
+  Y=VARS(:,ii);
+  grotKEEP=~isnan(Y);
+  Y=nets_demean(Y(grotKEEP));
+  X=nets_demean(grotV(grotKEEP,I));
+  VarExplained(ii)=var(X*(pinv(X)*Y)) / var(Y);
+
+
+  if abs(grotY(i))>0.1
+    BVname = string(sms_original_order(ii))
+    toplist=[toplist ii];
+    str=sprintf('%.2f %.2f %.2f %s %s',CorCCA(ii),ZCCA(ii),VarExplained(ii),BVname);
+    strlist{end+1} = str;
+    disp(str);
+  end
+  
+end
+
+x=ones([length(toplist),1]);
+dx=0.1;
+y=1:length(toplist);
+dy=0.1;
+set(0,'DefaultTextInterpreter','none')
+scatter(x,y);
+text(x+dx, y+dy, strlist);
