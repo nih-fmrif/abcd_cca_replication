@@ -2,6 +2,7 @@
 *
 # Except this file
 !.gitignore
+!permutations/
 !subject_measures.txt
 !subject_measure_breakdown.txt
 !confounds.txt
