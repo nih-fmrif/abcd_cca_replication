@@ -18,3 +18,6 @@
 !create_config.sh
 !abcd_cca_analysis.m
 !abcd_perm_gen.m
+!abcd_basic_proc.m
+!abcd_perm_agg.m
+!abcd_cca_single.m
