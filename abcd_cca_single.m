@@ -27,7 +27,7 @@ function abcd_cca_single(perm)
     N5=load('./data/N5.txt'); 
   
     % Permutation matrix
-    PAPset=load(PAPset,'./data/PAPset.txt')
+    PAPset=load('./data/PAPset.txt')
 
     grotvars=palm_inormal(S1);
     grotvars(:,std(grotvars)<1e-10)=[];
