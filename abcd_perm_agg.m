@@ -6,16 +6,16 @@
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 
-function abcd_perm_agg(N_perm)
-    if nargin<1
+function abcd_perm_agg(N_perm, N_dim)
+    if nargin<2
         N_perm=100000;
+        N_dim=70;
     end
 
     addpath(genpath('./dependencies/'));
     addpath(genpath('./data/'));
 
-    % permutation testing
-    grotRp=zeros(Nperm,N_dim+1);
+    grotRp=zeros(N_perm, N_dim+1);
     clear grotRpval;
     nullNETr=[];
     nullSMr=[];
