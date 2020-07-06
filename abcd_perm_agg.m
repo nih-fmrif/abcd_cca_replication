@@ -15,8 +15,7 @@ function abcd_perm_agg(N_perm, N_dim)
     addpath(genpath('./dependencies/'));
     addpath(genpath('./data/'));
 
-    grotRp=zeros(N_perm, N_dim+1);
-    clear grotRpval;
+    grotRp_agg=zeros(N_perm, N_dim+1);
     nullNETr=[];
     nullSMr=[];
     nullNETv=[];
