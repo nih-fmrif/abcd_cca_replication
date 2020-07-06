@@ -7,14 +7,16 @@
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 
 
-function abcd_cca_single(perm)
+function abcd_cca_single(perm, N_perm, N_dim)
+    if nargin<3
+        % Number of permutations, default 100,000
+        N_perm=100000;
+        N_dim=70;
+    end
+
     addpath(genpath('./dependencies/'));
     addpath(genpath('./data/'));
     
-    % Number of permutations
-    N_perm=1000;
-    N_dim=70;
-
     % Load data
     % Matrix S1 (only ICA sms)
     S1=load('./data/S1.txt'); 
@@ -33,10 +35,8 @@ function abcd_cca_single(perm)
     grotvars(:,std(grotvars)<1e-10)=[];
     grotvars(:,sum(isnan(grotvars)==0)<20)=[];
 
-
     % permutation calculation
     r=zeros(N_dim+1);
-    clear grotRpval;
 
     [A, B, r, U, V, stats] = canoncorr(N5,S5(PAPset(:,perm),:));
     r(end)=mean(r(1:end-1))
