@@ -22,11 +22,11 @@ function abcd_perm_agg(N_perm, N_dim)
     nullNETv=[];
     nullSMv=[];
     for perm=1:N_perm
-        grotRp      =   load(sprintf('./data/permutations/grotRp_%d',perm));
-        nullNETr    =   load(sprintf('./data/permutations/nullNETr_%d',perm));
-        nullSMr     =   load(sprintf('./data/permutations/nullSMr_%d',perm));
-        nullNETv    =   load(sprintf('./data/permutations/nullNETv_%d',perm));
-        nullSMv     =   load(sprintf('./data/permutations/nullSMv_%d',perm));
+        grotRp      =   load(sprintf('./data/permutations/grotRp_%d.txt',perm));
+        nullNETr    =   load(sprintf('./data/permutations/nullNETr_%d.txt',perm));
+        nullSMr     =   load(sprintf('./data/permutations/nullSMr_%d.txt',perm));
+        nullNETv    =   load(sprintf('./data/permutations/nullNETv_%d.txt',perm));
+        nullSMv     =   load(sprintf('./data/permutations/nullSMv_%d.txt',perm));
 
         grotRp_agg      =   [grotRp_agg grotRp];
         nullNETr_agg    =   [nullNETr_agg nullNETr];
@@ -36,9 +36,9 @@ function abcd_perm_agg(N_perm, N_dim)
     end
 
     % Now save
-    writematrix(grotRp, sprintf('./data/grotRp'));
-    writematrix(grotRp, sprintf('./data/nullNETr'));
-    writematrix(grotRp, sprintf('./data/nullSMr'));
-    writematrix(grotRp, sprintf('./data/nullNETv'));
-    writematrix(grotRp, sprintf('./data/nullSMv'));
+    writematrix(grotRp, sprintf('./data/grotRp.txt'));
+    writematrix(grotRp, sprintf('./data/nullNETr.txt'));
+    writematrix(grotRp, sprintf('./data/nullSMr.txt'));
+    writematrix(grotRp, sprintf('./data/nullNETv.txt'));
+    writematrix(grotRp, sprintf('./data/nullSMv.txt'));
 end
