@@ -33,17 +33,19 @@ function abcd_cca_single(perm)
     grotvars(:,std(grotvars)<1e-10)=[];
     grotvars(:,sum(isnan(grotvars)==0)<20)=[];
 
+
     % permutation calculation
-    grotRp=zeros(N_dim+1);
+    r=zeros(N_dim+1);
     clear grotRpval;
 
-    [grotAr,grotBr,grotRp(1:end-1),grotUr,grotVr,grotstatsr]=canoncorr(N5,S5(PAPset(:,perm),:));
-    grotRp(end)=mean(grotRp(1:end-1));
-    nullNETr=corr(grotUr(:,1),N0)';
-    nullSMr=corr(grotVr(:,1),grotvars(PAPset(:,perm),:),'rows','pairwise')';
-    nullNETv=sum(corr(grotUr,N0).^2,2);
-    nullSMv=sum(corr(grotVr,grotvars(PAPset(:,perm),:),'rows','pairwise').^2,2);
+    [A, B, r, U, V, stats] = canoncorr(N5,S5(PAPset(:,perm),:));
+    r(end)=mean(r(1:end-1))
 
+    nullNETr=corr(U(:,1),N0)';
+    nullSMr=corr(V(:,1),grotvars(PAPset(:,perm),:),'rows','pairwise')';
+    nullNETv=sum(corr(U,N0).^2,2);
+    nullSMv=sum(corr(V,grotvars(PAPset(:,perm),:),'rows','pairwise').^2,2);
+    
     % Now save
     writematrix(grotRp, sprintf('./data/permutations/grotRp_%d',perm))
     writematrix(nullNETr, sprintf('./data/permutations/nullNETr_%d',perm))
