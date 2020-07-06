@@ -5,8 +5,9 @@
 
 function abcd_perm_gen(N_perm, working_dir)
     if nargin<2
-        N_perm=100000;
-        working_dir='./'
+        print("ERROR, not enough arguments. Please input number of permutations and the path to /abcd_cca_replication/")
+        print("Example: abcd_perm_gen 1000 /data/ABCD_MBDU/goyaln2/abcd_cca_replication/")
+        exit
     end
 
     % addpath(genpath(sprintf('%s/dependencies/', working_dir)));
