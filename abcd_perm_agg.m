@@ -16,11 +16,11 @@ function abcd_perm_agg(N_perm, N_dim)
     addpath(genpath('./data/'));
 
     grotRp_agg=zeros(N_perm, N_dim+1);
-    nullNETr=[];
-    nullSMr=[];
-    nullNETv=[];
-    nullSMv=[];
-    
+    nullNETr_agg    =[];
+    nullSMr_agg     =[];
+    nullNETv_agg    =[];
+    nullSMv_agg     =[];
+
     for perm=1:N_perm
 
         grotRp      =   load(sprintf('./data/permutations/grotRp_%d.txt',perm));
@@ -29,11 +29,11 @@ function abcd_perm_agg(N_perm, N_dim)
         nullNETv    =   load(sprintf('./data/permutations/nullNETv_%d.txt',perm));
         nullSMv     =   load(sprintf('./data/permutations/nullSMv_%d.txt',perm));
 
-        grotRp_agg      =   [grotRp_agg grotRp];
-        nullNETr_agg    =   [nullNETr_agg nullNETr];
-        nullSMr_agg     =   [nullSMr_agg nullSMr];
-        nullNETv_agg    =   [nullNETv_agg nullNETv];
-        nullSMv_agg     =   [nullSMv_agg nullSMv];
+        grotRp_agg      =   [grotRp_agg;    grotRp' ];
+        nullNETr_agg    =   [nullNETr_agg;  nullNETr'];
+        nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
+        nullNETv_agg    =   [nullNETv_agg;  nullNETv'];
+        nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
     end
 
     % Now save
