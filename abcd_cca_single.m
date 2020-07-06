@@ -6,7 +6,6 @@
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 
-
 function abcd_cca_single(perm, N_perm, N_dim)
     if nargin<3
         % Number of permutations, default 100,000
@@ -29,7 +28,7 @@ function abcd_cca_single(perm, N_perm, N_dim)
     N5=load('./data/N5.txt'); 
   
     % Permutation matrix
-    PAPset=load('./data/PAPset.txt')
+    PAPset=load('./data/PAPset.txt');
 
     grotvars=palm_inormal(S1);
     grotvars(:,std(grotvars)<1e-10)=[];
@@ -39,7 +38,7 @@ function abcd_cca_single(perm, N_perm, N_dim)
     r=zeros(N_dim+1);
 
     [A, B, r, U, V, stats] = canoncorr(N5,S5(PAPset(:,perm),:));
-    r(end)=mean(r(1:end-1))
+    r(end)=mean(r(1:end-1));
 
     nullNETr=corr(U(:,1),N0)';
     nullSMr=corr(V(:,1),grotvars(PAPset(:,perm),:),'rows','pairwise')';
@@ -47,10 +46,10 @@ function abcd_cca_single(perm, N_perm, N_dim)
     nullSMv=sum(corr(V,grotvars(PAPset(:,perm),:),'rows','pairwise').^2,2);
     
     % Now save
-    writematrix(grotRp, sprintf('./data/permutations/grotRp_%d',perm))
-    writematrix(nullNETr, sprintf('./data/permutations/nullNETr_%d',perm))
-    writematrix(nullSMr, sprintf('./data/permutations/nullSMr_%d',perm))
-    writematrix(nullNETv, sprintf('./data/permutations/nullNETv_%d',perm))
-    writematrix(nullSMv, sprintf('./data/permutations/nullSMv_%d',perm))
+    writematrix(r, sprintf('./data/permutations/grotRp_%d',perm));
+    writematrix(nullNETr, sprintf('./data/permutations/nullNETr_%d',perm));
+    writematrix(nullSMr, sprintf('./data/permutations/nullSMr_%d',perm));
+    writematrix(nullNETv, sprintf('./data/permutations/nullNETv_%d',perm));
+    writematrix(nullSMv, sprintf('./data/permutations/nullSMv_%d',perm));
 
 end
