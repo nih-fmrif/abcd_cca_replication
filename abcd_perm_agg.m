@@ -37,9 +37,9 @@ function abcd_perm_agg(N_perm, N_dim)
     end
 
     % Now save
-    writematrix(grotRp, sprintf('./data/grotRp.txt'));
-    writematrix(grotRp, sprintf('./data/nullNETr.txt'));
-    writematrix(grotRp, sprintf('./data/nullSMr.txt'));
-    writematrix(grotRp, sprintf('./data/nullNETv.txt'));
-    writematrix(grotRp, sprintf('./data/nullSMv.txt'));
+    writematrix(grotRp_agg,     sprintf('./data/grotRp_agg.txt'));
+    writematrix(nullNETr_agg,   sprintf('./data/nullNETr_agg.txt'));
+    writematrix(nullSMr_agg,    sprintf('./data/nullSMr_agg.txt'));
+    writematrix(nullNETv_agg,   sprintf('./data/nullNETv_agg.txt'));
+    writematrix(nullSMv_agg,    sprintf('./data/nullSMv_agg.txt'));
 end
