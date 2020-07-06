@@ -20,7 +20,9 @@ function abcd_perm_agg(N_perm, N_dim)
     nullSMr=[];
     nullNETv=[];
     nullSMv=[];
+    
     for perm=1:N_perm
+
         grotRp      =   load(sprintf('./data/permutations/grotRp_%d.txt',perm));
         nullNETr    =   load(sprintf('./data/permutations/nullNETr_%d.txt',perm));
         nullSMr     =   load(sprintf('./data/permutations/nullSMr_%d.txt',perm));
