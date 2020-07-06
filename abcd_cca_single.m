@@ -35,7 +35,7 @@ function abcd_cca_single(perm, N_perm, N_dim)
     grotvars(:,sum(isnan(grotvars)==0)<20)=[];
 
     % permutation calculation
-    r=zeros(1, N_dim+1);
+    r=zeros(N_dim+1, 1);
 
     [A, B, r(1:end-1), U, V, stats] = canoncorr(N5,S5(PAPset(:,perm),:));
     r(end)=mean(r(1:end-1));
