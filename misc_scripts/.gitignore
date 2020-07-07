@@ -5,3 +5,4 @@
 !fix_cleanup.sh
 !clean_failed_subjects.sh
 !icafix_cmd_gen.sh
+!check_trunc_lengths.sh
