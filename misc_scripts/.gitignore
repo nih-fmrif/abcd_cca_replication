@@ -7,3 +7,4 @@
 !icafix_cmd_gen.sh
 !check_trunc_lengths.sh
 !random_n_subjects.py
+!find_subjects_in_filepath_list.sh
