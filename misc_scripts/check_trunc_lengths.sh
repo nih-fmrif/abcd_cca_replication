@@ -20,12 +20,20 @@ files=$1
 # desired tps threshold
 tps=$2
 
+count=0
 while read file; do
 
     scan_len=$(fslnvols $file)
 
     if [ $scan_len -ne $tps ]; then
         echo "ERROR, $file length NOT $tps"
+        ((count++))
     fi
     
 done < $files
+
+if [ $count -gt 0 ]; then
+    echo "$count subjects with incorrect number of tps"
+else
+    echo "all subjects have proper number of tps"
+fi
