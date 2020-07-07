@@ -86,6 +86,11 @@ echo "$(date) - STEP 3 - Generating final VARS.txt matrix (abcd_cca_replication/
 echo "$(date) - STEP 3 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)"
 python $SUPPORT_SCRIPTS/stage_2/vars.py $STAGE_2_OUT/final_subjects.txt $STAGE_2_OUT/final_subject_measures.txt $motion_file $STAGE_2_OUT/VARS_no_motion.txt $ABCD_CCA_REPLICATION/data/VARS.txt
 
+# Note, if you need to just run step three from command line, do the following (from abcd_cca_replication folder)
+# . pipeline.config
+# motion_file=$STAGE_2_OUT/subjects_mean_fds.txt
+# python $SUPPORT_SCRIPTS/stage_2/vars.py $ABCD_CCA_REPLICATION/misc_scripts/final_subs/successful_subjects.txt $STAGE_2_OUT/final_subject_measures.txt $motion_file $STAGE_2_OUT/VARS_no_motion.txt $ABCD_CCA_REPLICATION/data/VARS.txt
+
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 2 LOG ---" >> $PREP_LOG
 echo "" >> $PREP_LOG

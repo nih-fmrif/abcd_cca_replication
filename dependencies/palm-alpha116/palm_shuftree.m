@@ -133,7 +133,9 @@ end
 % Generate the Pset and Sset
 Pset = {};
 Sset = {};
-if nP0 == 0 || nP0 >= maxB,
+
+% if nP0 == 0 || nP0 >= maxB,
+if false,
     % Run exhaustively if the user requests too many permutations.
     % Note that here CMC is irrelevant.
     fprintf('Generating %g shufflings (%s).\n',maxB,whatshuf);
@@ -143,13 +145,15 @@ if nP0 == 0 || nP0 >= maxB,
     if ISE,
         Sset = palm_fliptree(Ptree,round(maxS),[],false,round(maxS));
     end
-elseif nP0 < maxB,
+% elseif nP0 < maxB,
+elseif true,
     % Or use a subset of possible permutations. The nested conditions
     % are to avoid repetitions, and to compensate fewer flips with more
     % perms or vice versa as needed in the tight situations
     fprintf('Generating %g shufflings (%s).\n',nP0,whatshuf);
     if EE,
-        if nP0 >= maxP,
+        % if nP0 >= maxP,
+        if false,
             Pset = palm_permtree(Ptree,round(maxP),CMC,false,round(maxP));
         else
             Pset = palm_permtree(Ptree,nP0,CMC,false,round(maxP));
@@ -184,7 +188,8 @@ if nS == 1,
 elseif nP == 1,
     % If only 1 permutation is possible, ignore it.
     Bset = Sset;
-elseif nP0 == 0 || nP0 >= maxB,
+% elseif nP0 == 0 || nP0 >= maxB,
+elseif false,
     % If the user requested too many shufflings, do all
     % those that are possible.
     Bset = cell(maxB,1);
