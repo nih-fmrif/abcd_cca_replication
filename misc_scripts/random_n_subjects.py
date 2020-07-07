@@ -13,7 +13,7 @@ sub_list = sys.argv[1]
 out_path = sys.argv[2]
 N = int(sys.argv[3])
 
-subs = [line.rstrip('\n') for line in open(sub_fp)]
+subs = [line.rstrip('\n') for line in open(sub_list)]
 
 random.shuffle(subs)
 
