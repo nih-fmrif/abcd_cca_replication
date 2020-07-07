@@ -89,6 +89,7 @@ python $SUPPORT_SCRIPTS/stage_2/vars.py $STAGE_2_OUT/final_subjects.txt $STAGE_2
 # Note, if you need to just run step three from command line, do the following (from abcd_cca_replication folder)
 # . pipeline.config
 # motion_file=$STAGE_2_OUT/subjects_mean_fds.txt
+# ABCD_CCA_REPLICATION=/data/ABCD_MBDU/goyaln2/abcd_cca_replication/
 # python $SUPPORT_SCRIPTS/stage_2/vars.py $ABCD_CCA_REPLICATION/misc_scripts/final_subs/successful_subjects.txt $STAGE_2_OUT/final_subject_measures.txt $motion_file $STAGE_2_OUT/VARS_no_motion.txt $ABCD_CCA_REPLICATION/data/VARS.txt
 
 echo "$(date) - STOP" >> $PREP_LOG
