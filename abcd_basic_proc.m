@@ -125,10 +125,10 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 
 
 	% --- Save matrices ---
-	writematrix(conf, sprintf('%s/data/%d/permutations/conf.txt', abcd_cca_dir, n_subs));
-	writematrix(N0, sprintf('%s/data/%d/permutations/N0.txt', abcd_cca_dir, n_subs));
-	writematrix(N5, sprintf('%s/data/%d/permutations/N5.txt', abcd_cca_dir, n_subs));
-	writematrix(S1, sprintf('%s/data/%d/permutations/S1.txt', abcd_cca_dir, n_subs));
-	writematrix(S5, sprintf('%s/data/%d/permutations/S5.txt', abcd_cca_dir, n_subs));
+	writematrix(conf, sprintf('%s/data/%d/conf.txt', abcd_cca_dir, n_subs));
+	writematrix(N0, sprintf('%s/data/%d/N0.txt', abcd_cca_dir, n_subs));
+	writematrix(N5, sprintf('%s/data/%d/N5.txt', abcd_cca_dir, n_subs));
+	writematrix(S1, sprintf('%s/data/%d/S1.txt', abcd_cca_dir, n_subs));
+	writematrix(S5, sprintf('%s/data/%d/S5.txt', abcd_cca_dir, n_subs));
 
 end
