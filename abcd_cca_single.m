@@ -5,8 +5,9 @@
 
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
+% NOTE: this script is COMPILED, and it expects input args to be strings (from cmd line), so we type cast the args
 
-function abcd_cca_single(perm, N_perm, N_dim, abcd_cca_dir, n_subs)
+function abcd_cca_single(perm_str, N_perm_str, N_dim_str, abcd_cca_dir, n_subs_str)
     if nargin<5
         sprintf("ERROR, not enough arguments.")
         sprintf("Example: abcd_perm_agg(1, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
@@ -18,14 +19,10 @@ function abcd_cca_single(perm, N_perm, N_dim, abcd_cca_dir, n_subs)
         addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
     end
     
-
-    sprintf("Inputs args:")
-    sprintf('perm: %s', perm)
-    sprintf('N_perm: %s', N_perm)
-    sprintf('N_dim: %s', N_dim)
-    sprintf('abcd_cca_dir: %s', abcd_cca_dir)
-    sprintf('n_subs: %s', n_subs)
-    
+    perm=int32(perm_str)
+    N_perm=int32(N_perm_str)
+    N_dim=int32(N_dim_str)
+    n_subs=int32(n_subs_str)
     
     % Load data
     % Matrix S1 (only ICA sms)
