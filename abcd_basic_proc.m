@@ -26,13 +26,13 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	% Load the Subjects X Nodes matrix (should be size Nx19900)
 	N0=load(sprintf('%s/data/%d/NET.txt', abcd_cca_dir, n_subs));   
 	
-	ica_sms_0=fileread(sprintf('%s/data/ica_subject_measures.txt', abcd_cca_dir))
-	ica_sms = strsplit(ica_sms_0)
+	ica_sms_0=fileread(sprintf('%s/data/ica_subject_measures.txt', abcd_cca_dir));
+	ica_sms = strsplit(ica_sms_0);
 
 	% Drop subject col and device serial number col (they are strings)
 	egid_col    = find(strcmpi(VARS_0(1,:),'subjectid'));
 	serial_col  = find(strcmpi(VARS_0(1,:),'mri_info_device.serial.number'));
-	VARS_0(:,[egid_col serial_col])=[]
+	VARS_0(:,[egid_col serial_col])=[];
 
 	site_col        = find(strcmpi(VARS_0(1,:),'abcd_site'));
 	mri_man_col     = find(strcmpi(VARS_0(1,:),'mri_info_manufacturer'));
@@ -42,7 +42,7 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	wholebrain_col  = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_wholebrain'));
 	intracran_col   = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_intracranialvolume'));
 
-	[sharedvals,idx]=intersect(VARS_0(1,:),ica_sms)
+	[sharedvals,idx]=intersect(VARS_0(1,:),ica_sms);
 
 	VARS=cell2mat(VARS_0(2:end,:));
 
@@ -75,9 +75,9 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	% Now generate S3, formed by deconfounding the 17 confounds out of S2
 	S3=S2;
 	for i=1:size(S3,2) % deconfound ignoring missing data
-	grot=(isnan(S3(:,i))==0);
-	grotconf=nets_demean(conf(grot,:));
-	S3(grot,i)=normalize(S3(grot,i)-grotconf*(pinv(grotconf)*S3(grot,i)));
+		grot=(isnan(S3(:,i))==0);
+		grotconf=nets_demean(conf(grot,:));
+		S3(grot,i)=normalize(S3(grot,i)-grotconf*(pinv(grotconf)*S3(grot,i)));
 	end
 
 	% Determine how much data is missing:
@@ -89,11 +89,11 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	% This method avoids imputation, and S4 can be fed into PCA.
 	S3Cov=zeros(size(S3,1));
 	for i=1:size(S3,1) % estimate "pairwise" covariance, ignoring missing data
-	for j=1:size(S3,1)
-		grot=S3([i j],:);
-		grot=cov(grot(:,sum(isnan(grot))==0)');
-		S3Cov(i,j)=grot(1,2);
-	end
+		for j=1:size(S3,1)
+			grot=S3([i j],:);
+			grot=cov(grot(:,sum(isnan(grot))==0)');
+			S3Cov(i,j)=grot(1,2);
+		end
 	end
 	S4=nearestSPD(S3Cov); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
 
