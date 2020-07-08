@@ -7,10 +7,10 @@
 % Required inputs are the NET.txt and VARS.txt files.
 
 function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
-    if nargin<5
+    if nargin<4
         sprintf("ERROR, not enough arguments.")
         sprintf("Example: abcd_basic_proc(100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
-        exit
+        return
 	end
 	
 	%% Add the dependencies folders to the PATH, and read in necessary data

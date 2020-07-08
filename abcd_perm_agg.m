@@ -7,10 +7,10 @@
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 
 function abcd_perm_agg(N_perm, N_dim, abcd_cca_dir, n_subs)
-    if nargin<3
+    if nargin<4
         sprintf("ERROR, not enough arguments.")
         sprintf("Example: abcd_perm_agg(100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
-        exit
+        return
 	end
 
     if ~isdeployed
