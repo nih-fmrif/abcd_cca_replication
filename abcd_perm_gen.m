@@ -4,16 +4,16 @@
 % Modified: 7/6/20 (made the script into a function)
 % 7/7/20 (updated the palm_quickperms call to make it faster)
 
-% n_subs = name of subset folder (e.x. 5013_subs) where the data is/should be saved
+% n_subs = name of subset folder (e.x. 1000) where the data is/should be saved; value is equal to the number of subjects under analysis
 
 % Example call:
-% abcd_perm_gen(100000, "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/", "5013_subs")
+% abcd_perm_gen(100000, "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/", 1000)
 
 
 function abcd_perm_gen(N_perm, abcd_cca_dir, n_subs)
     if nargin<3
         sprintf("ERROR, not enough arguments.")
-        sprintf("Example: abcd_perm_gen(100000, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', '5013_subs')")
+        sprintf("Example: abcd_perm_gen(100000, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 1000)")
         return
     end
 
