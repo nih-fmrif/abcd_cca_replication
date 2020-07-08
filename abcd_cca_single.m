@@ -34,7 +34,7 @@ function abcd_cca_single(perm, N_perm, N_dim, abcd_cca_dir, n_subs)
     N5=load(n5);
   
     % Permutation matrix
-    pset=sprintf('%s/data/%d/Pset.txt', abcd_cca_dir, n_subs)
+    pset=sprintf('%s/data/%d/Pset.txt', abcd_cca_dir, n_subs);
     Pset=load(pset);
 
     grotvars=palm_inormal(S1);
