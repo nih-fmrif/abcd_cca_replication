@@ -20,11 +20,11 @@ function abcd_cca_single(perm, N_perm, N_dim, abcd_cca_dir, n_subs)
     
 
     sprintf("Inputs args:")
-    sprintf('perm: %d', perm)
-    sprintf('N_perm: %d', N_perm)
-    sprintf('N_dim: %d', N_dim)
+    sprintf('perm: %s', perm)
+    sprintf('N_perm: %s', N_perm)
+    sprintf('N_dim: %s', N_dim)
     sprintf('abcd_cca_dir: %s', abcd_cca_dir)
-    sprintf('n_subs: %d', n_subs)
+    sprintf('n_subs: %s', n_subs)
     
     
     % Load data
