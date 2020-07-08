@@ -19,10 +19,10 @@ function abcd_cca_single(perm_str, N_perm_str, N_dim_str, abcd_cca_dir, n_subs_s
         addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
     end
     
-    perm=int32(perm_str)
-    N_perm=int32(N_perm_str)
-    N_dim=int32(N_dim_str)
-    n_subs=int32(n_subs_str)
+    perm=str2num(perm_str)
+    N_perm=str2num(N_perm_str)
+    N_dim=str2num(N_dim_str)
+    n_subs=str2num(n_subs_str)
     
     % Load data
     % Matrix S1 (only ICA sms)
