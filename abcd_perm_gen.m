@@ -23,8 +23,8 @@ function abcd_perm_gen(N_perm, abcd_cca_dir, n_subs)
     end
 
     % Generate permutations using the hcp2blocks package
-    in_VARS = sprintf('%s/data/%s/VARS.txt', abcd_cca_dir, n_subs);
-    blocksfile = sprintf('%s/data/%s/blocksfile.csv', abcd_cca_dir, n_subs);
+    in_VARS = sprintf('%s/data/%d/VARS.txt', abcd_cca_dir, n_subs);
+    blocksfile = sprintf('%s/data/%d/blocksfile.csv', abcd_cca_dir, n_subs);
     [EB,tab] = abcd2blocks(in_VARS, blocksfile, [100 10]);
 
     % NOTE, call palm_quickperms with the following options (for fastest calculations while also finding permutations proper)
@@ -40,5 +40,5 @@ function abcd_perm_gen(N_perm, abcd_cca_dir, n_subs)
     % Note, Pset is the final matrix of permuations (one permutation per column)
 
     % Now save Pset to file
-    writematrix(Pset, sprintf('%s/data/%s/Pset.txt', abcd_cca_dir, n_subs));
+    writematrix(Pset, sprintf('%s/data/%d/Pset.txt', abcd_cca_dir, n_subs));
 end

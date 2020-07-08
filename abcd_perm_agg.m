@@ -6,14 +6,16 @@
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 
-function abcd_perm_agg(N_perm, N_dim)
+function abcd_perm_agg(N_perm, N_dim, abcd_cca_dir, n_subs)
     if nargin<2
         N_perm=100000;
         N_dim=70;
     end
 
-    addpath(genpath('./dependencies/'));
-    addpath(genpath('./data/'));
+    if ~isdeployed
+        addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
+        addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
+    end
 
     grotRp_agg=zeros(N_perm, N_dim+1);
     nullNETr_agg=[];
@@ -23,11 +25,11 @@ function abcd_perm_agg(N_perm, N_dim)
 
     for perm=1:N_perm;
 
-        grotRp      =   load(sprintf('./data/permutations/grotRp_%d.txt',perm));
-        nullNETr    =   load(sprintf('./data/permutations/nullNETr_%d.txt',perm));
-        nullSMr     =   load(sprintf('./data/permutations/nullSMr_%d.txt',perm));
-        nullNETv    =   load(sprintf('./data/permutations/nullNETv_%d.txt',perm));
-        nullSMv     =   load(sprintf('./data/permutations/nullSMv_%d.txt',perm));
+        grotRp      =   load(sprintf('%s/data/%d/permutations/grotRp_%d.txt', abcd_cca_dir, n_subs, perm));
+        nullNETr    =   load(sprintf('%s/data/%d/permutations/nullNETr_%d.txt', abcd_cca_dir, n_subs, perm));
+        nullSMr     =   load(sprintf('%s/data/%d/permutations/nullSMr_%d.txt', abcd_cca_dir, n_subs, perm));
+        nullNETv    =   load(sprintf('%s/data/%d/permutations/nullNETv_%d.txt', abcd_cca_dir, n_subs, perm));
+        nullSMv     =   load(sprintf('%s/data/%d/permutations/nullSMv_%d.txt', abcd_cca_dir, n_subs, perm));
 
         grotRp_agg      =   [grotRp_agg;    grotRp' ];
         nullNETr_agg    =   [nullNETr_agg;  nullNETr'];
@@ -37,9 +39,9 @@ function abcd_perm_agg(N_perm, N_dim)
     end
 
     % Now save
-    writematrix(grotRp_agg,     sprintf('./data/grotRp_agg.txt'));
-    writematrix(nullNETr_agg,   sprintf('./data/nullNETr_agg.txt'));
-    writematrix(nullSMr_agg,    sprintf('./data/nullSMr_agg.txt'));
-    writematrix(nullNETv_agg,   sprintf('./data/nullNETv_agg.txt'));
-    writematrix(nullSMv_agg,    sprintf('./data/nullSMv_agg.txt'));
+    writematrix(grotRp_agg,     sprintf('%s/data/%d/grotRp_agg.txt', abcd_cca_dir, n_subs));
+    writematrix(nullNETr_agg,   sprintf('%s/data/%d/nullNETr_agg.txt', abcd_cca_dir, n_subs));
+    writematrix(nullSMr_agg,    sprintf('%s/data/%d/nullSMr_agg.txt', abcd_cca_dir, n_subs));
+    writematrix(nullNETv_agg,   sprintf('%s/data/%d/nullNETv_agg.txt', abcd_cca_dir, n_subs));
+    writematrix(nullSMv_agg,    sprintf('%s/data/%d/nullSMv_agg.txt', abcd_cca_dir, n_subs));
 end

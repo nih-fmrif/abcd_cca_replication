@@ -6,29 +6,36 @@
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 
-function abcd_cca_single(perm, N_perm, N_dim)
+function abcd_cca_single(perm, N_perm, N_dim, abcd_cca_dir, n_subs)
     if nargin<3
         % Number of permutations, default 100,000
         N_perm=100000;
         N_dim=70;
     end
 
-    addpath(genpath('./dependencies/'));
-    addpath(genpath('./data/'));
+    if ~isdeployed
+        addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
+        addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
+    end
     
     % Load data
     % Matrix S1 (only ICA sms)
-    S1=load('./data/S1.txt'); 
-    % Matrix S5
-    S5=load('./data/S5.txt');
-
+    s1=sprintf('%s/data/%d/S1.txt', abcd_cca_dir, n_subs)
+    % Matrix S5 (post-PCA SM matrix)
+    s5=sprintf('%s/data/%d/S5.txt', abcd_cca_dir, n_subs)
     % Matrix N0 (raw connectome data)
-    N0=load('./data/N0.txt'); 
+    n0=sprintf('%s/data/%d/N0.txt', abcd_cca_dir, n_subs)
     % Matrix N5 (post-PCA connectome matrix)
-    N5=load('./data/N5.txt'); 
+    n5=sprintf('%s/data/%d/N5.txt', abcd_cca_dir, n_subs)
+
+    S1=load(s1); 
+    S5=load(s5);
+    N0=load(n0);
+    N5=load(n5);
   
     % Permutation matrix
-    PAPset=load('./data/PAPset.txt');
+    pset=sprintf('%s/data/%d/Pset.txt', abcd_cca_dir, n_subs)
+    Pset=load(pset);
 
     grotvars=palm_inormal(S1);
     grotvars(:,std(grotvars)<1e-10)=[];
@@ -37,19 +44,19 @@ function abcd_cca_single(perm, N_perm, N_dim)
     % permutation calculation
     r=zeros(N_dim+1, 1);
 
-    [A, B, r(1:end-1), U, V, stats] = canoncorr(N5,S5(PAPset(:,perm),:));
+    [A, B, r(1:end-1), U, V, stats] = canoncorr(N5,S5(Pset(:,perm),:));
     r(end)=mean(r(1:end-1));
 
     nullNETr=corr(U(:,1),N0)';
-    nullSMr=corr(V(:,1),grotvars(PAPset(:,perm),:),'rows','pairwise')';
+    nullSMr=corr(V(:,1),grotvars(Pset(:,perm),:),'rows','pairwise')';
     nullNETv=sum(corr(U,N0).^2,2);
-    nullSMv=sum(corr(V,grotvars(PAPset(:,perm),:),'rows','pairwise').^2,2);
+    nullSMv=sum(corr(V,grotvars(Pset(:,perm),:),'rows','pairwise').^2,2);
     
     % Now save
-    writematrix(r, sprintf('./data/permutations/grotRp_%d',perm));
-    writematrix(nullNETr, sprintf('./data/permutations/nullNETr_%d',perm));
-    writematrix(nullSMr, sprintf('./data/permutations/nullSMr_%d',perm));
-    writematrix(nullNETv, sprintf('./data/permutations/nullNETv_%d',perm));
-    writematrix(nullSMv, sprintf('./data/permutations/nullSMv_%d',perm));
+    writematrix(r, sprintf('%s/data/%d/permutations/grotRp_%d', abcd_cca_dir, n_subs, perm));
+    writematrix(nullNETr, sprintf('%s/data/%d/permutations/nullNETr_%d', abcd_cca_dir, n_subs, perm));
+    writematrix(nullSMr, sprintf('%s/data/%d/permutations/nullSMr_%d', abcd_cca_dir, n_subs, perm));
+    writematrix(nullNETv, sprintf('%s/data/%d/permutations/nullNETv_%d', abcd_cca_dir, n_subs, perm));
+    writematrix(nullSMv, sprintf('%s/data/%d/permutations/nullSMv_%d', abcd_cca_dir, n_subs, perm));
 
 end

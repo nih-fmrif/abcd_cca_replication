@@ -14,5 +14,6 @@ while read subject; do
         echo "$line" >> $outdir/subset_filepaths.txt
     fi
 
-
 done < $subject_list
+
+cat $outdir/subset_filepaths.txt | uniq >> $outdir/subset_filepaths_final.txt
