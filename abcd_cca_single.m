@@ -18,6 +18,15 @@ function abcd_cca_single(perm, N_perm, N_dim, abcd_cca_dir, n_subs)
         addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
     end
     
+
+    sprintf("Inputs args:")
+    sprintf('perm: %d', perm)
+    sprintf('N_perm: %d', N_perm)
+    sprintf('N_dim: %d', N_dim)
+    sprintf('abcd_cca_dir: %s', abcd_cca_dir)
+    sprintf('n_subs: %d', n_subs)
+    
+    
     % Load data
     % Matrix S1 (only ICA sms)
     s1=sprintf('%s/data/%d/S1.txt', abcd_cca_dir, n_subs)
