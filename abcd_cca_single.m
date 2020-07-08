@@ -8,10 +8,10 @@
 
 function abcd_cca_single(perm, N_perm, N_dim, abcd_cca_dir, n_subs)
     if nargin<3
-        % Number of permutations, default 100,000
-        N_perm=100000;
-        N_dim=70;
-    end
+        sprintf("ERROR, not enough arguments.")
+        sprintf("Example: abcd_perm_agg(1, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
+        exit
+	end
 
     if ~isdeployed
         addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));

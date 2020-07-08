@@ -12,8 +12,8 @@
 
 function abcd_perm_gen(N_perm, abcd_cca_dir, n_subs)
     if nargin<3
-        print("ERROR, not enough arguments.")
-        print("Example: abcd_perm_gen(100000, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', '5013_subs')")
+        sprintf("ERROR, not enough arguments.")
+        sprintf("Example: abcd_perm_gen(100000, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', '5013_subs')")
         exit
     end
 

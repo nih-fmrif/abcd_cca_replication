@@ -8,8 +8,8 @@
 
 function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
     if nargin<5
-        print("ERROR, not enough arguments.")
-        print("Example: abcd_basic_proc(100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
+        sprintf("ERROR, not enough arguments.")
+        sprintf("Example: abcd_basic_proc(100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
         exit
 	end
 	
