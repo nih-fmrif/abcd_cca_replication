@@ -7,6 +7,18 @@
 % This script is given a start index and the number of permutations to calculate
 % NOTE: this script is COMPILED, and it expects input args to be strings (from cmd line), so we type cast the args
 
+% How to compile this script on NIH biowulf using the mcc2 utility:
+% mcc2 -m abcd_cca_batch.m -d compiled_scripts/ -nojvm -a ./dependencies/palm-alpha116/palm_inormal.m
+
+% And to run a SINGLE INSTANCE of it (this is NOT how it is called on slurm):
+%{
+export XAPPLRESDIR=MR/v98/X11/app-defaults
+export LD_LIBRARY_PATH=MR/v98/runtime/glnxa64:MR/v98/bin/glnxa64:MR/v98/sys/os/glnxa64:MR/v98/sys/opengl/lib/glnxa64
+./run_abcd_cca_batch.sh /usr/local/matlab-compiler/v98 1 1000 70 /data/ABCD_MBDU/goyaln2/abcd_cca_replication/ 500
+%}
+
+% To see the command structure for HPC slurm for this script, see gen_batch_permutation_ica_swarm.py
+
 % The result of the script is a .mat file with a structure of the following format:
 % .mat file
 % {
@@ -80,7 +92,7 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     
     r=zeros(N_dim+1, 1);
     count=1;
-    for perm = start_idx:(start_idx+num_perms)
+    for perm = start_idx:(start_idx+num_perms-1)
         [A, B, r(1:end-1), U, V, stats] = canoncorr(N5,S5(Pset(:,perm),:));
         r(end)=mean(r(1:end-1));
     
