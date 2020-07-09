@@ -7,6 +7,9 @@
 % Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 % NOTE: this script is COMPILED, and it expects input args to be strings (from cmd line), so we type cast the args
 
+% NOTE: FOR FUTURE DEVELOPMENT - change this script to accept a range of values, so it will run multiple CCAs rather than just 1 per script call (or write a new script for this?)
+%       This might help with batch submissions of the permutation CCAs (reduce overhead if we call the script fewer times, but each call runs more CCAs)
+
 function abcd_cca_single(perm_str, N_perm_str, N_dim_str, abcd_cca_dir, n_subs_str)
     if nargin<5
         sprintf("ERROR, not enough arguments.")
@@ -19,25 +22,25 @@ function abcd_cca_single(perm_str, N_perm_str, N_dim_str, abcd_cca_dir, n_subs_s
         addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
     end
     
-    perm=str2num(perm_str)
-    N_perm=str2num(N_perm_str)
-    N_dim=str2num(N_dim_str)
-    n_subs=str2num(n_subs_str)
+    perm    =   str2num(perm_str);
+    N_perm  =   str2num(N_perm_str);
+    N_dim   =   str2num(N_dim_str);
+    n_subs  =   str2num(n_subs_str);
     
     % Load data
     % Matrix S1 (only ICA sms)
-    s1=sprintf('%s/data/%d/S1.txt', abcd_cca_dir, n_subs)
+    s1  =   sprintf('%s/data/%d/S1.txt', abcd_cca_dir, n_subs);
     % Matrix S5 (post-PCA SM matrix)
-    s5=sprintf('%s/data/%d/S5.txt', abcd_cca_dir, n_subs)
+    s5  =   sprintf('%s/data/%d/S5.txt', abcd_cca_dir, n_subs);
     % Matrix N0 (raw connectome data)
-    n0=sprintf('%s/data/%d/N0.txt', abcd_cca_dir, n_subs)
+    n0  =   sprintf('%s/data/%d/N0.txt', abcd_cca_dir, n_subs);
     % Matrix N5 (post-PCA connectome matrix)
-    n5=sprintf('%s/data/%d/N5.txt', abcd_cca_dir, n_subs)
+    n5  =   sprintf('%s/data/%d/N5.txt', abcd_cca_dir, n_subs);
 
-    S1=load(s1); 
-    S5=load(s5);
-    N0=load(n0);
-    N5=load(n5);
+    S1  =   load(s1); 
+    S5  =   load(s5);
+    N0  =   load(n0);
+    N5  =   load(n5);
   
     % Permutation matrix
     pset=sprintf('%s/data/%d/Pset.txt', abcd_cca_dir, n_subs);
@@ -66,3 +69,53 @@ function abcd_cca_single(perm_str, N_perm_str, N_dim_str, abcd_cca_dir, n_subs_s
     writematrix(nullSMv, sprintf('%s/data/%d/permutations/nullSMv_%d', abcd_cca_dir, n_subs, perm));
 
 end
+
+MAT FILE 1
+{
+    iteration: 1{
+        r
+        nullNETr
+        nullSMr
+        nullNETv
+        nullSMv
+    },
+    iterationL 2{
+        r
+        nullNETr
+        nullSMr
+        nullNETv
+        nullSMv
+    }
+    iterationL 3{
+        r
+        nullNETr
+        nullSMr
+        nullNETv
+        nullSMv
+    }
+}
+
+MAT FILE 2
+{
+    iteration: 4{
+        r
+        nullNETr
+        nullSMr
+        nullNETv
+        nullSMv
+    },
+    iterationL 5{
+        r
+        nullNETr
+        nullSMr
+        nullNETv
+        nullSMv
+    }
+    iterationL 6{
+        r
+        nullNETr
+        nullSMr
+        nullNETv
+        nullSMv
+    }
+}
