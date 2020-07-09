@@ -1,48 +1,75 @@
 % abcd_perm_agg.m
 % Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 % Created: 7/1/2020
-% Modified:
+% Modified: 7/9/20 (modified to accomodate the outputs of abcd_cca_batch.m)
 
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
-% Each CCA result is saved out to a text file for use in abcd_cca_analysis.m
 
-function abcd_perm_agg(N_perm, N_dim, abcd_cca_dir, n_subs)
-    if nargin<4
+function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_subs)
+    if nargin<5
         sprintf("ERROR, not enough arguments.")
-        sprintf("Example: abcd_perm_agg(100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
+        sprintf("Example: abcd_perm_agg(1000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 500)")
         return
-	end
-
+    end
+    
     if ~isdeployed
         addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
         addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
+        perms_per_batch   =   perms_per_batch_in;
+        N_perm   =   N_perm_in;
+        N_dim   =   N_dim_in;
+        n_subs  =   n_subs_in;
+    elseif isdeployed
+        % When compiled matlab, it reads the command line args all as strings so we need to convert
+        perms_per_batch   =   str2num(perms_per_batch_in);
+        N_perm   =   str2num(N_perm_in);
+        N_dim   =   str2num(N_dim_in);
+        n_subs  =   str2num(n_subs_in);
     end
 
-    grotRp_agg=zeros(N_perm, N_dim+1);
+    s_agg = struct('perms',{},'r',{},'nullNETr',{},'nullNETv',{},'nullSMr',{},'nullSMv',{});
+
+    r_agg=zeros(N_perm, N_dim+1);
     nullNETr_agg=[];
-    nullSMr_agg=[];
     nullNETv_agg=[];
+    nullSMr_agg=[];
     nullSMv_agg=[];
 
-    for perm=1:N_perm;
+    for perm = 1:perms_per_batch:N_perm
+        % Iterate over 1 = 1, 1001, 2001, .... 99001
+        % filename of .mat files we need to load are of form permutations_<#>.mat
 
-        grotRp      =   load(sprintf('%s/data/%d/permutations/grotRp_%d.txt', abcd_cca_dir, n_subs, perm));
-        nullNETr    =   load(sprintf('%s/data/%d/permutations/nullNETr_%d.txt', abcd_cca_dir, n_subs, perm));
-        nullSMr     =   load(sprintf('%s/data/%d/permutations/nullSMr_%d.txt', abcd_cca_dir, n_subs, perm));
-        nullNETv    =   load(sprintf('%s/data/%d/permutations/nullNETv_%d.txt', abcd_cca_dir, n_subs, perm));
-        nullSMv     =   load(sprintf('%s/data/%d/permutations/nullSMv_%d.txt', abcd_cca_dir, n_subs, perm));
+        f_name = sprintf('%s/data/%d/permutations/permutations_%d.mat',abcd_cca_dir, n_subs, perm);
 
-        grotRp_agg      =   [grotRp_agg;    grotRp' ];
-        nullNETr_agg    =   [nullNETr_agg;  nullNETr'];
-        nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
-        nullNETv_agg    =   [nullNETv_agg;  nullNETv'];
-        nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
+        % Load the .mat file
+        s_load = load(f_name);
+
+        for j = 1:perms_per_batch
+            % Now iterate over the entries in the loaded structure (there will be perms_per_batch entries)
+            
+            r           =   s(j).r;
+            nullNETr    =   s(j).nullNETr;
+            nullNETv    =   s(j).nullNETv;
+            nullSMr     =   s(j).nullSMr;
+            nullSMv     =   s(j).nullSMv;
+
+            r_agg           =   [grotRp_agg;    r' ];
+            nullNETr_agg    =   [nullNETr_agg;  nullNETr'];
+            nullNETv_agg    =   [nullNETv_agg;  nullNETv'];
+            nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
+            nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
+        end
     end
 
+
+    s_agg(1).perm=N_perm;
+    s_agg(1).r=r_agg;
+    s_agg(1).nullNETr=nullNETr_agg;
+    s_agg(1).nullNETv=nullNETv_agg;
+    s_agg(1).nullSMr=nullSMr_agg;
+    s_agg(1).nullSMv=nullSMv_agg;
+
     % Now save
-    writematrix(grotRp_agg,     sprintf('%s/data/%d/grotRp_agg.txt', abcd_cca_dir, n_subs));
-    writematrix(nullNETr_agg,   sprintf('%s/data/%d/nullNETr_agg.txt', abcd_cca_dir, n_subs));
-    writematrix(nullSMr_agg,    sprintf('%s/data/%d/nullSMr_agg.txt', abcd_cca_dir, n_subs));
-    writematrix(nullNETv_agg,   sprintf('%s/data/%d/nullNETv_agg.txt', abcd_cca_dir, n_subs));
-    writematrix(nullSMv_agg,    sprintf('%s/data/%d/nullSMv_agg.txt', abcd_cca_dir, n_subs));
+    save(sprintf('%s/data/%d/permutations_agg.mat', abcd_cca_dir, n_subs), 's_agg');
+
 end
