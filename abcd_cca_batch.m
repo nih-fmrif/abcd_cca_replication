@@ -93,6 +93,8 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     r=zeros(N_dim+1, 1);
     count=1;
     for perm = start_idx:(start_idx+num_perms-1)
+        % Note, need to range from start_idx:(start_idx+num_perms-1) because without the -1 on the final iteration perm will exceed 100,000 becoming 100,001 and causing an error
+        % Also, need the -1 for only num_perms permutations to be ran
         [A, B, r(1:end-1), U, V, stats] = canoncorr(N5,S5(Pset(:,perm),:));
         r(end)=mean(r(1:end-1));
     
