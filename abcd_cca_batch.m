@@ -101,6 +101,6 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     end
 
     % Save .mat file with the permutations
-    save(sprintf('%s/data/%d/permutations_%d.mat', abcd_cca_dir, n_subs, start_idx), 's');
+    save(sprintf('%s/data/%d/permutations/permutations_%d.mat', abcd_cca_dir, n_subs, start_idx), 's');
 
 end
