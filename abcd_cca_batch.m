@@ -24,20 +24,21 @@
 function abcd_cca_batch(start_idx_str, num_perms_str, N_dim_str, abcd_cca_dir, n_subs_str)
     if nargin<5
         sprintf("ERROR, not enough arguments.")
-        sprintf("Example: abcd_perm_agg(1, 100, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 1000)")
+        sprintf("Example: abcd_cca_batch(1, 100, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 1000)")
         return
 	end
 
     if ~isdeployed
         addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
         addpath(genpath(sprintf('%s/data/', abcd_cca_dir)));
+    else if isdeployed
+        % When compiled matlab, it reads the command line args all as strings so we need to convert
+        start_idx   =   str2num(start_idx_str);
+        num_perms   =   str2num(num_perms_str);
+        N_dim   =   str2num(N_dim_str);
+        n_subs  =   str2num(n_subs_str);
     end
-    
-    start_idx   =   str2num(start_idx_str);
-    num_perms   =   str2num(num_perms_str);
-    N_dim   =   str2num(N_dim_str);
-    n_subs  =   str2num(n_subs_str);
-    
+        
     % Load data
     % Matrix S1 (only ICA sms)
     s1  =   sprintf('%s/data/%d/S1.txt', abcd_cca_dir, n_subs);
