@@ -35,7 +35,7 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
         num_perms   =   num_perms_in;
         N_dim   =   N_dim_in;
         n_subs  =   n_subs_in;
-    else if isdeployed
+    elseif isdeployed
         % When compiled matlab, it reads the command line args all as strings so we need to convert
         start_idx   =   str2num(start_idx_in);
         num_perms   =   str2num(num_perms_in);
