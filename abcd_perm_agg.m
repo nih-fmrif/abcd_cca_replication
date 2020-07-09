@@ -42,7 +42,7 @@ function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_
         f_name = sprintf('%s/data/%d/permutations/permutations_%d.mat',abcd_cca_dir, n_subs, perm);
 
         % Load the .mat file
-        s_load = load(f_name);
+        s = load(f_name);
 
         for j = 1:perms_per_batch
             % Now iterate over the entries in the loaded structure (there will be perms_per_batch entries)
