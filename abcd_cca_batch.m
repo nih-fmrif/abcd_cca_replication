@@ -19,19 +19,8 @@ export LD_LIBRARY_PATH=MR/v98/runtime/glnxa64:MR/v98/bin/glnxa64:MR/v98/sys/os/g
 
 % To see the command structure for HPC slurm for this script, see gen_batch_permutation_ica_swarm.py
 
-% The result of the script is a .mat file with a structure of the following format:
-% .mat file
-% {
-%     1: {
-%         perm
-%         r
-%         nullNETr
-%         nullSMr
-%         nullNETv
-%         nullSMv
-%     }
-%     2: {}...
-% }
+% The output of this script is a .mat file that contains data necessary for null distribution permutation testing
+% For the sake of aggregating this data, some computations are done here (finding percentiles and means) on the num_perms calculated (reduces memory and computational overhead later in analysis when we need to use this data)
 
 function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_subs_in)
     if nargin<5
@@ -88,31 +77,79 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     % nullNETv  =   for this permutation, the summation of the correlation values between each mode's connectome weights and the RAW connectome matrix
     % nullSMr   =   for this permutation, CCA mode 1 SM weights correalated against the S1 matrix
     % nullSMv   =   for this permutation, the summation of the correlation values between each mode's SM weights and the S1 matrix
-    s = struct('perm',{},'r',{},'nullNETr',{},'nullNETv',{},'nullSMr',{},'nullSMv',{});
     
+    % s = struct('perm',{},'r',{},'nullNETr',{},'nullNETv',{},'nullSMr',{},'nullSMv',{});
+
+    % Aggregation variables
+    r_agg           =   zeros(N_perm, N_dim+1);
+    nullNETr_agg    =   [];
+    nullNETv_agg    =   [];
+    nullSMr_agg     =   [];
+    nullSMv_agg     =   [];
+
     r=zeros(N_dim+1, 1);
-    count=1;
+    % count=1;
     for perm = start_idx:(start_idx+num_perms-1)
         % Note, need to range from start_idx:(start_idx+num_perms-1) because without the -1 on the final iteration perm will exceed 100,000 becoming 100,001 and causing an error
         % Also, need the -1 for only num_perms permutations to be ran
         [A, B, r(1:end-1), U, V, stats] = canoncorr(N5,S5(Pset(:,perm),:));
         r(end)=mean(r(1:end-1));
     
-        nullNETr=corr(U(:,1),N0)';
-        nullNETv=sum(corr(U,N0).^2,2);
+        nullNETr    =   corr(U(:,1),N0)';
+        nullNETv    =   sum(corr(U,N0).^2,2);
 
-        nullSMr=corr(V(:,1),grotvars(Pset(:,perm),:),'rows','pairwise')';
-        nullSMv=sum(corr(V,grotvars(Pset(:,perm),:),'rows','pairwise').^2,2);
+        nullSMr     =   corr(V(:,1),grotvars(Pset(:,perm),:),'rows','pairwise')';
+        nullSMv     =   sum(corr(V,grotvars(Pset(:,perm),:),'rows','pairwise').^2,2);
 
-        s(count).perm=perm;
-        s(count).r=r;
-        s(count).nullNETr=nullNETr;
-        s(count).nullNETv=nullNETv;
-        s(count).nullSMr=nullSMr;
-        s(count).nullSMv=nullSMv;
+        r_agg           =   [r_agg;         r' ];
+        nullNETr_agg    =   [nullNETr_agg;  nullNETr'];
+        nullNETv_agg    =   [nullNETv_agg;  nullNETv'];
+        nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
+        nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
+
+        % s(count).perm=perm;
+        % s(count).r=r;
+        % s(count).nullNETr=nullNETr;
+        % s(count).nullNETv=nullNETv;
+        % s(count).nullSMr=nullSMr;
+        % s(count).nullSMv=nullSMv;
         
-        count = count + 1;
+        % count = count + 1;
     end
+
+    % Now find the summary variables for these 1000 permutatations
+    % These are what we need to compute (taken from Steve Smith's code):
+    % prctile(nullNETv,5,2) mean(nullNETv,2) prctile(nullNETv,95,2)
+    % prctile(nullSMv,5,2) mean(nullSMv,2) prctile(nullSMv,95,2)
+    % prctile( max(abs(nullSMr)) ,95)
+    % prctile( max(abs(nullNETr)) ,95)
+
+    s = struct( 'start_idx',                {}, ...
+                'num_perm',                 {}, ...
+                'nullNETv_prctile_95',      {}, ...
+                'nullNETv_prctile_5',       {}, ...
+                'nullNETv_mean',            {}, ...
+                'nullSMv_prctile_95',       {}, ...
+                'nullSMv_prctile_5',        {}, ...
+                'nullSMv_mean',             {}, ...
+                'nullNETr_prctile_95',      {}, ...
+                'nullSMr_prctile_95',       {}, ...
+                'r',                        {}  );
+
+    s.start_idx             =   start_idx;
+    s.num_perms             =   num_perms;
+
+    s.nullNETv_prctile_95   =   prctile(nullNETv_agg,95,2);
+    s.nullNETv_prctile_5    =   prctile(nullNETv_agg,5,2);
+    s.nullNETv_mean         =   mean(nullNETv_agg,2);
+
+    s.nullSMv_prctile_95    =   prctile(nullSMv_agg, 95, 2);
+    s.nullSMv_prctile_5     =   prctile(nullSMv_agg, 5, 2);
+    s.nullSMv_mean          =   mean(nullSMv_agg, 2);
+
+    s.nullNETr_prctile_95   =   prctile( max(abs(nullNETr_agg)) ,95);
+    s.nullSMr_prctile_95    =   prctile( max(abs(nullSMr_agg)) ,95);
+    s.r                     =   r_agg;
 
     % Save .mat file with the permutations
     save(sprintf('%s/data/%d/permutations/permutations_%d.mat', abcd_cca_dir, n_subs, start_idx), 's');
