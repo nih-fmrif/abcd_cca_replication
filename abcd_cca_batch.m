@@ -25,7 +25,7 @@ export LD_LIBRARY_PATH=MR/v98/runtime/glnxa64:MR/v98/bin/glnxa64:MR/v98/sys/os/g
 function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_subs_in)
     if nargin<5
         sprintf("ERROR, not enough arguments.")
-        sprintf("Example: abcd_cca_batch(1, 100, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 1000)")
+        sprintf("Example: abcd_cca_batch(1, 1000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 1000)")
         return
 	end
 
@@ -81,7 +81,7 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     % s = struct('perm',{},'r',{},'nullNETr',{},'nullNETv',{},'nullSMr',{},'nullSMv',{});
 
     % Aggregation variables
-    r_agg           =   zeros(N_perm, N_dim+1);
+    r_agg           =   zeros(num_perms, N_dim+1);
     nullNETr_agg    =   [];
     nullNETv_agg    =   [];
     nullSMr_agg     =   [];
