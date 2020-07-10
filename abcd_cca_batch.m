@@ -1,7 +1,7 @@
 % abcd_cca_batch.m
 % Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 % Created: 7/9/20
-% Modified:
+% Modified: 7/10/20 (modified to do some calcuations on the set of perms (percentiles, means))
 
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
 % This script is given a start index and the number of permutations to calculate
@@ -68,18 +68,14 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     grotvars(:,std(grotvars)<1e-10)=[];
     grotvars(:,sum(isnan(grotvars)==0)<20)=[];
 
-    % struct for storing the result of the CCAs for each permutation
-    % Each structure entry (i.e. s(1), s(2)..) is a permutation.
-    % The structure fields are:
-    % perm = the permutation number (between 1 to 100,000)
+
+    % Varibles we calculate for each permutation:
     % r = the vector r for the permutation
     % nullNETr  =   the permutation's mode 1 connectome weights correlation to the RAW connectome matrix
     % nullNETv  =   for this permutation, the summation of the correlation values between each mode's connectome weights and the RAW connectome matrix
     % nullSMr   =   for this permutation, CCA mode 1 SM weights correalated against the S1 matrix
     % nullSMv   =   for this permutation, the summation of the correlation values between each mode's SM weights and the S1 matrix
     
-    % s = struct('perm',{},'r',{},'nullNETr',{},'nullNETv',{},'nullSMr',{},'nullSMv',{});
-
     % Aggregation variables
     r_agg           =   [];
     nullNETr_agg    =   [];
@@ -88,7 +84,6 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     nullSMv_agg     =   [];
 
     r=zeros(N_dim+1, 1);
-    % count=1;
     for perm = start_idx:(start_idx+num_perms-1)
         % Note, need to range from start_idx:(start_idx+num_perms-1) because without the -1 on the final iteration perm will exceed 100,000 becoming 100,001 and causing an error
         % Also, need the -1 for only num_perms permutations to be ran
@@ -107,14 +102,6 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
         nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
         nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
 
-        % s(count).perm=perm;
-        % s(count).r=r;
-        % s(count).nullNETr=nullNETr;
-        % s(count).nullNETv=nullNETv;
-        % s(count).nullSMr=nullSMr;
-        % s(count).nullSMv=nullSMv;
-        
-        % count = count + 1;
     end
 
     % Now find the summary variables for these 1000 permutatations
