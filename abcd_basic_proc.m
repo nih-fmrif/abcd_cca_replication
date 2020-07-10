@@ -104,8 +104,6 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	[uu,dd]=eigs(S4,N_dim);       % SVD (eigs actually)
 	S5=uu-conf*(pinv(conf)*uu);   % deconfound again just to be safe
 
-
-
 	% --- NETMAT PROCESSING ---
 	fprintf("Calculating netmat matrices N1 through N5\n")
 	% N1, formed by 1. demean, 2. globally variance normalize
