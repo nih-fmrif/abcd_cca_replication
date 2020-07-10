@@ -8,7 +8,7 @@
 function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_subs_in)
     if nargin<5
         sprintf("ERROR, not enough arguments.")
-        sprintf("Example: abcd_perm_agg(1000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 500)")
+        sprintf("Example: abcd_perm_agg(2000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 500)")
         return
     end
     
@@ -98,20 +98,20 @@ function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_
                     'nullSMr_prctile_95',       {}, ...
                     'r',                        {}  );
 
-    s(1).perms_per_batch        =   perms_per_batch;
-    s(1).tot_perms              =   N_perm;
+    s_agg(1).perms_per_batch        =   perms_per_batch;
+    s_agg(1).tot_perms              =   N_perm;
 
-    s(1).nullNETv_prctile_95    =   prctile(    nullNETv_prctile_95_agg,    95,1);
-    s(1).nullNETv_prctile_5     =   prctile(    nullNETv_prctile_5_agg,     5,1);
-    s(1).nullNETv_mean          =   mean(       nullNETv_mean_agg,          1);
+    s_agg(1).nullNETv_prctile_95    =   prctile(    nullNETv_prctile_95_agg,    95,1);
+    s_agg(1).nullNETv_prctile_5     =   prctile(    nullNETv_prctile_5_agg,     5,1);
+    s_agg(1).nullNETv_mean          =   mean(       nullNETv_mean_agg,          1);
 
-    s(1).nullSMv_prctile_95     =   prctile(    nullSMv_prctile_95_agg,     95, 1);
-    s(1).nullSMv_prctile_5      =   prctile(    nullSMv_prctile_5_agg,      5, 1);
-    s(1).nullSMv_mean           =   mean(       nullSMv_mean_agg,           1);
+    s_agg(1).nullSMv_prctile_95     =   prctile(    nullSMv_prctile_95_agg,     95, 1);
+    s_agg(1).nullSMv_prctile_5      =   prctile(    nullSMv_prctile_5_agg,      5, 1);
+    s_agg(1).nullSMv_mean           =   mean(       nullSMv_mean_agg,           1);
 
-    s(1).nullNETr_prctile_95    =   prctile( max(abs(nullNETr_prctile_95_agg)), 95);
-    s(1).nullSMr_prctile_95     =   prctile( max(abs(nullSMr_prctile_95_agg)),  95);
-    s(1).r                      =   r_agg;
+    s_agg(1).nullNETr_prctile_95    =   prctile( max(abs(nullNETr_prctile_95_agg)), 95);
+    s_agg(1).nullSMr_prctile_95     =   prctile( max(abs(nullSMr_prctile_95_agg)),  95);
+    s_agg(1).r                      =   r_agg;
 
 
     % s_agg(1).perm=N_perm;
