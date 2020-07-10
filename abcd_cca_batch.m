@@ -81,7 +81,7 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     % s = struct('perm',{},'r',{},'nullNETr',{},'nullNETv',{},'nullSMr',{},'nullSMv',{});
 
     % Aggregation variables
-    r_agg           =   zeros(num_perms, N_dim+1);
+    r_agg           =   [];
     nullNETr_agg    =   [];
     nullNETv_agg    =   [];
     nullSMr_agg     =   [];
