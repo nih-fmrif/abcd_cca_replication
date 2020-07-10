@@ -119,13 +119,14 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
 
     % Now find the summary variables for these 1000 permutatations
     % These are what we need to compute (taken from Steve Smith's code):
-    % prctile(nullNETv,5,2) mean(nullNETv,2) prctile(nullNETv,95,2)
-    % prctile(nullSMv,5,2) mean(nullSMv,2) prctile(nullSMv,95,2)
+    % NOTE - these are percentiles of the columns - the result should be a 1xN_dim vector (where the N_dim columns are CCA modes)
+    % prctile(nullNETv,5,1) mean(nullNETv,1) prctile(nullNETv,95,1)
+    % prctile(nullSMv,5,1) mean(nullSMv,1) prctile(nullSMv,95,1)
     % prctile( max(abs(nullSMr)) ,95)
     % prctile( max(abs(nullNETr)) ,95)
 
     s = struct( 'start_idx',                {}, ...
-                'num_perm',                 {}, ...
+                'num_perms',                 {}, ...
                 'nullNETv_prctile_95',      {}, ...
                 'nullNETv_prctile_5',       {}, ...
                 'nullNETv_mean',            {}, ...
@@ -139,13 +140,13 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     s(1).start_idx             =   start_idx;
     s(1).num_perms             =   num_perms;
 
-    s(1).nullNETv_prctile_95   =   prctile(nullNETv_agg,95,2);
-    s(1).nullNETv_prctile_5    =   prctile(nullNETv_agg,5,2);
-    s(1).nullNETv_mean         =   mean(nullNETv_agg,2);
+    s(1).nullNETv_prctile_95   =   prctile(nullNETv_agg,95,1);
+    s(1).nullNETv_prctile_5    =   prctile(nullNETv_agg,5,1);
+    s(1).nullNETv_mean         =   mean(nullNETv_agg,1);
 
-    s(1).nullSMv_prctile_95    =   prctile(nullSMv_agg, 95, 2);
-    s(1).nullSMv_prctile_5     =   prctile(nullSMv_agg, 5, 2);
-    s(1).nullSMv_mean          =   mean(nullSMv_agg, 2);
+    s(1).nullSMv_prctile_95    =   prctile(nullSMv_agg, 95, 1);
+    s(1).nullSMv_prctile_5     =   prctile(nullSMv_agg, 5, 1);
+    s(1).nullSMv_mean          =   mean(nullSMv_agg, 1);
 
     s(1).nullNETr_prctile_95   =   prctile( max(abs(nullNETr_agg)) ,95);
     s(1).nullSMr_prctile_95    =   prctile( max(abs(nullSMr_agg)) ,95);
