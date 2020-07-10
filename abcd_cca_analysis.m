@@ -9,7 +9,7 @@
 function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_subs_in)
   if nargin<5
     sprintf("ERROR, not enough arguments.")
-    sprintf("Example: abcd_perm_agg(1000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 500)")
+    sprintf("Example: abcd_cca_analysis(2000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 500)")
     return
   end
   
@@ -54,6 +54,8 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
   intracran_col   = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_intracranialvolume'));
 
   [sharedvals,idx]=intersect(VARS_0(1,:),ica_sms);
+  sms_original_order = VARS_0(1,:)
+
   VARS=cell2mat(VARS_0(2:end,:));
 
 
@@ -206,7 +208,7 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
   scatter(x,y);
   text(x+dx, y+dy, strlist);
 
-  
+
   %% --- VARIANCE ANALYSES ---
   % Load the summarized permutation data .mat file
   perm_data  = load(sprintf('%s/data/%d/permutation_data.mat', abcd_cca_dir, n_subs)); 
