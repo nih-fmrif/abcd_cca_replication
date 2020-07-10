@@ -136,20 +136,20 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
                 'nullSMr_prctile_95',       {}, ...
                 'r',                        {}  );
 
-    s.start_idx             =   start_idx;
-    s.num_perms             =   num_perms;
+    s(1).start_idx             =   start_idx;
+    s(1).num_perms             =   num_perms;
 
-    s.nullNETv_prctile_95   =   prctile(nullNETv_agg,95,2);
-    s.nullNETv_prctile_5    =   prctile(nullNETv_agg,5,2);
-    s.nullNETv_mean         =   mean(nullNETv_agg,2);
+    s(1).nullNETv_prctile_95   =   prctile(nullNETv_agg,95,2);
+    s(1).nullNETv_prctile_5    =   prctile(nullNETv_agg,5,2);
+    s(1).nullNETv_mean         =   mean(nullNETv_agg,2);
 
-    s.nullSMv_prctile_95    =   prctile(nullSMv_agg, 95, 2);
-    s.nullSMv_prctile_5     =   prctile(nullSMv_agg, 5, 2);
-    s.nullSMv_mean          =   mean(nullSMv_agg, 2);
+    s(1).nullSMv_prctile_95    =   prctile(nullSMv_agg, 95, 2);
+    s(1).nullSMv_prctile_5     =   prctile(nullSMv_agg, 5, 2);
+    s(1).nullSMv_mean          =   mean(nullSMv_agg, 2);
 
-    s.nullNETr_prctile_95   =   prctile( max(abs(nullNETr_agg)) ,95);
-    s.nullSMr_prctile_95    =   prctile( max(abs(nullSMr_agg)) ,95);
-    s.r                     =   r_agg;
+    s(1).nullNETr_prctile_95   =   prctile( max(abs(nullNETr_agg)) ,95);
+    s(1).nullSMr_prctile_95    =   prctile( max(abs(nullSMr_agg)) ,95);
+    s(1).r                     =   r_agg;
 
     % Save .mat file with the permutations
     save(sprintf('%s/data/%d/permutations/permutations_%d.mat', abcd_cca_dir, n_subs, start_idx), 's');
