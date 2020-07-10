@@ -7,6 +7,7 @@
 % Required inputs are the NET.txt and VARS.txt files located in abcd_cca_replication/data/<num_subs>/
 
 function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_subs_in)
+  mlock
   if nargin<5
     sprintf("ERROR, not enough arguments.")
     sprintf("Example: abcd_cca_analysis(2000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 500)")
@@ -220,13 +221,13 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
   for i = 1:N_dim;  % show corrected pvalues
     Rpval(i) = (1 + sum(perm_data.s_agg(1).r(2:end,1) >= R(i))) / N_perm;
   end
-  Rpval
+  Rpval;
   Ncca=sum(Rpval<0.05)  % number of significant CCA components
   Rpval(1:Ncca)
 
   % variance_data_NET   = [ sum(corr(U,N0).^2,2) prctile(nullNETv,5,2) mean(nullNETv,2) prctile(nullNETv,95,2) sum(corr(N5,N0).^2,2) ] * 100 / size(N0,2);
 
-  variance_data_NET   = [ sum(corr(U,N0).^2,2) perm_data.s_agg(1).nullNETv_prctile_5 perm_data.s_agg(1).nullNETv_mean perm_data.s_agg(1).nullNETv_prctile_95 sum(corr(N5,N0).^2,2) ] * 100 / size(N0,2);
+  variance_data_NET   = [ sum(corr(U, N0).^2,2) perm_data.s_agg(1).nullNETv_prctile_5 perm_data.s_agg(1).nullNETv_mean perm_data.s_agg(1).nullNETv_prctile_95 sum(corr(N5,N0).^2,2) ] * 100 / size(N0,2);
   variance_data_VARS  = [ sum(corr(V,tmp_VARS,'rows','pairwise').^2,2) perm_data.s_agg(1).nullSMv_prctile_5 perm_data.s_agg(1).nullSMv_mean perm_data.s_agg(1).nullSMv_prctile_95 sum(corr(S5,tmp_VARS,'rows','pairwise').^2,2)  ] * 100 / size(tmp_VARS,2);
 
   % Look at first 20 modes
