@@ -54,7 +54,7 @@ function abcd_cca_batch(start_idx_in, num_perms_in, N_dim_in, abcd_cca_dir, n_su
     % Matrix N5 (post-PCA connectome matrix)
     n5  =   sprintf('%s/data/%d/N5.txt', abcd_cca_dir, n_subs);
 
-    S1  =   load(s1); 
+    S1  =   load(s1);
     S5  =   load(s5);
     N0  =   load(n0);
     N5  =   load(n5);
