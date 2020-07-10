@@ -56,7 +56,7 @@ function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_
         % nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
         % nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
 
-        r_agg                       =   [r_agg;                     mat_file.s(1).r'];
+        r_agg                       =   [r_agg;                     mat_file.s(1).r                     ];
 
         nullNETv_prctile_95_agg     =   [nullNETv_prctile_95_agg;   mat_file.s(1).nullNETv_prctile_95   ];
         nullNETv_prctile_5_agg      =   [nullNETv_prctile_5_agg;    mat_file.s(1).nullNETv_prctile_5    ];
