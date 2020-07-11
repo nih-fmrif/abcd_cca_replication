@@ -14,7 +14,7 @@
 %{
 export XAPPLRESDIR=MR/v98/X11/app-defaults
 export LD_LIBRARY_PATH=MR/v98/runtime/glnxa64:MR/v98/bin/glnxa64:MR/v98/sys/os/glnxa64:MR/v98/sys/opengl/lib/glnxa64
-/compiled_scripts/run_hcp_cca_batch.sh /usr/local/matlab-compiler/v98 1 2000 100 /data/ABCD_MBDU/goyaln2/abcd_cca_replication/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/hcp_cca_testing/ 500
+./compiled_scripts/run_hcp_cca_batch.sh /usr/local/matlab-compiler/v98 1 2000 100 /data/ABCD_MBDU/goyaln2/abcd_cca_replication/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/hcp_cca_testing/ 461
 %}
 
 % To see the command structure for HPC slurm for this script, see gen_batch_permutation_ica_swarm.py
