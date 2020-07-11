@@ -14,16 +14,34 @@
 addpath(genpath('../dependencies/'));
 addpath(genpath('./data/'));
 
+abcd_cca_dir="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/"
+hcp_cca_dir="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/hcp_cca_testing/"
+
+if ~isdeployed
+  addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
+  addpath(genpath(sprintf('%s/data/', hcp_cca_dir)));
+  start_idx   =   start_idx_in;
+  num_perms   =   num_perms_in;
+  N_dim   =   N_dim_in;
+  n_subs  =   n_subs_in;
+elseif isdeployed
+  % When compiled matlab, it reads the command line args all as strings so we need to convert
+  start_idx   =   str2num(start_idx_in);
+  num_perms   =   str2num(num_perms_in);
+  N_dim   =   str2num(N_dim_in);
+  n_subs  =   str2num(n_subs_in);
+end
+
 % Read in data, set some variables, create confounds matrix
-VARS=readmatrix('./VARS.txt');  % Subjects X SMs text file
+VARS=readmatrix(sprintf('%s/data/%d/VARS.txt', hcp_cca_dir, n_subs));  % Subjects X SMs text file
 VARS(:,sum(isnan(VARS)==0)<60)=NaN;             % Pre-delete any variables in VARS that have lots of missing data (fewer than 60 subjects have measurements)
-varsQconf=load('./varsQconf.txt');        % Load the previously-imputed acquisition period (recon method) (avail at https://www.fmrib.ox.ac.uk/datasets/HCP-CCA/, or in our code repo.)
-NET=load('./NET.txt');          % Load the Subjects X Nodes matrix (should be size 461x19900)
+varsQconf=load(sprintf('%s/data/%d/varsQconf.txt', hcp_cca_dir, n_subs)));        % Load the previously-imputed acquisition period (recon method) (avail at https://www.fmrib.ox.ac.uk/datasets/HCP-CCA/, or in our code repo.)
+NET=load(sprintf('%s/data/%d/NET.txt', hcp_cca_dir, n_subs));          % Load the Subjects X Nodes matrix (should be size 461x19900)
 
 % Number of PCA and CCA components
-Nkeep=100;
+N_dim=100;
 % Number of permutations
-Nperm=1000;
+N_perm=1000;
 
 % Set up confounds matrix (this is based on variables selected by Smith et al. in the original study). Confounds are demeaned, any missing data is set to 0
 conf=palm_inormal([ varsQconf VARS(:,[7 14 15 22 23 25]) VARS(:,[265 266]).^(1/3) ]);   % Gaussianise
@@ -31,14 +49,8 @@ conf(isnan(conf)|isinf(conf))=0;                % impute missing data as zeros
 conf=nets_normalise([conf conf(:,2:end).^2]);   % add on squared terms and renormalise
 conf(isnan(conf)|isinf(conf))=0;                % again convert NaN/inf to 0 (above line makes them reappear for some reason)
 
-%% Generate permutation scheme using PALM - for more details see:
-% https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/PALM/ExchangeabilityBlocks#Generating_the_set_of_permutations_only
-                                                          % in the paper we used 100000 but 10000 should be enough
-EB=hcp2blocks('./r500_m.csv', [ ], false, VARS(:,1));    % Input is the raw restricted file downloaded from Connectome DB
-PAPset=palm_quickperms([ ], EB, Nperm);                                 % the final matrix of permuations
-
-% Now save PAPset to file
-writematrix(PAPset,'./data/PAPset.txt')
+% --- GENERATE PERMUTATIONS ---
+EB=hcp2blocks(sprintf('%s/data/%d/r500_m.csv', hcp_cca_dir, n_subs), [ ], false, VARS(:,1)); % Input is the raw restricted file downloaded from Connectome DB
 
 % Since subjects are dropped by hcp2blocks, we need to drop them from the other matrices (VARS, NET, varsQconf) to avoid errors
 subs = EB(:,5);             % Pull list of subject IDs in EB from column 5 (EB is what returned from hcp2blocks), these are the subjects we KEEP
@@ -66,7 +78,7 @@ N3=[N1 N2]; % Concat horizontally
 % N4, formed by regressing the confounds matrix out of N3
 N4=nets_demean(N3-conf*(pinv(conf)*N3));
 % N5
-[N5,ss1,vv1]=nets_svds(N4,Nkeep); % 100-dim PCA of netmat via SVD reduction
+[N5,ss1,vv1]=nets_svds(N4,N_dim); % 100-dim PCA of netmat via SVD reduction
 
 %% Prepare the SM matrix - apply quantitative exclusion criteria
 fprintf("Calculating SM matrices S2 through S5\n")
@@ -130,15 +142,15 @@ end
 S4=nearestSPD(varsdCOV); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
 
 % Generate S5, the top 100 eigenvectors for SMs, to avoid overfitting and reduce dimensionality
-[uu,dd]=eigs(S4,Nkeep);       % SVD (eigs actually)
+[uu,dd]=eigs(S4,N_dim);       % SVD (eigs actually)
 S5=uu-conf*(pinv(conf)*uu);   % deconfound again just to be safe
 
 %% CCA
 fprintf("Running CCA on matrices S5 and N5\n")
 [grotA,grotB,grotR,grotU,grotV,grotstats]=canoncorr(N5,S5);
 
-writematrix(conf, './data/conf.txt')
-writematrix(N0, './data/N0.txt')
-writematrix(N5, './data/N5.txt')
-writematrix(S1, './data/S1.txt')
-writematrix(S5, './data/S5.txt')
+writematrix(conf, sprintf('%s/data/%d/conf.txt', hcp_cca_dir, n_subs));
+writematrix(N0, sprintf('%s/data/%d/N0.txt', hcp_cca_dir, n_subs));
+writematrix(N5, sprintf('%s/data/%d/N5.txt', hcp_cca_dir, n_subs));
+writematrix(S1, sprintf('%s/data/%d/S1.txt', hcp_cca_dir, n_subs));
+writematrix(S5, sprintf('%s/data/%d/S5.txt', hcp_cca_dir, n_subs));
