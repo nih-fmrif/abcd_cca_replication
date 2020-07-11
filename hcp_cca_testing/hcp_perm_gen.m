@@ -13,7 +13,7 @@ VARS=readmatrix('./VARS.txt');  % Subjects X SMs text file
 
 % --- GENERATE PERMUTATIONS ---
 EB=hcp2blocks('./r500_m.csv', [ ], false, VARS(:,1));    % Input is the raw restricted file downloaded from Connectome DB
-PAPset=palm_quickperms([ ], EB, Nperm, true, false, true, true);                                % the final matrix of permuations
+PAPset=palm_quickperms([ ], EB, N_perm, true, false, true, true);                                % the final matrix of permuations
 
 
 % Now save PAPset to file
