@@ -17,19 +17,13 @@ addpath(genpath('./data/'));
 abcd_cca_dir="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/"
 hcp_cca_dir="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/hcp_cca_testing/"
 
+N_dim=100;
+N_perm=100000;
+n_subs=461;
+
 if ~isdeployed
   addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
   addpath(genpath(sprintf('%s/data/', hcp_cca_dir)));
-  start_idx   =   start_idx_in;
-  num_perms   =   num_perms_in;
-  N_dim   =   N_dim_in;
-  n_subs  =   n_subs_in;
-elseif isdeployed
-  % When compiled matlab, it reads the command line args all as strings so we need to convert
-  start_idx   =   str2num(start_idx_in);
-  num_perms   =   str2num(num_perms_in);
-  N_dim   =   str2num(N_dim_in);
-  n_subs  =   str2num(n_subs_in);
 end
 
 % Read in data, set some variables, create confounds matrix
