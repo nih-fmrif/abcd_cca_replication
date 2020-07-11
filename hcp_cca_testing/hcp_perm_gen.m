@@ -9,6 +9,8 @@ addpath(genpath('./data/'));
 % Number of permutations (100,000)
 N_perm=100000;
 
+VARS=readmatrix('./VARS.txt');  % Subjects X SMs text file
+
 % --- GENERATE PERMUTATIONS ---
 EB=hcp2blocks('./r500_m.csv', [ ], false, VARS(:,1));    % Input is the raw restricted file downloaded from Connectome DB
 PAPset=palm_quickperms([ ], EB, Nperm, true, false, true, true);                                % the final matrix of permuations
