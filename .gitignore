@@ -10,6 +10,7 @@
 !conda_requirements.txt
 !pipeline_diagrams/
 !misc_scripts/
+!hcp_cca_testing/
 
 # Files
 !pip_requirements.txt
