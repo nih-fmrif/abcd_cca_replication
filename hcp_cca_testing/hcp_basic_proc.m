@@ -29,7 +29,7 @@ end
 % Read in data, set some variables, create confounds matrix
 VARS=readmatrix(sprintf('%s/data/%d/VARS.txt', hcp_cca_dir, n_subs));  % Subjects X SMs text file
 VARS(:,sum(isnan(VARS)==0)<60)=NaN;             % Pre-delete any variables in VARS that have lots of missing data (fewer than 60 subjects have measurements)
-varsQconf=load(sprintf('%s/data/%d/varsQconf.txt', hcp_cca_dir, n_subs)));        % Load the previously-imputed acquisition period (recon method) (avail at https://www.fmrib.ox.ac.uk/datasets/HCP-CCA/, or in our code repo.)
+varsQconf=load(sprintf('%s/data/%d/varsQconf.txt', hcp_cca_dir, n_subs));        % Load the previously-imputed acquisition period (recon method) (avail at https://www.fmrib.ox.ac.uk/datasets/HCP-CCA/, or in our code repo.)
 NET=load(sprintf('%s/data/%d/NET.txt', hcp_cca_dir, n_subs));          % Load the Subjects X Nodes matrix (should be size 461x19900)
 
 % Number of PCA and CCA components
