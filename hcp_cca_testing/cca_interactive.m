@@ -129,7 +129,7 @@ S5=uu-conf*(pinv(conf)*uu);   % deconfound again just to be safe
 
 %% CCA
 fprintf("Running CCA on matrices S5 and N5\n")
-[grotA,grotB,grotR,grotU,grotV,grotstats]=canoncorr(N5,S5);
+[A,B,R,U,V,grotstats]=canoncorr(N5,S5);
 
 perm_data  = load(sprintf('%s/data/%d/permutation_data.mat', hcp_cca_dir, n_subs)); 
 
