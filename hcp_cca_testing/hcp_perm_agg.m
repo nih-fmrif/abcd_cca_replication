@@ -5,13 +5,12 @@
 
 % Script is used in batch processing to calculate CCA for each of the 100,000 permutations we generate
 
-function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, hcp_cca_dir, n_subs_in)
+function hcp_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, hcp_cca_dir, n_subs_in)
     if nargin<6
         sprintf("ERROR, not enough arguments.")
-        sprintf("Example: hcp_cca_batch(2000, 100000, 100, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/hcp_cca_testing/', 461)")
+        sprintf("Example: hcp_perm_agg(2000, 100000, 100, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/hcp_cca_testing/', 461)")
         return
     end
-    
     
     if ~isdeployed
         addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
@@ -27,8 +26,6 @@ function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, hc
         N_dim           =   str2num(N_dim_in);
         n_subs          =   str2num(n_subs_in);
     end
-
-    % s_agg = struct('perms',{},'r',{},'nullNETr',{},'nullNETv',{},'nullSMr',{},'nullSMv',{});
 
     r_agg                       =   [];
     
@@ -52,11 +49,6 @@ function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, hc
         % Load the .mat file
         mat_file = load(f_name);
 
-        % nullNETr_agg    =   [nullNETr_agg;  nullNETr'];
-        % nullNETv_agg    =   [nullNETv_agg;  nullNETv'];
-        % nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
-        % nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
-
         r_agg                       =   [r_agg;                     mat_file.s(1).r                     ];
 
         nullNETv_prctile_95_agg     =   [nullNETv_prctile_95_agg;   mat_file.s(1).nullNETv_prctile_95   ];
@@ -70,21 +62,6 @@ function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, hc
         nullNETr_prctile_95_agg     =   [nullNETr_prctile_95_agg;   mat_file.s(1).nullNETr_prctile_95   ];
         nullSMr_prctile_95_agg      =   [nullSMr_prctile_95_agg;    mat_file.s(1).nullSMr_prctile_95    ];
 
-        % for j = 1:perms_per_batch
-        %     % Now iterate over the entries in the loaded structure (there will be perms_per_batch entries)
-            
-        %     r           =   mat_file.s(j).r;
-        %     nullNETr    =   mat_file.s(j).nullNETr;
-        %     nullNETv    =   mat_file.s(j).nullNETv;
-        %     nullSMr     =   mat_file.s(j).nullSMr;
-        %     nullSMv     =   mat_file.s(j).nullSMv;
-
-        %     r_agg           =   [r_agg;         r'];
-        %     nullNETr_agg    =   [nullNETr_agg;  nullNETr'];
-        %     nullNETv_agg    =   [nullNETv_agg;  nullNETv'];
-        %     nullSMr_agg     =   [nullSMr_agg;   nullSMr'];
-        %     nullSMv_agg     =   [nullSMv_agg;   nullSMv'];
-        % end
     end
 
     s_agg = struct( 'perms_per_batch',          {}, ...
@@ -113,14 +90,6 @@ function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, hc
     s_agg(1).nullNETr_prctile_95    =   prctile( max(abs(nullNETr_prctile_95_agg)), 95);
     s_agg(1).nullSMr_prctile_95     =   prctile( max(abs(nullSMr_prctile_95_agg)),  95);
     s_agg(1).r                      =   r_agg;
-
-
-    % s_agg(1).perm=N_perm;
-    % s_agg(1).r=r_agg;
-    % s_agg(1).nullNETr=nullNETr_agg;
-    % s_agg(1).nullNETv=nullNETv_agg;
-    % s_agg(1).nullSMr=nullSMr_agg;
-    % s_agg(1).nullSMv=nullSMv_agg;
 
     % Now save
     save(sprintf('%s/data/%d/permutation_data.mat', hcp_cca_dir, n_subs), 's_agg');
