@@ -26,7 +26,7 @@ print('Expected matrix shape: ({}, {})'.format(num_subs, expected_cols))
 netmat = pd.read_csv(in_path, header=None)
 
 myList = [] # list of the subject x 200*199/2 matrix enties (the lower diagonal)
-col = 200
+col = ICA
 
 # Now, pull out each row from netmat2.txt (each is the flattened 200x200 matrix for each subject), then get the lower tri and flatten it
 count=0
