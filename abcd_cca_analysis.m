@@ -55,7 +55,7 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
   intracran_col   = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_intracranialvolume'));
 
   [sharedvals,idx]=intersect(VARS_0(1,:),ica_sms);
-  sms_original_order = VARS_0(1,:)
+  sms_original_order = VARS_0(1,:);
 
   VARS=cell2mat(VARS_0(2:end,:));
 
@@ -197,7 +197,7 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
       toplist=[toplist ii];
       str=sprintf('%.2f %.2f %.2f %s %s',CorCCA(ii),ZCCA(ii),VarExplained(ii),BVname);
       strlist{end+1} = str;
-      disp(str);
+      % disp(str);
     end
   end
 
@@ -227,9 +227,9 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
 
   % variance_data_NET   = [ sum(corr(U,N0).^2,2) prctile(nullNETv,5,2) mean(nullNETv,2) prctile(nullNETv,95,2) sum(corr(N5,N0).^2,2) ] * 100 / size(N0,2);
 
-  variance_data_NET   = [ sum(corr(U, N0).^2,2) perm_data.s_agg(1).nullNETv_prctile_5 perm_data.s_agg(1).nullNETv_mean perm_data.s_agg(1).nullNETv_prctile_95 sum(corr(N5,N0).^2,2) ] * 100 / size(N0,2);
-  variance_data_VARS  = [ sum(corr(V,tmp_VARS,'rows','pairwise').^2,2) perm_data.s_agg(1).nullSMv_prctile_5 perm_data.s_agg(1).nullSMv_mean perm_data.s_agg(1).nullSMv_prctile_95 sum(corr(S5,tmp_VARS,'rows','pairwise').^2,2)  ] * 100 / size(tmp_VARS,2);
-
+  variance_data_NET   = [ sum(corr(U, N0).^2,2)'; perm_data.s_agg(1).nullNETv_prctile_5; perm_data.s_agg(1).nullNETv_mean; perm_data.s_agg(1).nullNETv_prctile_95; sum(corr(N5,N0).^2,2)' ] * 100 / size(N0,2);
+  variance_data_VARS  = [ sum(corr(V,tmp_VARS,'rows','pairwise').^2,2)'; perm_data.s_agg(1).nullSMv_prctile_5; perm_data.s_agg(1).nullSMv_mean; perm_data.s_agg(1).nullSMv_prctile_95; sum(corr(S5,tmp_VARS,'rows','pairwise').^2,2)' ] * 100 / size(tmp_VARS,2);
+    
   % Look at first 20 modes
   I=1:20;
 
@@ -239,11 +239,11 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
   hold on;
   % Draw the rectangles for null distributions per mode
   for i=1:length(I)
-    rectangle('Position',[i-0.5 variance_data_NET(i,2) 1 variance_data_NET(i,4)-variance_data_NET(i,2)],'FaceColor',[0.8 0.8 0.8],'EdgeColor',[0.8 0.8 0.8]);
+    rectangle('Position',[i-0.5 variance_data_NET(2,i) 1 variance_data_NET(4,i)-variance_data_NET(2,i)],'FaceColor',[0.8 0.8 0.8],'EdgeColor',[0.8 0.8 0.8]);
   end
-  plot(variance_data_NET(I,3),'k');
-  plot(variance_data_NET(I,1),'b');
-  plot(variance_data_NET(I,1),'b.');
+  plot(variance_data_NET(3,I),'k');
+  plot(variance_data_NET(1,I),'b');
+  plot(variance_data_NET(1,I),'b.');
   % plot(variance_data_NET(I,5),'g');  % turned off showing the PCA equivalent plots
 
   % th1 = title({'Connectome total % variance explained by CCA modes';''});
@@ -258,11 +258,11 @@ function abcd_cca_analysis(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir
   subplot(2,1,2); 
   hold on;
   for i=1:length(I)
-    rectangle('Position',[i-0.5 variance_data_VARS(i,2) 1 variance_data_VARS(i,4)-variance_data_VARS(i,2)],'FaceColor',[0.8 0.8 0.8],'EdgeColor',[0.8 0.8 0.8]);
+    rectangle('Position',[i-0.5 variance_data_VARS(2,i) 1 variance_data_VARS(4,i)-variance_data_VARS(2,i)],'FaceColor',[0.8 0.8 0.8],'EdgeColor',[0.8 0.8 0.8]);
   end
-  plot(variance_data_VARS(I,3),'k');
-  plot(variance_data_VARS(I,1),'b');
-  plot(variance_data_VARS(I,1),'b.');
+  plot(variance_data_VARS(3,I),'k');
+  plot(variance_data_VARS(1,I),'b');
+  plot(variance_data_VARS(1,I),'b.');
   % plot(variance_data_VARS(I,5),'g');
   % th2 = title({'';'Subject measures total % variance explained by CCA modes';''});
   % ylabel('%% variance (SMs)')

@@ -23,3 +23,4 @@
 !abcd_perm_agg.m
 !abcd_cca_single.m
 !abcd_cca_batch.m
+!abcd_cca_interactive.m
