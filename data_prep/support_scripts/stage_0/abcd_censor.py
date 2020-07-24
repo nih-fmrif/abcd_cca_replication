@@ -1,4 +1,22 @@
 #!/usr/bin/env python
+# This script takes a subject ID and FD threshold and:
+# 1. Grabs all rest runs that exist for the subject (raw data directory is currently hard coded)
+# 2. Runs fsl_motion_outliers to generate the fdrms file: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLMotionOutliers
+# 3. Creates a censor file where timepoints are removed if:
+#        - TR > FD_thresh
+#        - segment length is < seg
+# 4. Writes censor files and the number of surviving TRs for each run to text
+#
+# usage: abcd_censor.py -subj <subjectID> -FD_th <threshold> -seg <segment_length> -out <output directory>
+# inputs: subjectID, as it exists in the raw data directory (eg, sub-NDARINVCLL3TR97)
+#         FD_th: motion threshold (in mm) (eg 0.3)
+#         seg: segment length (segments less than seg will be censored) (eg 5)
+#         output directory structure:
+#           output_directory/
+#                   <subjectID>/  (will be created if it doesn't exists)
+#                         good_TRs_<FD_th>mm.censor.txt: numebrs of uncensored TRs for each run. One run per row.
+#                         run-XX_fdrms.txt: head motion data from fsl_motion_outliers
+#                         run-XX_<FD_th>mm.censor.txt: censor file for each run
 
 import numpy as np
 from glob import glob
@@ -18,8 +36,6 @@ def find_runs(subj):
 
 def run_fsl_outliers(subj,runs,out):
     print('Running fsl_motion_outliers...')
-    if not os.environ['FSLDIR']:
-        os.system('module load fsl')
 
     data_in = f'/data/ABCD_MBDU/abcd_bids/bids/{subj}/ses-baselineYear1Arm1/func'
     for r in runs:
@@ -38,10 +54,11 @@ def run_fsl_outliers(subj,runs,out):
 
 def censor(out,subj,runs,FD_th,seg_len):
     print('Creating censor files for each run...')
-
     for th in FD_th:
         # container for number of good timepoints
         summary = []
+        th = float(th)
+        seg_len = int(seg_len)
         cen = str(th)
 
         for r in runs:
@@ -69,28 +86,34 @@ def censor(out,subj,runs,FD_th,seg_len):
             for line in summary:
                 f.write(f'{line}\n')        
 
-def Main(subj,out):
+def Main(subj,out,FD_th,seg):
     print(f'Current subject: {subj}')
     if not os.path.isdir(f'{out}/{subj}'):
         os.mkdir(f'{out}/{subj}')
 
-    # set up parameters for censor
-    FD_th = [0.2, 0.3]
-    seg_len = 5
-
     # do the things
+    FD_th = [FD_th]
     runs = find_runs(subj)
     run_fsl_outliers(subj, runs, out)
-    censor(out,subj,runs,FD_th,seg_len)
+    censor(out,subj,runs,FD_th,seg)
 
 
 if __name__ == "__main__":
     # parse input
     parser = argparse.ArgumentParser()
     parser.add_argument('-subj',action='store',dest='subj')
+    parser.add_argument('-FD_th',action='store',dest='FD_th')
+    parser.add_argument('-seg',action='store',dest='seg')
     parser.add_argument('-out',action='store',dest='out')
     r = parser.parse_args()
     locals().update(r.__dict__)
+
+    # check for FSL
+    try:
+        os.environ['FSLDIR']
+    except:
+        print('\nFSL must be in your path, try:\n> module load fsl\n')
+        sys.exit(-1)
 
     # check output
     if not os.path.isdir(out):
@@ -99,4 +122,4 @@ if __name__ == "__main__":
     print(f'\nOutput directory: {out}')
 
     # do the thing
-    Main(subj,out)
+    Main(subj,out,FD_th,seg)
