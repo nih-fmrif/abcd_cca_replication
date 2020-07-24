@@ -15,6 +15,7 @@
 # Example usage:
 # ./prep_stage_0.sh
 
+
 # Check for FSL on path, else error
 fsl_exec=$(which fsl)
 if [ ! -x "$fsl_exec" ] ; then
