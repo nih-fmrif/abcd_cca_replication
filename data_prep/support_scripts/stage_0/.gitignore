@@ -3,3 +3,4 @@
 # Except this file
 !.gitignore
 !abcd_censor.py
+!stage_0_swarm_gen.py
