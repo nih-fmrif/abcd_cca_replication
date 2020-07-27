@@ -143,7 +143,7 @@ write.table(nda_final_2,
 
 # Save list of subjects available
 write.table(final_subs,
-            file = paste(out_path,"final_subjects.txt",sep="/"),
+            file = paste(out_path,"stage_2_final_subjects.txt",sep="/"),
             row.names = FALSE,
             col.names = FALSE,
             quote = FALSE)
