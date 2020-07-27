@@ -2,22 +2,15 @@
 
 # prep_stage_3.sh
 # Created: 6/21/20 (pipeline_version_1.3)
-# Updated:
+# Updated: (rewritten) 7/24/20 pipeline_version_1.5
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
 
 # Expected tools on PATH:
-# R
+# None.
 
 # Example usage:
 #   ./prep_stage_3.sh
-
-# Check for R
-Rscript_exec=$(which Rscript)
- if [ ! -x "$Rscript_exec" ] ; then
-    echo "Error - Rscript is not on PATH. Exiting"
-    exit 1
- fi
 
 # Check for and load config
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
@@ -31,45 +24,50 @@ else
 fi
 
 # Check if the following folders/files exist
-STAGE_3_OUT=$DATA_PREP/data/stage_3/
 if [[ -d $STAGE_3_OUT ]]; then
     rm $STAGE_3_OUT/*.txt
     rm $STAGE_3_OUT/*.Rds
+    :
 else
-    mkdir $STAGE_3_OUT
+    mkdir -p $STAGE_3_OUT
+    mkdir -p $STAGE_3_OUT/swarm_logs/icafix/
+    mkdir -p $STAGE_3_OUT/swarm_logs/censor_and_truncate/
+    mkdir -p $STAGE_3_OUT/NIFTI/
 fi
 
 echo "--- PREP_STAGE_3 ---"
-echo "$(date) - START"
+echo "PREP STAGE 3 Requires a number of steps to be performed manually. A number of scripts will be run to generate batch commands (designed for the NIH Biowulf) along with instructions on how to use the commands."
+echo "If you are not using the NIH Biowulf, you will need to adapt these commands to your own HPC."
 
-echo "--- STAGE 3 LOG ---" >> $PREP_LOG
-echo "$(date) - START" >> $PREP_LOG
-
-
-# STEP 0 - Get path to subject list from Stage 2, also generate a motion file using data in /data/stage_2/motion_data/sub-NDARINVxxxxxxxx.txt
-stage_2_subjects=$DATA_PREP/data/stage_2/prep_stage_2_rds_subjects.txt
-
-motion_file=$DATA_PREP/data/stage_3/subjects_mean_fds.txt
-touch $motion_file
-echo "subjectid,mean_fd" >> $motion_file
+echo "STEP 1: ICA+FIX"
+echo "For the ICA+FIX runs, we recommend using our included fix_multi_run.sh script, with ICA+FIX 1.06.15 and HPC pipeline 4.1.3"
+echo "You will need to properly configure the ICA+FIX settings.sh file for your system."
+echo "Example ICA+FIX command: "
+echo "  cd /path/to/subject/folder/MNINonLinear/Results/ /path/to/fix_multi_run.sh task-rest01/task-rest01.nii.gz@task-rest02/task-rest02.nii.gz 2000 fix_proc/task-rest_concat TRUE"
+echo "NOTE, if you want to change the SWARM commands, you need to manually change the code in this script."
 while read subject; do
-    cat $DATA_PREP/data/stage_2/motion_data/$subject.txt >> $motion_file
-done < $stage_2_subjects
+    icafix=$(cat $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/$subject.txt)
+    echo "export MCR_CACHE_ROOT=/lscratch/\$SLURM_JOB_ID && module load R fsl connectome-workbench && cd /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/$subject/ses-baselineYear1Arm1/files/MNINonLinear/Results && /data/ABCD_MBDU/goyaln2/fix/fix_multi_run.sh $icafix 2000 fix_proc/task-rest_concat TRUE /data/ABCD_MBDU/goyaln2/fix/training_files/HCP_Style_Single_Multirun_Dedrift.RData" >> $STAGE_3_OUT/icafix.swarm
+done < $STAGE_2_OUT/stage_2_final_subjects.txt
+echo "ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm."
+echo "Run the swarm as follows:"
+echo "  swarm -f icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix"
 
-# STEP 1 - Call R script to extract final subjects and SMs
-echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_proc)" >> $PREP_LOG
-echo "$(date) - STEP 1 - Extracting final subject list and SM matrix (final_rds_proc)"
-Rscript $SUPPORT_SCRIPTS/stage_3/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $stage_2_subjects $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txt $STAGE_3_OUT
 
-NUM_SUBS=$(cat $STAGE_3_OUT/final_subjects.txt | wc -l)
-echo "Final number of subjects: $NUM_SUBS"
+echo "STEP 2: Get final subject list (based on presence of task-rest_concat_hp2000_clean.nii.gz)"
+echo "STEP 3: Generate censor+truncate commands)"
+echo "To perform steps 2 & 3, run the script $SUPPORT_SCRIPTS/prep_stage_3_steps2and3.sh (no arguments required)."
+echo "NOTE, Step 3 will require manually submitting/running a SWARM job to do censor+truncate."
 
-# STEP 2 - Generate final VARS.txt matrix
-echo "$(date) - STEP 2 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)" >> $PREP_LOG
-echo "$(date) - STEP 2 - Generating final VARS.txt matrix (abcd_cca_replication/data/VARS.txt)"
-python $SUPPORT_SCRIPTS/stage_3/vars.py $STAGE_3_OUT/final_subjects.txt $STAGE_3_OUT/final_sm_list $motion_file $STAGE_3_OUT/VARS_no_motion.txt $ABCD_CCA_REPLICATION/data/VARS.txt
 
-echo "$(date) - STOP" >> $PREP_LOG
-echo "--- END STAGE 3 LOG ---" >> $PREP_LOG
-echo "" >> $PREP_LOG
-echo
+echo "STEP 4: MELODIC Group-ICA"
+echo "Run MELODIC using the script: $SUPPORT_SCRIPTS/run_melodic.sh"
+
+echo "STEP 5: dual_regression"
+echo "Run dual_regression as follows (NOTE, on the NIH Biowulf this command will be automatically submnitted to the cluster):"
+echo " ABCD_CCA_REPLICATION="$(dirname "$PWD")" && . $ABCD_CCA_REPLICATION/pipeline.config && dual_regression && export FSL_MEM=32 && dual_regression $GICA/melodic_IC 1 -1 0 $DR `cat $FINAL_SUBJECTS`"
+
+
+echo "STEP 6: slices_summary"
+echo "Run slices_summary as follows:"
+echo "  ABCD_CCA_REPLICATION="$(dirname "$PWD")" && . $ABCD_CCA_REPLICATION/pipeline.config && slices_summary $GICA/melodic_IC 4 /usr/local/apps/fsl/6.0.1/data/standard/MNI152_T1_2mm $GICA/melodic_IC.sum -1"
