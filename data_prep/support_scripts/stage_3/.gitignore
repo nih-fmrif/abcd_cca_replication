@@ -8,3 +8,5 @@
 !vars.py
 !run_melodic.sh
 !prep_stage_3_steps2and3.sh
+!run_dual_regression.sh
+!run_slices_summary.sh

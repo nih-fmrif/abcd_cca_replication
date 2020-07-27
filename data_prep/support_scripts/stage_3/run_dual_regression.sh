@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# run_melodic.sh
+# run_dual_regression.sh
 # Created: 7/27/20 (pipeline_version_1.5)
 # Updated:
 
@@ -11,7 +11,7 @@
 # FSL
 
 # Example usage:
-#   ./run_melodic.sh
+#   ./run_dual_regression.sh
 
 # Check for fsl
 fsl_exec=$(which fsl)
@@ -30,17 +30,7 @@ else
     exit 1
 fi
 
-# Get final paths to the NIFTI inputs
-find $STAGE_3_OUT/NIFTI/ -type f -name "*.nii.gz" >> $STAGE_3_OUT/paths_to_NIFTI_files.txt
+echo "run_dual_regression.sh - Running dual_regression"
+echo "WARNING: This script was designed to be run the NIH Biowulf where dual_regression is AUTOMATICALLY SWARMED, and may not work on other systems."
 
-echo "run_melodic.sh - Running MELODIC"
-echo "WARNING: This script was designed to be run the NIH Biowulf, and may not work on other systems."
-
-# The first portion of the command loads our pipeline.config.
-# $STAGE_3_OUT/paths_to_NIFTI_files.txt points to a text file with absolute paths to the censored+truncated NIFTI files for input to MELODIC.
-# The variable $GICA points to the melodic output folder (inside data_prep/).
-
-melodic -i $STAGE_3_OUT/paths_to_NIFTI_files.txt -o $GICA -m /usr/local/apps/fsl/6.0.1/data/standard/MNI152_T1_2mm_brain_mask_dil1.nii.gz --nobet -a concat --tr=$TR_INTERVAL --Oall -d 200
-
-
-
+export FSL_MEM=32 && dual_regression $GICA/melodic_IC 1 -1 0 $DR `cat $FINAL_SUBJECTS`
