@@ -78,6 +78,7 @@ echo "---ABCD CCA Pipeline Config Setup---"
 echo "--PATHS--"
 echo "BIDS_PATH=$BIDS_PATH"
 echo "NDA_RDS_RAW=$NDA_RDS_RAW"
+echo "DCAN_REPROC=$DCAN_REPROC"
 echo "DERIVATIVES_PATH=$DERIVATES_PATH"
 echo "DATA_PREP=$DATA_PREP"
 echo "MAIN_REPO_DATA_FOLDER=$MAIN_REPO_DATA_FOLDER"
@@ -110,6 +111,7 @@ echo "------------------------------------"
 # Now write these variables
 echo "BIDS_PATH=$BIDS_PATH" >> $CONFIG
 echo "NDA_RDS_RAW=$NDA_RDS_RAW" >> $CONFIG
+echo "DCAN_REPROC=$DCAN_REPROC" >> $CONFIG
 echo "DERIVATIVES_PATH=$DERIVATES_PATH" >> $CONFIG
 echo "DATA_PREP=$DATA_PREP" >> $CONFIG
 echo "MAIN_REPO_DATA_FOLDER=$MAIN_REPO_DATA_FOLDER" >> $CONFIG
