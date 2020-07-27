@@ -2,11 +2,13 @@
 
 # create_config.sh
 # Created: 6/15/20
-# Updated:
+# Updated: 7/27/20 (added variables for pipeline_version1.5)
+
 
 usage()
 {
 	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/raw/nda2.0.1.Rds> <path/to/reprocessed/DCAN/output/"
+    echo "ex: ./create_config.sh /data/ABCD/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/"
     echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
     echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 }
@@ -93,6 +95,9 @@ echo "STAGE_3_OUT=$STAGE_3_OUT"
 echo "STAGE_4_OUT=$STAGE_4_OUT"
 echo "STAGE_5_OUT=$STAGE_5_OUT"
 
+echo "FINAL_SUBJECTS=$FINAL_SUBJECTS"
+echo "FINAL_SUBJECT_MEASURES=$FINAL_SUBJECT_MEASURES"
+
 echo
 echo "--VARIABLES--"
 echo "TR_INTERVAL=$TR_INTERVAL"
@@ -121,6 +126,9 @@ echo "STAGE_2_OUT=$STAGE_2_OUT" >> $CONFIG
 echo "STAGE_3_OUT=$STAGE_3_OUT" >> $CONFIG
 echo "STAGE_4_OUT=$STAGE_4_OUT" >> $CONFIG
 echo "STAGE_5_OUT=$STAGE_5_OUT" >> $CONFIG
+
+echo "FINAL_SUBJECTS=$FINAL_SUBJECTS" >> $CONFIG
+echo "FINAL_SUBJECT_MEASURES=$FINAL_SUBJECT_MEASURES" >> $CONFIG
 
 echo "TR_INTERVAL=$TR_INTERVAL" >> $CONFIG
 echo "MIN_TPS=$MIN_TPS" >> $CONFIG
