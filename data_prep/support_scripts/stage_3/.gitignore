@@ -6,3 +6,5 @@
 !find_anomalies.py
 !final_rds_proc.r
 !vars.py
+!run_melodic.sh
+!prep_stage_3_steps2and3.sh
