@@ -25,26 +25,31 @@ fi
 
 
 # PREP STAGE 3 - STEP 2: get final subject list
-ls -d $DCAN_REPROC/*/ > $STAGE_3_OUT/folder_names.txt
+ls -d $DCAN_REPROC/*/ >> $STAGE_3_OUT/folder_names.txt      #note these are ABSOLUTE paths
 while read line
 do
     FILE=$line/ses-baselineYear1Arm1/files/MNINonLinear/Results/fix_proc/task-rest_concat_hp2000_clean.nii.gz
     if test -f "$FILE"; then
-        echo "$FILE" >> $STAGE_3_OUT/final_subjects.txt
+        # use basename to get subject id only
+        echo $(basename $line) >> $STAGE_3_OUT/tmp.txt
     fi
 done < $STAGE_3_OUT/folder_names.txt
+
+cat $STAGE_3_OUT/tmp.txt | sort | uniq >> $STAGE_3_OUT/final_subjects.txt
+rm $STAGE_3_OUT/tmp.txt
 
 # Save number subjects
 NUMSUBS=$(cat $STAGE_3_OUT/final_subjects.txt | wc -l)
 echo "NUMSUBS=$NUMSUBS" >> $CONFIG
+echo "NUMSUBS=$NUMSUBS"
 
 # Make the melodic directory & save the path
-GICA=$DATA_PREP/${NUMSUBS}_subjects.gica
+GICA=$DATA_PREP/${NUMSUBS}.gica
 echo "GICA=$GICA" >> $CONFIG
 mkdir -p $GICA
 
 # Save path for dual_regression output
-DR=$DATA_PREP/${NUMSUBS}_subjects.dr
+DR=$DATA_PREP/${NUMSUBS}.dr
 echo "DR=$DR" >> $CONFIG
 
 
