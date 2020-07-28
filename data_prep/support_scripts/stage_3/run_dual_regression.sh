@@ -33,4 +33,4 @@ fi
 echo "run_dual_regression.sh - Running dual_regression"
 echo "WARNING: This script was designed to be run the NIH Biowulf where dual_regression is AUTOMATICALLY SWARMED, and may not work on other systems."
 
-export FSL_MEM=32 && dual_regression $GICA/melodic_IC 1 -1 0 $DR `cat $FINAL_SUBJECTS`
+export FSL_MEM=32 && dual_regression $GICA/melodic_IC 1 -1 0 $DR `cat $STAGE_3_OUT/paths_to_NIFTI_files.txt`
