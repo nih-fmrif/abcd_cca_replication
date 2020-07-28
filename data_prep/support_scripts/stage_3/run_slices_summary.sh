@@ -15,7 +15,7 @@
 
 # Check for fsl
 fsl_exec=$(which fsl)
- if [ ! -x "fsl_exec" ] ; then
+ if [ ! -x "$fsl_exec" ] ; then
     echo "Error - FSL is not on PATH. Exiting"
     exit 1
  fi
