@@ -13,7 +13,8 @@
 #   ./prep_stage_3_steps2and3.sh
 
 # Check for and load config
-ABCD_CCA_REPLICATION="$(dirname $PWD | rev | cut -d/ -f3- | rev)"
+# ABCD_CCA_REPLICATION="$(dirname $PWD | rev | cut -d/ -f3- | rev)"
+ABCD_CCA_REPLICATION=$1
 if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
     # config exists, so run it
     # This will load BIDS_PATH, DERIVATIVES_PATH, DATA_PREP variables

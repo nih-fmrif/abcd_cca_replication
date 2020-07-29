@@ -20,7 +20,7 @@ fsl_exec=$(which fsl)
     exit 1
  fi
 
-ABCD_CCA_REPLICATION="$(dirname $PWD | rev | cut -d/ -f3- | rev)"
+ABCD_CCA_REPLICATION=$1
 if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
     # config exists, so run it
     # This will load BIDS_PATH, DERIVATIVES_PATH, DATA_PREP variables

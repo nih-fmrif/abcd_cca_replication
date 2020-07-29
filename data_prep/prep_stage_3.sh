@@ -64,20 +64,20 @@ echo "- STEP 2: Get final subject list (based on presence of task-rest_concat_hp
 echo "- STEP 3: Generate censor+truncate commands)"
 echo "- NOTE, Step 3 will require manually submitting/running a SWARM job to do censor+truncate."
 echo "- To perform steps 2 & 3, run the script:"
-echo "      $SUPPORT_SCRIPTS/stage_3/prep_stage_3_steps2and3.sh"
+echo "      $SUPPORT_SCRIPTS/stage_3/prep_stage_3_steps2and3.sh $ABCD_CCA_REPLICATION"
 
 echo
 echo "- STEP 4: MELODIC Group-ICA -"
 echo "- Run MELODIC using the script:"
-echo "      $SUPPORT_SCRIPTS/stage_3/run_melodic.sh"
+echo "      $SUPPORT_SCRIPTS/stage_3/run_melodic.sh $ABCD_CCA_REPLICATION"
 
 echo
 echo "- STEP 5: dual_regression -"
 echo "- Run dual_regression using the script:"
-echo "      $SUPPORT_SCRIPTS/stage_3/run_dual_regression.sh"
+echo "      $SUPPORT_SCRIPTS/stage_3/run_dual_regression.sh $ABCD_CCA_REPLICATION"
 
 echo
 echo "- STEP 6: slices_summary -"
 echo "- Run slices_summary using the script:"
-echo "      $SUPPORT_SCRIPTS/stage_3/run_slices_summary.sh"
+echo "      $SUPPORT_SCRIPTS/stage_3/run_slices_summary.sh $ABCD_CCA_REPLICATION"
 echo
