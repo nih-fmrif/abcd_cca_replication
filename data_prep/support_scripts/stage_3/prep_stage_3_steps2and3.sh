@@ -44,12 +44,12 @@ echo "NUMSUBS=$NUMSUBS" >> $CONFIG
 echo "NUMSUBS=$NUMSUBS"
 
 # Make the melodic directory & save the path
-GICA=$DATA_PREP/${NUMSUBS}.gica
+GICA=$DATA_PREP/$STAGE_3_OUT/${NUMSUBS}.gica
 echo "GICA=$GICA" >> $CONFIG
 mkdir -p $GICA
 
 # Save path for dual_regression output
-DR=$DATA_PREP/${NUMSUBS}.dr
+DR=$DATA_PREP/$STAGE_3_OUT/${NUMSUBS}.dr
 echo "DR=$DR" >> $CONFIG
 
 

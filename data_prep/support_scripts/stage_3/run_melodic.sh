@@ -31,7 +31,7 @@ else
 fi
 
 # Get final paths to the NIFTI inputs
-find $STAGE_3_OUT/NIFTI/ -type f -name "*.nii.gz" >> $STAGE_3_OUT/paths_to_NIFTI_files.txt
+find $STAGE_3_OUT/NIFTI/ -type f -name "*.nii.gz" | sort | >> $STAGE_3_OUT/paths_to_NIFTI_files.txt
 
 echo "run_melodic.sh - Running MELODIC"
 echo "WARNING: This script was designed to be run the NIH Biowulf, and may not work on other systems."
