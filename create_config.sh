@@ -9,8 +9,8 @@ usage()
 {
 	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/raw/nda2.0.1.Rds> <path/to/reprocessed/DCAN/output/"
     echo "ex: ./create_config.sh /data/ABCD/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/"
-    echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
-    echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
+    # echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
+    # echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 }
 
 if (( $# < 2 ))
@@ -55,7 +55,7 @@ SCAN_FD_THRESH_2=0.15
 #   $DR
 
 if [[ -f $CONFIG ]]; then
-    read -p "A config file already exists. Are you sure you want to overwrite it? " -n 1 -r
+    read -p "A config file already exists. Are you sure you want to overwrite it [y/n]? " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         # overwrite itss

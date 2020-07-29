@@ -29,7 +29,6 @@ if [[ -d $STAGE_3_OUT ]]; then
     rm -rf $STAGE_3_OUT/*.Rds
     rm -rf $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
     rm -rf $STAGE_3_OUT/swarm_logs/censor_and_truncate/*.{e,o}
-    :
 else
     mkdir -p $STAGE_3_OUT
     mkdir -p $STAGE_3_OUT/swarm_logs/icafix/

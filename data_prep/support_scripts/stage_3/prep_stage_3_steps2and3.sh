@@ -24,6 +24,14 @@ else
     exit 1
 fi
 
+# Check if the following folders/files exist
+if [[ -d $STAGE_3_OUT ]]; then
+    rm $STAGE_3_OUT/folder_names.txt
+    rm $STAGE_3_OUT/final_subjects.txt
+    rm $STAGE_3_OUT/censor_and_truncate.swarm
+else
+    :
+fi
 
 # PREP STAGE 3 - STEP 2: get final subject list
 ls -d $DCAN_REPROC/*/ >> $STAGE_3_OUT/folder_names.txt      #note these are ABSOLUTE paths
@@ -45,12 +53,12 @@ echo "NUMSUBS=$NUMSUBS" >> $CONFIG
 echo "NUMSUBS=$NUMSUBS"
 
 # Make the melodic directory & save the path
-GICA=$DATA_PREP/$STAGE_3_OUT/${NUMSUBS}.gica
+GICA=$STAGE_3_OUT/${NUMSUBS}.gica
 echo "GICA=$GICA" >> $CONFIG
 mkdir -p $GICA
 
 # Save path for dual_regression output
-DR=$DATA_PREP/$STAGE_3_OUT/${NUMSUBS}.dr
+DR=$STAGE_3_OUT/${NUMSUBS}.dr
 echo "DR=$DR" >> $CONFIG
 
 
