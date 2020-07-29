@@ -25,10 +25,10 @@ fi
 
 # Check if the following folders/files exist
 if [[ -d $STAGE_3_OUT ]]; then
-    rm $STAGE_3_OUT/*.txt
-    rm $STAGE_3_OUT/*.Rds
-    rm $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
-    rm $STAGE_3_OUT/swarm_logs/censor_and_truncate/*.{e,o}
+    rm -rf $STAGE_3_OUT/*.txt
+    rm -rf $STAGE_3_OUT/*.Rds
+    rm -rf $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
+    rm -rf $STAGE_3_OUT/swarm_logs/censor_and_truncate/*.{e,o}
     :
 else
     mkdir -p $STAGE_3_OUT
