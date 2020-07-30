@@ -5,7 +5,7 @@
 # Updated:
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
-# NOTE, This was written for use on the NIH BIOWULF, and MAY NOT FUNCTION PROPERLY ON OTHER SYSTEMS.
+# NOTE, This was written for use on the NIH BIOWULF, and MAY NOT FUNCTION PROPERLY ON OTHER SYSTEMah S.
 
 # Expected tools on PATH:
 # FSL
