@@ -49,6 +49,6 @@ echo "WARNING: This script was designed to be run the NIH Biowulf where dual_reg
 # done
 
 echo "Calling the following command:"
-echo "      export FSL_MEM=64 && export FSL_QUEUE=norm && dual_regression $GICA/melodic_IC 1 -1 0 $DR `cat $STAGE_3_OUT/paths_to_NIFTI_files.txt`"
+echo "      export FSL_MEM=64 && export FSL_QUEUE=norm && dual_regression $GICA/melodic_IC 1 -1 0 $DR \`cat $STAGE_3_OUT/paths_to_NIFTI_files.txt\`"
 
 export FSL_MEM=64 && export FSL_QUEUE=norm && dual_regression $GICA/melodic_IC 1 -1 0 $DR `cat $STAGE_3_OUT/paths_to_NIFTI_files.txt`
