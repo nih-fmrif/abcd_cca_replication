@@ -38,7 +38,7 @@ fi
 
 echo
 echo "--- PREP_STAGE_3 ---"
-echo "PREP STAGE 3 Requires a number of steps to be performed manually. A number of scripts will be run to generate batch commands (designed for the NIH Biowulf) along with instructions on how to use the commands."
+echo "PREP STAGE 3 Requires some steps to be performed manually. A number of scripts will be run to generate batch commands (designed for the NIH Biowulf) along with instructions on how to use the commands."
 echo "If you are not using the NIH Biowulf, you will need to adapt these commands to your own HPC."
 
 echo "- STEP 1: ICA+FIX -"
