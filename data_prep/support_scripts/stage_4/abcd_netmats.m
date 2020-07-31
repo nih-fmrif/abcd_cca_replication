@@ -22,8 +22,14 @@
 %       return
 %  end
 
+gica_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_3//5013.gica";
+dr_path="/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_3//5013.dr";
+abcd_cca_dir   =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/';
+n_subs=5013;
+
+
 function abcd_netmats(stage_4_out, gica_path, dr_path, abcd_cca_dir, n_subs_in)
-    if nargin<6
+    if nargin<5
         sprintf("ERROR, not enough arguments.")
         sprintf("Example: abcd_netmats()")
         return
