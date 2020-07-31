@@ -12,9 +12,6 @@ abcd_cca_dir    =   '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/';
 % melodic_folder      =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/ica_500_test/groupICA200_50subs.gica/';
 % SUMPICS =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/ica_500_test/groupICA200_50subs.gica/melodic_IC.sum';
 
-
-melodic_folder  =   sprintf('%s/data_prep/1000_subjects_masked.gica/', abcd_cca_dir);
-SUMPICS         =   sprintf('%s/data_prep/1000_subjects_masked.gica/melodic_IC.sum', abcd_cca_dir);
 % SUMPICS_THICK   =   sprintf('%s/data_prep/1000_subjects_masked.gica/melodic_IC_thick.sum', abcd_cca_dir);
 
 if ~isdeployed
@@ -32,6 +29,10 @@ elseif isdeployed
     n_subs          =   str2num(n_subs_in);
 end
 
+
+melodic_folder  =   sprintf('%s/data_prep/data/stage_3/%d.gica', abcd_cca_dir, n_subs);
+% SUMPICS         =   sprintf('%s/data_prep/1000_subjects_masked.gica/melodic_IC.sum', abcd_cca_dir);
+SUMPICS         =   sprintf('%s/melodic_IC.sum', melodic_folder);
 
 %% --- Read in data, set some variables, create confounds matrix ---
 % load in data from FSLNets calculations
