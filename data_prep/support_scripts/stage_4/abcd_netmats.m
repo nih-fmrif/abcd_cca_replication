@@ -109,7 +109,7 @@ netmats5_001 =  nets_netmats(ts,1,'ridgep',0.01);     % Ridge Regression partial
 [Znet1,Mnet1]  =  nets_groupmean(netmats1,0,1);   % test whichever netmat you're interested in; returns Z values from one-group t-test and group-mean netmat
 [Znet2,Mnet2]  =  nets_groupmean(netmats5_001,0,1);   % test whichever netmat you're interested in; returns Z values from one-group t-test and group-mean netmat
 
-save(sprintf('%s/fslnets.mat',stage_4_out,n_subs_in))
+save(sprintf('%s/fslnets.mat',stage_4_out),'-v7.3')
 
 %%% view hierarchical clustering of nodes
 %%% arg1 is shown below the diagonal (and drives the clustering/hierarchy); arg2 is shown above diagonal
@@ -120,8 +120,7 @@ save(sprintf('%s/fslnets.mat',stage_4_out,n_subs_in))
 % nets_hierarchy(Znet1,Znet5,ts.DD,group_maps);
 
 % writematrix(netmats5_01, sprintf('%s/raw_netmats_01.txt',subs_folder))
-writematrix(netmats5_001, sprintf('%s/raw_netmats_001.txt',stage_4_out,n_subs_in))
-
+writematrix(netmats5_001, sprintf('%s/raw_netmats_001.txt',stage_4_out))
 
 
 % UNUSED CODE:

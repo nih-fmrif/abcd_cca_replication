@@ -4,7 +4,7 @@
 perms_per_batch_in = 2000
 N_perm_in = 100000
 N_dim_in = 70
-n_subs_in = 1000
+n_subs_in = 5013
 abcd_cca_dir    =   '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/';
 
 

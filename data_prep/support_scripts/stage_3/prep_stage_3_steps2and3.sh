@@ -61,6 +61,9 @@ mkdir -p $GICA
 DR=$STAGE_3_OUT/${NUMSUBS}.dr
 echo "DR=$DR" >> $CONFIG
 
+# Make our /data/$NUMSUBS folder where our MATLAB processing will go in Stage 4
+CCA_PROC_DATA=$MAIN_REPO_DATA_FOLDER/$NUMSUBS
+echo "CCA_PROC_DAT=$CCA_PROC_DATA" >> $CONFIG
 
 # PREP STAGE 3 - STEP 3: generate swarm commands for censor+truncate
 while read subject; do

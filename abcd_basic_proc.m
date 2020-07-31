@@ -98,7 +98,7 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	S4=nearestSPD(S3Cov); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
 
 	% Check the before and after correlation:
-	corrcoef(S4,S3Cov)  %0.9999
+	corrcoef(S4,S3Cov)  %0.9999 for the 5013 subject sample
 
 	% Generate S5, the top eigenvectors for SMs, to avoid overfitting and reduce dimensionality
 	[uu,dd]=eigs(S4,N_dim);       % SVD (eigs actually)
