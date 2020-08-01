@@ -7,8 +7,9 @@ Zygosity
 paired.subjectid (NOT USED ANY MORE)
 
 ---CONFOUNDS (7 total)---
-abcd_site
-mri_info_manufacturer
+abcd_site (NOT USED ANYMORE)
+mri_info_device.serial.number
+mri_info_manufacturer (NOT USED ANYMORE)
 remaining_frame_mean_FD
 anthro_weight_calc
 anthro_bmi_calc
