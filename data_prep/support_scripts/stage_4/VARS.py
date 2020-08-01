@@ -15,10 +15,12 @@ motion_data =   sys.argv[3]
 vars_txt    =   sys.argv[4]
 out_folder      =   sys.argv[5]
 
-df_vars = pd.read_csv(vars_txt, sep=',')
-
 final_subs = [line.rstrip('\n') for line in open(sub_fp)]
 sms = [line.rstrip('\n') for line in open(sm_fp)]
+
+# Keep only subjects from the data_prep/data/stage_3/final_subjects.txt list
+df_vars = pd.read_csv(vars_txt, sep=',')
+df_vars = df_vars[df_vars['subjectid'].isin(final_subs)]
 
 # STEP 1 - Properly code the scanner type variable (since it is not binary)
 # Our encoding scheme will require n-1 columns (i.e. 4 cols if there are 5 unique scanners)
