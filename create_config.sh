@@ -53,6 +53,7 @@ SCAN_FD_THRESH_2=0.15
 #   $NUMSUBS
 #   $GICA
 #   $DR
+#   $CCA_PROC_DATA
 
 if [[ -f $CONFIG ]]; then
     read -p "A config file already exists. Are you sure you want to overwrite it [y/n]? " -n 1 -r

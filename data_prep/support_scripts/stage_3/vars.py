@@ -28,6 +28,7 @@ df_motion = df_motion[df_motion['subjectid'].isin(final_subs)]
 df_final = df_vars.merge(df_motion,on='subjectid',how='left')
 
 # Finally, sort the rows alphabetically (ASCENDING ORDER) based on the subject ID (for future ref, since the final VARS.txt file has NO INDEX!)
+# This will sort subject id A-->Z and row index 0-->N
 df_final.sort_values('subjectid',inplace=True)
 df_final = df_final[sms]
 # Sort columns in descending order (so Zygosity is last)
