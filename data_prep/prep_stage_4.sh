@@ -35,9 +35,8 @@ fi
 
 # STEP 1 - FSLNets to generate subject-level connectomes
 echo "Generating subject-level connectomes using FSLNets. This may take a while (6-8 hours)."
-
-echo "gica_path=$GICA"
-echo "dr_path=$DR"
+# echo "gica_path=$GICA"
+# echo "dr_path=$DR"
 # matlab -nodisplay -nodesktop -nojvm -r "stage_4_out="$STAGE_4_OUT/$NUMSUBS/"; gica_path="$GICA"; dr_path="$DR";  run $SUPPORT_SCRIPTS/stage_4/abcd_netmats.m"
 
 # STEP 2 - Generate the NET matrix
