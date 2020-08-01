@@ -7,7 +7,7 @@ paired.subjectid
 abcd_site
 mri_info_manufacturer
 mri_info_device.serial.number
-remaining_frame_mean_FD
+mean_fd
 anthro_weight_calc
 anthro_bmi_calc
 smri_vol_subcort.aseg_intracranialvolume
