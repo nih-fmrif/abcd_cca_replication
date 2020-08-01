@@ -26,14 +26,21 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	% Load the Subjects X Nodes matrix (should be size Nx19900)
 	N0=load(sprintf('%s/data/%d/NET.txt', abcd_cca_dir, n_subs));   
 	
+	% Load list of SMs to be used in ICA (this list is made manually)
 	ica_sms_0=fileread(sprintf('%s/data/ica_subject_measures.txt', abcd_cca_dir));
 	ica_sms = strsplit(ica_sms_0);
+
+	% Load list of names of colums used to encode scanner ID
+	scanner_col_names_0=fileread(sprintf('%s/data/%d/scanner_confounds.txt', abcd_cca_dir, n_subs));
+	scanner_col_names = strsplit(scanner_col_names_0);
 
 	% Drop subject col and device serial number col (they are strings)
 	egid_col    = find(strcmpi(VARS_0(1,:),'subjectid'));
 	serial_col  = find(strcmpi(VARS_0(1,:),'mri_info_device.serial.number'));
 	VARS_0(:,[egid_col serial_col])=[];
 
+	% Get column indices of our confound variables
+	[sharedvals,scanner_cols_idx]=intersect(VARS_0(1,:),scanner_col_names);
 	site_col        = find(strcmpi(VARS_0(1,:),'abcd_site'));
 	mri_man_col     = find(strcmpi(VARS_0(1,:),'mri_info_manufacturer'));
 	mean_fd_col     = find(strcmpi(VARS_0(1,:),'mean_fd'));
@@ -42,31 +49,30 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	wholebrain_col  = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_wholebrain'));
 	intracran_col   = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_intracranialvolume'));
 
-	[sharedvals,idx]=intersect(VARS_0(1,:),ica_sms);
-
+	% Get column indices of the ICA SMs
+	[sharedvals,ica_sms_idx]=intersect(VARS_0(1,:),ica_sms);
+	
+	% VARS without column names
 	VARS=cell2mat(VARS_0(2:end,:));
 
 	% --- CREATE CONFOUND MATRIX ---
 	% Set up confounds matrix. Confounds are demeaned, any missing data is set to 0
 	% Confounds are:
-	% 1. abcd_site
-	% 2. mri_info_manufacturer
-	% 3. mean_fd
-	% 4. anthro_bmi_calc
-	% 5. anthro_weight_calc
-	% 6. smri_vol_subcort.aseg_wholebrain
-	% 7. smri_vol_subcort.aseg_intracranialvolume 
-	% Additional confounds from demeaning and squaring all confounds 3-7
-	% [site_col mri_man_col mean_fd_col bmi_col weight_col]
-	% [wholebrain_col intracran_col]
-	conf=palm_inormal([ VARS(:,[site_col mri_man_col mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);   % Gaussianise
-	conf(isnan(conf)|isinf(conf))=0;                % impute missing data as zeros
-	conf=nets_normalise([conf conf(:,3:end).^2]);   % add on squared terms and renormalise (additional SMs made from 3-7)
-	conf(isnan(conf)|isinf(conf))=0;                % again convert NaN/inf to 0 (above line makes them reappear for some reason)
+	% 1. Individual scanner IDs (subsitute for abcd_site and mri_info_manufacturer)
+	% 2. mean_fd
+	% 3. anthro_bmi_calc
+	% 4. anthro_weight_calc
+	% 5. smri_vol_subcort.aseg_wholebrain
+	% 6. smri_vol_subcort.aseg_intracranialvolume 
+	% Additional confounds from demeaning and squaring all confounds 
+	conf  = palm_inormal([ VARS(:,scanner_cols_idx) VARS(:,[mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
+	conf(isnan(conf)|isinf(conf)) = 0;                % impute missing data as zeros
+	conf  = nets_normalise([conf conf(:,3:end).^2]);  % add on squared terms and renormalise (additional SMs made from 3-7)
+	conf(isnan(conf)|isinf(conf)) = 0;                % again convert NaN/inf to 0 (above line makes them reappear for some reason)
 
 	% --- SM PROCESSING ---
 	% Matrix S1 (only ICA sms)
-	S1=[VARS(:,idx)];
+	S1=[VARS(:,ica_sms_idx)];
 
 	% Now, prepare the final SM matrix and run the PCA
 	% S2, formed by gaussianizing the SMs we keep

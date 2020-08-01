@@ -7,7 +7,6 @@ N_dim_in = 70
 n_subs_in = 5013
 abcd_cca_dir    =   '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/';
 
-
 % subs_folder    =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/ica_500_test/'
 % melodic_folder      =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/ica_500_test/groupICA200_50subs.gica/';
 % SUMPICS =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/ica_500_test/groupICA200_50subs.gica/melodic_IC.sum';
@@ -29,7 +28,6 @@ elseif isdeployed
     n_subs          =   str2num(n_subs_in);
 end
 
-
 melodic_folder  =   sprintf('%s/data_prep/data/stage_3/%d.gica', abcd_cca_dir, n_subs);
 % SUMPICS         =   sprintf('%s/data_prep/1000_subjects_masked.gica/melodic_IC.sum', abcd_cca_dir);
 SUMPICS         =   sprintf('%s/melodic_IC.sum', melodic_folder);
@@ -37,15 +35,19 @@ SUMPICS         =   sprintf('%s/melodic_IC.sum', melodic_folder);
 %% --- Read in data, set some variables, create confounds matrix ---
 % load in data from FSLNets calculations
 fslnets_mat     =   load(sprintf('%s/data/%d/fslnets.mat', abcd_cca_dir, n_subs));
+% Load the Subjects X Nodes matrix (should be size Nx19900)
+N0 = load(sprintf('%s/data/%d/NET.txt', abcd_cca_dir, n_subs));  
 
 % VARS_0 = Subjects X SMs text file
 VARS_0 = strcsvread(sprintf('%s/data/%d/VARS.txt', abcd_cca_dir, n_subs));
 
-% Load the Subjects X Nodes matrix (should be size Nx19900)
-N0 = load(sprintf('%s/data/%d/NET.txt', abcd_cca_dir, n_subs));   
+% Load list of SMs to be used in ICA (this list is made manually)
+ica_sms_0=fileread(sprintf('%s/data/ica_subject_measures.txt', abcd_cca_dir));
+ica_sms = strsplit(ica_sms_0);
 
-ica_sms_0   =   fileread(sprintf('%s/data/ica_subject_measures.txt', abcd_cca_dir));
-ica_sms     =   strsplit(ica_sms_0);
+% Load list of names of colums used to encode scanner ID
+scanner_col_names_0=fileread(sprintf('%s/data/%d/scanner_confounds.txt', abcd_cca_dir, n_subs));
+scanner_col_names = strsplit(scanner_col_names_0);
 
 % Drop subject col and device serial number col (they are strings)
 egid_col    = find(strcmpi(VARS_0(1,:),'subjectid'));
@@ -53,6 +55,7 @@ serial_col  = find(strcmpi(VARS_0(1,:),'mri_info_device.serial.number'));
 VARS_0(:,[egid_col serial_col])=[];
 
 % Get column indices of our confound variables
+[sharedvals,scanner_cols_idx]=intersect(VARS_0(1,:),scanner_col_names);
 site_col        = find(strcmpi(VARS_0(1,:),'abcd_site'));
 mri_man_col     = find(strcmpi(VARS_0(1,:),'mri_info_manufacturer'));
 mean_fd_col     = find(strcmpi(VARS_0(1,:),'mean_fd'));
@@ -61,22 +64,27 @@ weight_col      = find(strcmpi(VARS_0(1,:),'anthro_weight_calc'));
 wholebrain_col  = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_wholebrain'));
 intracran_col   = find(strcmpi(VARS_0(1,:),'smri_vol_subcort.aseg_intracranialvolume'));
 
-[sharedvals,idx]=intersect(VARS_0(1,:),ica_sms);
+% Now get column indices of the ICA SMs
+[sharedvals,ica_sms_idx]=intersect(VARS_0(1,:),ica_sms);
+
+% Store the original order of the ICA SMs, used later to make our pos-neg axis
 sms_original_order = VARS_0(1,:);
 
+% VARS without column names
 VARS=cell2mat(VARS_0(2:end,:));
 
-conf  = palm_inormal([ VARS(:,[site_col mri_man_col mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
+% Create confounds matrix
+% conf  = palm_inormal([ VARS(:,[site_col mri_man_col mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
+conf  = palm_inormal([ VARS(:,scanner_cols_idx) VARS(:,[mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
 conf(isnan(conf)|isinf(conf)) = 0;                % impute missing data as zeros
 conf  = nets_normalise([conf conf(:,3:end).^2]);  % add on squared terms and renormalise (additional SMs made from 3-7)
 conf(isnan(conf)|isinf(conf)) = 0;                % again convert NaN/inf to 0 (above line makes them reappear for some reason)
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- SM PROCESSING ---
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Matrix S1 (only ICA sms)
-S1=[VARS(:,idx)];
+S1=[VARS(:,ica_sms_idx)];
 
 % Now, prepare the final SM matrix and run the PCA
 % S2, formed by gaussianizing the SMs we keep
