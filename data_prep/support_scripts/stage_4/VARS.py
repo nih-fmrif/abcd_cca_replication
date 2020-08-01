@@ -27,7 +27,7 @@ num_unique_scanners = df_vars['mri_info_device.serial.number'].nunique()
 # Get list of unique scanner hashes, sort alphabetically (for convenience)
 unique_scanners = sorted(df_vars['mri_info_device.serial.number'].unique())
 
-scanner_cols_file = open("{}/scanner_confounds.txt".format(out_folder))
+scanner_cols_file = open("{}/scanner_confounds.txt".format(out_folder),'a')
 
 for i in range(0,num_unique_scanners-1):
     type_i = unique_scanners[i]
