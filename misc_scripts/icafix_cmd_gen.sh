@@ -26,6 +26,7 @@ output_folder=$2
 
 # STEP 1
 # Generate swarm commands
+# NOTE, use SCAN_FD_THRESH_1 which is set to 0.3
 while read subject; do
     icafix=$(cat $STAGE_1_OUT/icafix_cmds/$FD_THRESH/$SCAN_FD_THRESH_1/$subject.txt)
     echo "export MCR_CACHE_ROOT=/lscratch/\$SLURM_JOB_ID && module load R fsl connectome-workbench && cd /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/$subject/ses-baselineYear1Arm1/files/MNINonLinear/Results && /data/ABCD_MBDU/goyaln2/fix/fix_multi_run.sh $icafix 2000 fix_proc/task-rest_concat TRUE /data/ABCD_MBDU/goyaln2/fix/training_files/HCP_Style_Single_Multirun_Dedrift.RData" >> $output_folder/icafix.swarm
