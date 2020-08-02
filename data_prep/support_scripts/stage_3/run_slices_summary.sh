@@ -32,7 +32,8 @@ fi
 
 echo "run_slices_summary.sh - Running slices_summary"
 echo "WARNING: This script was designed to be run the NIH Biowulf, and may not work on other systems."
-slices_summary $GICA/melodic_IC 4 /usr/local/apps/fsl/6.0.1/data/standard/MNI152_T1_2mm $GICA/melodic_IC.sum
+slices_summary $GICA/melodic_IC 4 /usr/local/apps/fsl/6.0.1/data/standard/MNI152_T1_2mm $GICA/melodic_IC_thick.sum
+slices_summary $GICA/melodic_IC 4 /usr/local/apps/fsl/6.0.1/data/standard/MNI152_T1_2mm $GICA/melodic_IC_thin.sum -1
 
 # Or run this line with the [-1] option to do single-slice summary instead of 3 slice summary
 # slices_summary $GICA/melodic_IC 4 /usr/local/apps/fsl/6.0.1/data/standard/MNI152_T1_2mm $GICA/melodic_IC.sum -1

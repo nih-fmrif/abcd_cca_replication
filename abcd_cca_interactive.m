@@ -29,8 +29,8 @@ elseif isdeployed
 end
 
 melodic_folder  =   sprintf('%s/data_prep/data/stage_3/%d.gica', abcd_cca_dir, n_subs);
-% SUMPICS         =   sprintf('%s/data_prep/1000_subjects_masked.gica/melodic_IC.sum', abcd_cca_dir);
-SUMPICS         =   sprintf('%s/melodic_IC.sum', melodic_folder);
+SUMPICS         =   sprintf('%s/melodic_IC_thin.sum', melodic_folder);
+SUMPICS_THICK   =   sprintf('%s/melodic_IC_thick.sum', melodic_folder);
 
 %% --- Read in data, set some variables, create confounds matrix ---
 % load in data from FSLNets calculations
