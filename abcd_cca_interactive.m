@@ -323,8 +323,6 @@ hist([grot -grot],100);
 % ciftisave(BO,'~/sumCCAnodesPOSNEG.dtseries.nii',WBC);
 
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- HEIRARCHICAL MAP ---
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

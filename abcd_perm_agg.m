@@ -8,7 +8,7 @@
 function abcd_perm_agg(perms_per_batch_in, N_perm_in, N_dim_in, abcd_cca_dir, n_subs_in)
     if nargin<5
         sprintf("ERROR, not enough arguments.")
-        sprintf("Example: abcd_perm_agg(2000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 500)")
+        sprintf("Example: abcd_perm_agg(2000, 100000, 70, '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/', 5013)")
         return
     end
     
