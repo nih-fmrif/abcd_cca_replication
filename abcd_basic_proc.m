@@ -96,6 +96,9 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	end
 	S3=nearestSPD(S2Cov); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
 
+	% Check the before and after correlation
+	corrcoef(S3,S2Cov)
+
 	S4 = Qz'*S3;
 	% Determine how much data is missing:
 	sum(sum(isnan(S4)))/(size(S4,1)*size(S4,2))*100
