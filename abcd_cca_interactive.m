@@ -74,15 +74,22 @@ sms_original_order = VARS_0(1,:);
 VARS=cell2mat(VARS_0(2:end,:));
 
 % Create confounds matrix
-% conf  = palm_inormal([ VARS(:,[site_col mri_man_col mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
 conf  = palm_inormal([ VARS(:,scanner_cols_idx) VARS(:,[mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
 conf(isnan(conf)|isinf(conf)) = 0;                % impute missing data as zeros
-conf  = nets_normalise([conf conf(:,3:end).^2]);  % add on squared terms and renormalise (additional SMs made from 3-7)
+conf  = nets_normalise([conf conf(:,length(scanner_cols_idx):end).^2]);  % add on squared terms and renormalise (all cols other than those for scanner IDs)
 conf(isnan(conf)|isinf(conf)) = 0;                % again convert NaN/inf to 0 (above line makes them reappear for some reason)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% --- SM PROCESSING ---
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I = eye(n_subs);
+Z = conf;
+Rz = I-Z*pinv(Z);
+[Q, D, ~] = svd(null(Z'));
+Qz = Q*D;
+
+
 % Matrix S1 (only ICA sms)
 S1=[VARS(:,ica_sms_idx)];
 
@@ -90,7 +97,31 @@ S1=[VARS(:,ica_sms_idx)];
 % S2, formed by gaussianizing the SMs we keep
 S2=palm_inormal(S1); % Gaussianise
 
-% Now generate S3, formed by deconfounding the 17 confounds out of S2
+
+
+
+%%%%%%% TESTING HERE
+
+% Project onto nearest valid cov matrix so we don't have NaNs
+S2Cov=zeros(size(S2,1));
+for i=1:size(S2,1) % estimate "pairwise" covariance, ignoring missing data
+    for j=1:size(S2,1)
+        tmp=S2([i j],:);
+        tmp=cov(tmp(:,sum(isnan(tmp))==0)');
+        S2Cov(i,j)=tmp(1,2);
+    end
+end
+S3=nearestSPD(S2Cov); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
+
+S4 = Qz'*S3;
+% Determine how much data is missing:
+sum(sum(isnan(S4)))/(size(S4,1)*size(S4,2))*100
+
+[S5,uu1_Q,dd1_Q] = nets_svds(S4, N_dim); % PCA of netmat via SVD reduction
+
+
+%{
+ % Now generate S3, formed by deconfounding the confounds out of S2
 S3=S2;
 for i=1:size(S3,2) % deconfound ignoring missing data
     tmp=(isnan(S3(:,i))==0);
@@ -98,6 +129,8 @@ for i=1:size(S3,2) % deconfound ignoring missing data
     S3(tmp,i)=normalize(S3(tmp,i)-tmpconf*(pinv(tmpconf)*S3(tmp,i)));
 end
 
+S3_Q = Qz'*S2;
+S3=S3_Q;
 % Determine how much data is missing:
 sum(sum(isnan(S3)))/(size(S3,1)*size(S3,2))*100
 
@@ -120,7 +153,9 @@ corrcoef(S4, S3Cov)  %0.9999
 
 % Generate S5, the top eigenvectors for SMs, to avoid overfitting and reduce dimensionality
 [uu,dd] = eigs(S4,N_dim);       % SVD (eigs actually)
-S5 = uu-conf*(pinv(conf)*uu);   % deconfound again just to be safe
+S5 = uu-conf*(pinv(conf)*uu);   % deconfound again just to be safe 
+%}
+
 
 %% --- NETMAT PROCESSING ---
 fprintf("Calculating netmat matrices N1 through N5\n")
@@ -135,7 +170,7 @@ N2 = N2/std(N2(:));                                       % 3. variance normaliz
 % N3, formed by horizontally concat N1 and N2
 N3 = [N1 N2]; % Concat horizontally
 % N4, formed by regressing the confounds matrix out of N3
-N4 = nets_demean(N3-conf*(pinv(conf)*N3));
+% N4 = nets_demean(N3-conf*(pinv(conf)*N3));
 
 % --- Notes from call with Anderson (7/16/20) ---
 % I = identity matrix (NxN)
@@ -145,8 +180,19 @@ N4 = nets_demean(N3-conf*(pinv(conf)*N3));
 % Qz = Q*D
 % N4 = (I-Z*pinv(Z))*N3;
 % N4q = Qz'*N3    % N - ncols(Z) rows
+
 % Rz = Qz*Qz'
 % I = Qz'*Qz  (dimensions N-ncols(Z) x N-ncols(Z))
+
+% I = eye(n_subs);
+% Z = conf;
+% Rz = I-Z*pinv(Z);
+% [Q, D, ~] = svd(null(Z'));
+% Qz = Q*D;
+
+% N4_R = (I-Z*pinv(Z))*N3;
+N4 = Qz'*N3;
+
 
 % Qz and Rz will lead to same CCA results, but Qz is the smallest space to represent the information
 % N4 vs. N4q, N4q have no dependency between rows (assuming original observations are independent, or select only subjects that are independent)
@@ -156,6 +202,7 @@ N4 = nets_demean(N3-conf*(pinv(conf)*N3));
 
 % N5
 [N5,ss1,vv1] = nets_svds(N4, N_dim); % PCA of netmat via SVD reduction
+% [N5_Q,ss1_Q,vv1_Q] = nets_svds(N4_Q, N_dim); % PCA of netmat via SVD reduction
 
 %% --- CCA ---
 fprintf("Running CCA on matrices S5 and N5\n")

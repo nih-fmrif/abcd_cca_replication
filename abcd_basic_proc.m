@@ -67,8 +67,15 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	% Additional confounds from demeaning and squaring all confounds 
 	conf  = palm_inormal([ VARS(:,scanner_cols_idx) VARS(:,[mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
 	conf(isnan(conf)|isinf(conf)) = 0;                % impute missing data as zeros
-	conf  = nets_normalise([conf conf(:,3:end).^2]);  % add on squared terms and renormalise (additional SMs made from 3-7)
+	conf  = nets_normalise([conf conf(:,length(scanner_cols_idx):end).^2]);  % add on squared terms and renormalise (all cols other than those for scanner IDs)
 	conf(isnan(conf)|isinf(conf)) = 0;                % again convert NaN/inf to 0 (above line makes them reappear for some reason)
+	
+	I = eye(n_subs);
+	Z = conf;
+	Rz = I-Z*pinv(Z);
+	[Q, D, ~] = svd(null(Z'));
+	Qz = Q*D;
+
 
 	% --- SM PROCESSING ---
 	% Matrix S1 (only ICA sms)
@@ -78,7 +85,25 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	% S2, formed by gaussianizing the SMs we keep
 	S2=palm_inormal(S1); % Gaussianise
 
-	% Now generate S3, formed by deconfounding the 17 confounds out of S2
+	% Project onto nearest valid cov matrix so we don't have NaNs
+	S2Cov=zeros(size(S2,1));
+	for i=1:size(S2,1) % estimate "pairwise" covariance, ignoring missing data
+		for j=1:size(S2,1)
+			tmp=S2([i j],:);
+			tmp=cov(tmp(:,sum(isnan(tmp))==0)');
+			S2Cov(i,j)=tmp(1,2);
+		end
+	end
+	S3=nearestSPD(S2Cov); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
+
+	S4 = Qz'*S3;
+	% Determine how much data is missing:
+	sum(sum(isnan(S4)))/(size(S4,1)*size(S4,2))*100
+
+	[S5,uu1_Q,dd1_Q] = nets_svds(S4, N_dim); % PCA of netmat via SVD reduction
+
+%{
+ 	% Now generate S3, formed by deconfounding the 17 confounds out of S2
 	S3=S2;
 	for i=1:size(S3,2) % deconfound ignoring missing data
 		grot=(isnan(S3(:,i))==0);
@@ -108,7 +133,8 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 
 	% Generate S5, the top eigenvectors for SMs, to avoid overfitting and reduce dimensionality
 	[uu,dd]=eigs(S4,N_dim);       % SVD (eigs actually)
-	S5=uu-conf*(pinv(conf)*uu);   % deconfound again just to be safe
+	S5=uu-conf*(pinv(conf)*uu);   % deconfound again just to be safe 
+%}
 
 	% --- NETMAT PROCESSING ---
 	fprintf("Calculating netmat matrices N1 through N5\n")
@@ -123,7 +149,8 @@ function abcd_basic_proc(N_perm, N_dim, abcd_cca_dir, n_subs)
 	% N3, formed by horizontally concat N1 and N2
 	N3=[N1 N2]; % Concat horizontally
 	% N4, formed by regressing the confounds matrix out of N3
-	N4=nets_demean(N3-conf*(pinv(conf)*N3));
+	% N4=nets_demean(N3-conf*(pinv(conf)*N3));
+	N4 = Qz'*N3;
 	% N5
 	[N5,ss1,vv1]=nets_svds(N4,N_dim); % PCA of netmat via SVD reduction
 
