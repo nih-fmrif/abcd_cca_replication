@@ -30,14 +30,20 @@ df_vars = df_vars[df_vars['subjectid'].isin(final_subs)]
 
 # STEP 1 - Properly code the scanner type variable (since it is not binary)
 # Our encoding scheme will require n-1 columns (i.e. 4 cols if there are 5 unique scanners)
-# This is required to properly deconfound
+# # This is required to properly deconfound
+
+# First, convert any NaNs to "nan" string (otherwise this wont encode properly)
+df_vars['mri_info_device.serial.number'] = df_vars['mri_info_device.serial.number'].fillna('nan')
+# Get number of unique scanners
 num_unique_scanners = df_vars['mri_info_device.serial.number'].nunique(dropna=False)
 # Get list of unique scanner hashes
 unique_scanners = list(df_vars['mri_info_device.serial.number'].unique().astype(str))
 unique_scanners.sort()
 
+# Folder to write our our confound column names
 scanner_cols_file = open("{}/scanner_confounds.txt".format(out_folder),'a')
 
+# Perform the encoding
 for i in range(0,num_unique_scanners-1,1):
     type_i = unique_scanners[i]
     type_iplus1 = unique_scanners[i+1]
