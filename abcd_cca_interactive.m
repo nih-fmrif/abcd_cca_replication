@@ -74,6 +74,10 @@ sms_original_order = VARS_0(1,:);
 VARS=cell2mat(VARS_0(2:end,:));
 
 % Create confounds matrix
+% NOTE, since we use the same nuisance variable matrix conf (aka Z), this is a PARTIAL CCA where the same nuisance variable matrix (Z) is used for both the SM and connectome matrices
+% (see Winkler Et al. Permutation inference in CCA, Neuroimage 2020)
+
+% Per conversation with Anderson, we might want to consider NOT doing this double normalization thing, instead just add an intercept column to our confounds matrix
 conf  = palm_inormal([ VARS(:,scanner_cols_idx) VARS(:,[mean_fd_col bmi_col weight_col]) VARS(:,[wholebrain_col intracran_col]).^(1/3) ]);  % Gaussianise
 conf(isnan(conf)|isinf(conf)) = 0;                % impute missing data as zeros
 conf  = nets_normalise([conf conf(:,length(scanner_cols_idx):end).^2]);  % add on squared terms and renormalise (all cols other than those for scanner IDs)
@@ -97,11 +101,9 @@ S1=[VARS(:,ica_sms_idx)];
 % S2, formed by gaussianizing the SMs we keep
 S2=palm_inormal(S1); % Gaussianise
 
-
-
+% Impute first, THEN do nuisance regression
 
 %%%%%%% TESTING HERE
-
 % Project onto nearest valid cov matrix so we don't have NaNs
 S2Cov=zeros(size(S2,1));
 for i=1:size(S2,1) % estimate "pairwise" covariance, ignoring missing data
@@ -111,13 +113,35 @@ for i=1:size(S2,1) % estimate "pairwise" covariance, ignoring missing data
         S2Cov(i,j)=tmp(1,2);
     end
 end
+% "projection" is ambiguous here, this is imputation
+% this nearestSPD is same as mean imputation, could do either really.
 S3=nearestSPD(S2Cov); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
 
-S4 = Qz'*S3;
-% Determine how much data is missing:
-sum(sum(isnan(S4)))/(size(S4,1)*size(S4,2))*100
+% Mean imputation method for comparison
+% Get mean for each column, excluding NaNs
+% col_means = nanmean(S2);
+% for i=1:size(S2,2)
+%   % Iterate over columns
+%   % Find the NaN rows of this column
+%   col_vals = S2[:,i];
+%   col_vals1 = col_vals;
+%   t = ~isnan(col_vals);
+%   col_vals1(~t) = 0;
+%   s = sum(t)
+%   s(s==0) = 1;
+%   out = sum(col_vals1)/s;
+%   col_vals(nan_rows) = col_means(i)
 
-[S5,uu1_Q,dd1_Q] = nets_svds(S4, N_dim); % PCA of netmat via SVD reduction
+% Determine how much data is missing:
+sum(sum(isnan(S3)))/(size(S3,1)*size(S3,2))*100
+
+% N_dim_SM should be >= size(S,2) to capture as much of the data as possible. Try N_dim_SM = size(S3,2) and something larger.
+[S4,uu1_Q,dd1_Q] = nets_svds(S3, 73); % PCA of netmat via SVD reduction
+
+% Do the residualization AFTER PCA.
+% Why? Because the purpose of the above PCA is to get a matrix that is NOT missing any data and we do PCA to compensate for the fact that the above covariance matrix is NOT actually a true positive defininte cov. matrix
+% This S5 is input to CCA.
+S5 = Qz'*S4;
 
 
 %{
@@ -128,6 +152,22 @@ for i=1:size(S3,2) % deconfound ignoring missing data
     tmpconf=nets_demean(conf(tmp,:));
     S3(tmp,i)=normalize(S3(tmp,i)-tmpconf*(pinv(tmpconf)*S3(tmp,i)));
 end
+% Xdeconf=R*X;
+% Xdeconf2=Q'*X
+
+for i=1:size(S3,2) % deconfound ignoring missing data
+    tmp=(isnan(S3(:,i))==0);
+    tmpconf=nets_demean(conf(tmp,:));
+    [Q,D,~] = svd(null(tmpconf'),'econ');
+    Q = Q*D;
+
+    %I = eye(size(tmpconf,1));
+    %H = tmpconf*pinv(tmpconf)
+    %R = I - H;
+    S3(tmp,i)=normalize(Q'*S3(tmp,i)));
+end
+
+
 
 S3_Q = Qz'*S2;
 S3=S3_Q;
@@ -201,7 +241,20 @@ N4 = Qz'*N3;
 % Making scatter plot with N4, will have artifacts, but N4q will show the data properly
 
 % N5
-[N5,ss1,vv1] = nets_svds(N4, N_dim); % PCA of netmat via SVD reduction
+% Purpose of svd here is dimensionality reduction, whereas with S matrix above goal is to get something with no missing data
+% In the above case, consider two equivalent algorithms if there is no missing data:
+% Algorithm A:
+% 1) Do CCA as Y ~ X
+
+% Algorithm B:
+% 1) Compute cov(X)
+% 2) Compute all the eigenvectors W of cov(X)
+% 3) Do CCA as Y ~ W
+
+% If there is no missing data, A and B give the same result, but B is more complicated. If, however, there are missing data, B can be used since we can approximate cov(X) using nearest SPD.
+
+
+[N5,ss1,vv1] = nets_svds(N4, 1000); % PCA of netmat via SVD reduction
 % [N5_Q,ss1_Q,vv1_Q] = nets_svds(N4_Q, N_dim); % PCA of netmat via SVD reduction
 
 %% --- CCA ---
@@ -214,6 +267,16 @@ scatter(U(:,1), V(:,1))
 % Plot with regression line
 figure;
 plotregression(U(:,1), V(:,1))
+
+
+% CCA with Winkler CCA code (PRODUCES SAME RESULT)
+% [cc1,A1,B1,U1,V1] = cca(N5,S5,n_subs - rank(Z))
+% % Plot
+% figure;
+% scatter(U1(:,1), V1(:,1))
+% % Plot with regression line
+% figure;
+% plotregression(U1(:,1), V1(:,1))
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
