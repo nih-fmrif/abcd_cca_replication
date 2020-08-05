@@ -2,9 +2,12 @@
 *
 # Except this file
 !.gitignore
-!stage_0
-!stage_1
-!stage_2
-!stage_3
-!stage_4
-!stage_5
+
+# Folders
+!stage_0/
+!stage_1/
+!stage_2/
+!stage_3/
+!stage_4/
+!stage_5/
+!misc_scripts/

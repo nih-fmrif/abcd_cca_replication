@@ -118,7 +118,7 @@ if (length(badcols) > 0){
     sprintf("All SMs passed quantitative inclusion.")
 }
 
-## Drop any subject who is missing more than 50% of the final 74 SMs
+## Drop any subject who is missing more than 50% of the final SMs
 nda_final_1 <- nda_numeric[rowSums(is.na(nda_numeric[,ica_sm_list])) < (length(ica_sm_list)/2),]    #Drop the subjects
 
 # Drop any bad cols

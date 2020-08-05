@@ -2,26 +2,18 @@
 *
 # Except this file
 !.gitignore
+
+# Folders
 !data
 !logs
 !support_scripts
-!pull_filepaths_0.sh
-!pull_motion_data_1.py
-!motion_analysis_2.py
-!sm_processing_3.r
-!VARS_4.py
-!censoring_data
-!groupICA200.dr
-!groupICA200.gica
-!netmats.m
-!clean_censors.py
-!scan_length_analyzer_5.sh
+
+# Files
+
+# Scripts
 !fix_cleanup.sh
-!classify_scans.py
 !prep_stage_0.sh
 !prep_stage_1.sh
 !prep_stage_2.sh
 !prep_stage_3.sh
 !prep_stage_4.sh
-!icafix_cmd_gen.sh
-!net.py

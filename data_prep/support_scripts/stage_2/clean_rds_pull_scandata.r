@@ -47,7 +47,6 @@ nda3[["subjectid"]] <- sub_ids_new[[1]]
 # Check which subjects from subject_list ARE NOT PRESENT in the RDS dataframe -- we drop these subjects!
 subs_not_in_rds <- setdiff(subject_list,nda3$subjectid)
 
-# Now remove all subjects who are missing their .mat files (specific by file /data/stage_1/subs_with_motion.txt)
 # Format of strings in these files are sub-NDARINVxxxxxxxx
 # Drop subjects not in our list
 nda4 <- nda3[nda3$subjectid %in% subject_list,]
