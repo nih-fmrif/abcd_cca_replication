@@ -92,7 +92,7 @@ while i < split_iters:
     for fam_id in family_ids:
         subs = list(df_final.loc[df_final['rel_family_id'] == fam_id, 'subjectid'].values)
         randval = secrets.randbelow(100)
-        if randval <= splitpct:
+        if randval <= split_pct:
             # 80% set
             G1.extend(subs)
         else:
