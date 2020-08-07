@@ -6,13 +6,16 @@
 import sys
 import os
 import pandas as pd
-import datetime
+import secrets
 
 # sub_fp          =   "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_3//final_subjects.txt"
 # sm_fp           =   "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_2//final_subject_measures.txt"
 # motion_data     =   "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_2//subjects_mean_fds.txt"
 # vars_txt        =   "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep//data/stage_2//VARS_no_motion.txt"
 # out_folder      =   "/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data//5013/"
+split_pct       =   80
+split_iters     =   10
+split_tol       =   1
 
 # LOAD DATA
 sub_fp      =   sys.argv[1]
@@ -40,7 +43,7 @@ num_unique_scanners = df_vars['mri_info_device.serial.number'].nunique(dropna=Fa
 unique_scanners = list(df_vars['mri_info_device.serial.number'].unique().astype(str))
 unique_scanners.sort()
 
-# Folder to write our our confound column names
+# File to write our our confound column names
 scanner_cols_file = open("{}/scanner_confounds.txt".format(out_folder),'a')
 
 # Perform the encoding
@@ -58,19 +61,63 @@ for i in range(0,num_unique_scanners-1,1):
 
 scanner_cols_file.close()
 
+
+# STEP 2 - Append the mean FD data and
 df_motion = pd.read_csv(motion_data, sep=',')
 # Extract the appropriate subjects from the motion file
 df_motion = df_motion[df_motion['subjectid'].isin(final_subs)]
-
 # Merge the df_vars and df_motion
 df_final = df_vars.merge(df_motion,on='subjectid',how='left')
 
+# STEP 3 - Sort subjects alphabetically
 # Finally, sort the rows alphabetically (ASCENDING ORDER) based on the subject ID (for future ref, since the final VARS.txt file has NO INDEX!)
 # This will sort subject id A-->Z and row index 0-->N
 df_final.sort_values('subjectid',inplace=True)
 # df_final = df_final[sms]
 # Sort columns in descending order (so Zygosity is last)
 df_final.sort_index(axis=1, inplace=True, ascending=False)
+
+# STEP 4 - Produce our 10 80-20 split subsets
+# df_final[df_final['rel_family_id'].isnull()]
+# df_final[df_final['rel_family_id'].notnull()]
+# Generate 10 files with subject IDs for the train set of 80pct of subject
+# Apply a tolerance of +/- 1pct to determine valid sets
+family_ids = list(df_final['rel_family_id'].unique())
+G1_sets=[]
+i=0
+cnt=0
+while i < split_iters:
+    G1 = []
+    G2 = []
+    for fam_id in family_ids:
+        subs = list(df_final.loc[df_final['rel_family_id'] == fam_id, 'subjectid'].values)
+        randval = secrets.randbelow(100)
+        if randval <= splitpct:
+            # 80% set
+            G1.extend(subs)
+        else:
+            # 20% set
+            G2.extend(subs)
+    totlen=len(G1)+len(G2)
+    # Confirm that the split is within our 1% tolerance
+    if 100*len(G1)/totlen >= split_pct-split_tol and 100*len(G1)/totlen <= split_pct+split_tol:
+        # Valid set
+        G1_sets.append(G1)
+        i+=1
+        P="PASS"
+    else:
+        P=""
+    print("Split iteration {} - 80/20 split is: {} {} - tot subjects {} - {}".format(cnt, len(G1)/totlen, len(G2)/totlen, totlen, P))
+    print("Overlap between train and test sets is (this is just a sanity check): {}".format(len(list(set(G1) & set(G2)))))
+    cnt+=1
+
+# Save the iteration lists to the folder abcd_cca_replication/data/<NUMSUBS>/iterations as .txt files, one subject per line
+cnt=1
+for G1_set in G1_sets:
+    with open("{}/iterations/{}.txt".format(out_folder,cnt),'a') as filehandle:
+        for ln in G1_set:
+            filehandle.write('%s\n' % ln)
+    cnt+=1
 
 # Now save the final .txt file
 df_final.to_csv("{}/VARS.txt".format(out_folder), index=False)

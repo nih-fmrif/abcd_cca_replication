@@ -13,3 +13,4 @@
 !abcd_cca_batch.m
 !abcd_perm_agg.m
 !abcd_cca_interactive.m
+!train_test_split.m
