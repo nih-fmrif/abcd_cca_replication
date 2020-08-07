@@ -84,6 +84,7 @@ df_final.sort_index(axis=1, inplace=True, ascending=False)
 # Apply a tolerance of +/- 1pct to determine valid sets
 family_ids = list(df_final['rel_family_id'].unique())
 G1_sets=[]
+G2_sets=[]
 i=0
 cnt=0
 while i < split_iters:
@@ -103,6 +104,7 @@ while i < split_iters:
     if 100*len(G1)/totlen >= split_pct-split_tol and 100*len(G1)/totlen <= split_pct+split_tol:
         # Valid set
         G1_sets.append(G1)
+        G2_sets.append(G2)
         i+=1
         P="PASS"
     else:
@@ -114,8 +116,15 @@ while i < split_iters:
 # Save the iteration lists to the folder abcd_cca_replication/data/<NUMSUBS>/iterations as .txt files, one subject per line
 cnt=1
 for G1_set in G1_sets:
-    with open("{}/iterations/{}.txt".format(out_folder,cnt),'a') as filehandle:
+    with open("{}/iterations/G1_{}.txt".format(out_folder,cnt),'a') as filehandle:
         for ln in G1_set:
+            filehandle.write('%s\n' % ln)
+    cnt+=1
+
+cnt=1
+for G2_set in G2_sets:
+    with open("{}/iterations/G2_{}.txt".format(out_folder,cnt),'a') as filehandle:
+        for ln in G2_set:
             filehandle.write('%s\n' % ln)
     cnt+=1
 
