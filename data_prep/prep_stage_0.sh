@@ -109,7 +109,7 @@ done < $STAGE_0_OUT/all_subjects.txt
 # One folder per subject, containing the censors, number of TRs for each run after censoring for the specified FD threshold
 echo "$(date) - Step 2: Generating swarm file to calculate censors, post-censor length for each subject."
 echo "$(date) - Step 2: Generating swarm file to calculate censors, post-censor length for each subject." >> $PREP_LOG
-python $SUPPORT_SCRIPTS/stage_0/stage_0_swarm_gen.py $STAGE_0_OUT/subjects_with_rsfmri.txt $SUPPORT_SCRIPTS/stage_0/abcd_censor.py $FD_THRESH 5 $STAGE_0_OUT/censor_files $STAGE_0_OUT
+$PYTHON $SUPPORT_SCRIPTS/stage_0/stage_0_swarm_gen.py $STAGE_0_OUT/subjects_with_rsfmri.txt $SUPPORT_SCRIPTS/stage_0/abcd_censor.py $FD_THRESH 5 $STAGE_0_OUT/censor_files $STAGE_0_OUT
 
 
 echo "$(date) - STOP" >> $PREP_LOG

@@ -96,7 +96,7 @@ echo "$(date) - START" >> $PREP_LOG
 # STEP 1
 # Generate swarm commands
 echo "$(date) - Generating .swarm file with commands for classifying scans and subjects for use."
-python $SUPPORT_SCRIPTS/stage_1/stage_1_swarm_gen.py $STAGE_0_OUT/subjects_with_rsfmri.txt $ABCD_CCA_REPLICATION $SUPPORT_SCRIPTS/stage_1/subject_classifier.sh $STAGE_1_OUT
+$PYTHON $SUPPORT_SCRIPTS/stage_1/stage_1_swarm_gen.py $STAGE_0_OUT/subjects_with_rsfmri.txt $ABCD_CCA_REPLICATION $SUPPORT_SCRIPTS/stage_1/subject_classifier.sh $STAGE_1_OUT
 
 echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!"
 echo "          swarm -f $STAGE_1_OUT/stage_1.swarm -b 500 --logdir $STAGE_1_OUT/swarm_logs/ --time=00:10:00 --job-name stage_1"

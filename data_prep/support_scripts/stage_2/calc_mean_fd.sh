@@ -39,7 +39,7 @@ else
         echo "$tsv_paths" > $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt
 
         # Now call python script to calc
-        python $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py $sub $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt $STAGE_2_OUT/motion_data/$sub.txt
+        $PYTHON $SUPPORT_SCRIPTS/stage_2/subject_motion_to_meanFD.py $sub $DATA_PREP/data/stage_1/classifiers/0.3mm/$sub.txt $STAGE_2_OUT/motion_data/${sub}_tsv_paths.txt $STAGE_2_OUT/motion_data/$sub.txt
 
     else
         # Error, skip this subject

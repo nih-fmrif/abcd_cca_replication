@@ -81,7 +81,7 @@ THRESH_TO_USE=$SCAN_FD_THRESH_1
 # concat_censor_out_fp    =   sys.argv[8]
 # min_tps                 =   int(sys.argv[9])
 # scan_fd_thresh          =   float(sys.argv[10])
-python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $STAGE_1_OUT/censor_file_paths/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $CONCAT_CENSORS/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
+$PYTHON $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $STAGE_1_OUT/censor_file_paths/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $CONCAT_CENSORS/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
 result=$?
 
 # Check that the subject has enough total time based on returned "result"
@@ -145,7 +145,7 @@ fi
 
 # STEP 2 - 0.3mm (FD_THRESH), SCAN_FD_THRESH_2
 THRESH_TO_USE=$SCAN_FD_THRESH_2
-python $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $STAGE_1_OUT/censor_file_paths/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $CONCAT_CENSORS/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
+$PYTHON $SUPPORT_SCRIPTS/stage_1/scan_subject_classifier.py $sub $pre_censor_lens $post_censor_lens $STAGE_1_OUT/motion_tsv_files/${sub}.txt $STAGE_1_OUT/censor_file_paths/${sub}.txt $CLASSIFIERS/$THRESH_TO_USE/$sub.txt $SUBJECT_MEAN_FD_DIR/$THRESH_TO_USE/$sub.txt $CONCAT_CENSORS/$THRESH_TO_USE/$sub.txt $MIN_TPS $THRESH_TO_USE
 result=$?
 
 # Check that the subject has enough total time based on returned "result"
