@@ -7,8 +7,8 @@
 
 usage()
 {
-	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/raw/nda2.0.1.Rds> <path/to/reprocessed/DCAN/output/"
-    echo "ex: ./create_config.sh /data/ABCD/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/"
+	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/raw/nda2.0.1.Rds> <path/to/reprocessed/DCAN/output/> <path/to/conda/python>"
+    echo "ex: ./create_config.sh /data/ABCD/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/goyaln2/conda/envs/abcd_cca_replication/bin/python"
     # echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
     # echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 }
@@ -22,6 +22,7 @@ fi
 BIDS_PATH=$1
 NDA_RDS_RAW=$2
 DCAN_REPROC=$3
+PYTHON=$4
 DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 DATA_PREP=$PWD/data_prep/
 MAIN_REPO_DATA_FOLDER=$PWD/data/
@@ -100,6 +101,8 @@ echo "STAGE_5_OUT=$STAGE_5_OUT"
 echo "FINAL_SUBJECTS=$FINAL_SUBJECTS"
 echo "FINAL_SUBJECT_MEASURES=$FINAL_SUBJECT_MEASURES"
 
+echo "PYTHON=$PYTHON"
+
 echo
 echo "--VARIABLES--"
 echo "TR_INTERVAL=$TR_INTERVAL"
@@ -138,3 +141,5 @@ echo "MIN_TPS=$MIN_TPS" >> $CONFIG
 echo "FD_THRESH=$FD_THRESH" >> $CONFIG
 echo "SCAN_FD_THRESH_1=$SCAN_FD_THRESH_1" >> $CONFIG
 echo "SCAN_FD_THRESH_2=$SCAN_FD_THRESH_2" >> $CONFIG
+
+echo "PYTHON=$PYTHON" >> $CONFIG
