@@ -99,7 +99,7 @@ while i < split_iters:
             # 20% set
             G2.extend(subs)
     totlen=len(G1)+len(G2)
-    # Confirm that the split is within our 1% tolerance
+    # Confirm that the split is within our percentage tolerance
     if 100*len(G1)/totlen >= split_pct-split_tol and 100*len(G1)/totlen <= split_pct+split_tol:
         # Valid set
         G1_sets.append(G1)
