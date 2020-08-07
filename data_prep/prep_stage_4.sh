@@ -41,7 +41,7 @@ echo "Generating subject-level connectomes using FSLNets. This may take a while 
 
 # STEP 2 - Generate the NET matrix
 echo "Generating the aggregated subject connectome matrix."
-python $SUPPORT_SCRIPTS/stage_4/NET.py $STAGE_4_OUT/$NUMSUBS/raw_netmats_001.txt 200 $NUMSUBS $STGE_3_OUT/paths_to_NIFTI_files.txt $FINAL_SUBJECTS $MAIN_REPO_DATA_FOLDER/$NUMSUBS/NET.txt
+# python $SUPPORT_SCRIPTS/stage_4/NET.py $STAGE_4_OUT/$NUMSUBS/raw_netmats_001.txt 200 $NUMSUBS $STGE_3_OUT/paths_to_NIFTI_files.txt $FINAL_SUBJECTS $MAIN_REPO_DATA_FOLDER/$NUMSUBS/NET.txt
 
 # STEP 3 - Generate VARS matrix
 echo "Generating the finalized subject measure matrix."

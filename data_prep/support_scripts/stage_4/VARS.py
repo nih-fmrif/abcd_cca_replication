@@ -18,10 +18,10 @@ split_iters     =   10
 split_tol       =   1
 
 # LOAD DATA
-sub_fp      =   sys.argv[1]
-sm_fp       =   sys.argv[2]
-motion_data =   sys.argv[3]
-vars_txt    =   sys.argv[4]
+sub_fp          =   sys.argv[1]
+sm_fp           =   sys.argv[2]
+motion_data     =   sys.argv[3]
+vars_txt        =   sys.argv[4]
 out_folder      =   sys.argv[5]
 
 final_subs = [line.rstrip('\n') for line in open(sub_fp)]
