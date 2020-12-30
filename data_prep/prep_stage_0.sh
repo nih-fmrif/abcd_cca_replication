@@ -46,8 +46,10 @@ fi
 STAGE_0_OUT=$DATA_PREP/data/stage_0/
 if [[ -d $STAGE_0_OUT ]]; then
     rm $STAGE_0_OUT/*.txt
+    rm $STAGE_0_OUT/swarm_logs/*.{e,o}
 else
     mkdir -p $STAGE_0_OUT
+    mkdir -p $STAGE_0_OUT/swarm_logs/
 fi
 
 # Check if we have censor files directory
@@ -111,6 +113,13 @@ echo "$(date) - Step 2: Generating swarm file to calculate censors, post-censor 
 echo "$(date) - Step 2: Generating swarm file to calculate censors, post-censor length for each subject." >> $PREP_LOG
 $PYTHON $SUPPORT_SCRIPTS/stage_0/stage_0_swarm_gen.py $STAGE_0_OUT/subjects_with_rsfmri.txt $SUPPORT_SCRIPTS/stage_0/abcd_censor.py $FD_THRESH 5 $STAGE_0_OUT/censor_files $STAGE_0_OUT
 
+# Print command to console for user to execute manually
+echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!"
+echo "          swarm -f $STAGE_0_OUT/stage_0.swarm -b 12 -g 12 --time 00:25:00 --module fsl --logdir $STAGE_0_OUT/swarm_logs/ --job-name stage_0"
+
+# Print to log
+echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!" >> $PREP_LOG
+echo "          swarm -f $STAGE_0_OUT/stage_0.swarm -b 12 -g 12 --time 00:25:00 --module fsl --logdir $STAGE_0_OUT/swarm_logs/ --job-name stage_0" >> $PREP_LOG
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 0 LOG ---" >> $PREP_LOG
