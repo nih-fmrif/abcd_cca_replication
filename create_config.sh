@@ -8,7 +8,7 @@
 usage()
 {
 	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/raw/nda2.0.1.Rds> <path/to/reprocessed/DCAN/output/> <path/to/conda/python>"
-    echo "ex: ./create_config.sh /data/ABCD/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/goyaln2/conda/envs/abcd_cca_replication/bin/python"
+    echo "ex: ./create_config.sh /data/ABCD_MBDU/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/goyaln2/conda/envs/abcd_cca_replication/bin/python"
     # echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
     # echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 }
