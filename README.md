@@ -19,9 +19,7 @@ The script uses the following packages:
 - libsvm-3.24
 - L1precision
 
-This pipeline has been tested on CentOS Liux 7 (Core)
-Other versions of these tools may work, but have NOT been tested.
-
+This pipeline has been tested on CentOS Liux 7 (Core). Other versions of these tools may work, *but have NOT been tested*.
 
 Other info:
 
