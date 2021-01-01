@@ -39,7 +39,7 @@ You will need to download the NDA RDS file for the associated ABCD release you'r
 
 ### Running the pipeline
 1. Run /create_config.sh/ and provide the absolute paths to:
-    - the main abcd_bids folder (for example: )
+    - the main abcd_bids folder (for example, for NIH Biowulf users, */data/ABCD_MBDU/abcd_bids/bids/*)
     - the NDA RDS file
     - the location of the ABCD data reprocessed with the DCAN pipeline
     - the absolute path to the conda environment install of python
@@ -55,6 +55,17 @@ You will need to download the NDA RDS file for the associated ABCD release you'r
 this version is used to develop the "winkler" method, which does two things differently than the original pipeline (corrections to the methodology)
 1. we use scanner ID hash as a confound instead of abcd_site and scanner manufacturer -- why? because this is a better, more specific confound. BUT, to use this, we need to encode the confounds a bit differently. This is accomplished by the stage_4/VARS.py script.
 2. We need to do our CCA pre-processing a bit differently, according to Permutation inference for canonical correlation analysis Winkler Et al. Neuroimage 2020.
+
+### Run Notes:
+1. Stage 0 swarm can take up to 24 hours to run completely. In the swarm error logs, you may see the following error, whose cause and effect is unkown, but appears to be irrelevant:
+```
+slurmstepd: error: _is_a_lwp: open() /proc/24097/status failed: No such file or directory
+```
+
+### Future development notes:
+1. Modify the pipeline so the user does not need to manually activate the Conda environment, use a path variable in the pipeline.config file
+2. Modify the logging system so that there are versioned log files for the pipeline (this functionality could be implemented by the create_config.sh script)
+
 
 
 
