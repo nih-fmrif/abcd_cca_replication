@@ -3,12 +3,20 @@
 # prep_stage_1.sh
 # Created: 6/15/20
 # Updated: 6/22/20 (pipeline_version_1.4)
+# Updated: 12/29/20 (updated comments for clarity)
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
-# 
+# 1st stage in our data preparation pipeline. It does the following steps:
+#   0.  Generate the data preparation Stage 1 directory structure
+#   1.  Generate a swarm file that user must run.
+#       This swarm file will look at each available subject and determine which of their scans are valid for inclusion based on number of timepoints available at motion thresholds of 0.2 and 0.3mm.
+
+# Expected tools on path:
+# None
 
 # Example usage:
 # ./prep_stage_1.sh
+
 
 # Check for config
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
@@ -20,7 +28,6 @@ else
     echo "$ABCD_CCA_REPLICATION/pipeline.config does not exist! Please run create_config.sh."
     exit 1
 fi
-
 
 # Check if the following folders exists
 if [[ -d "$STAGE_1_OUT" ]]; then
@@ -98,11 +105,13 @@ echo "$(date) - START" >> $PREP_LOG
 echo "$(date) - Generating .swarm file with commands for classifying scans and subjects for use."
 $PYTHON $SUPPORT_SCRIPTS/stage_1/stage_1_swarm_gen.py $STAGE_0_OUT/subjects_with_rsfmri.txt $ABCD_CCA_REPLICATION $SUPPORT_SCRIPTS/stage_1/subject_classifier.sh $STAGE_1_OUT
 
+# Print command to console for user to execute manually
 echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!"
-echo "          swarm -f $STAGE_1_OUT/stage_1.swarm -b 500 --logdir $STAGE_1_OUT/swarm_logs/ --time=00:10:00 --job-name stage_1"
+echo "          swarm -f $STAGE_1_OUT/stage_1.swarm -b 25 --logdir $STAGE_1_OUT/swarm_logs/ --time=00:10:00 --job-name stage_1"
 
+# Print to log
 echo "$(date) - swarm file created, call with the following commands. MAKE SURE TO ACTIVATE ABCD_CCA_REPLICATION CONDA ENVIRONMENT PRIOR TO RUNNING!" >> $PREP_LOG
-echo "          swarm -f $STAGE_1_OUT/stage_1.swarm -b 500 --logdir $STAGE_1_OUT/swarm_logs/ --time=00:10:00 --job-name stage_1" >> $PREP_LOG
+echo "          swarm -f $STAGE_1_OUT/stage_1.swarm -b 25 --logdir $STAGE_1_OUT/swarm_logs/ --time=00:10:00 --job-name stage_1" >> $PREP_LOG
 
 echo "$(date) - STOP" >> $PREP_LOG
 echo "--- END STAGE 1 LOG ---" >> $PREP_LOG
