@@ -36,11 +36,17 @@ else
     mkdir -p $STAGE_3_OUT/NIFTI/
 fi
 
+
+echo "--- STAGE 3 LOG ---" >> $PREP_LOG
+echo "$(date) - START" >> $PREP_LOG
+
 echo
 echo "--- PREP_STAGE_3 ---"
+echo "$(date) - START"
 echo "PREP STAGE 3 Requires some steps to be performed manually. A number of scripts will be run to generate batch commands (designed for the NIH Biowulf) along with instructions on how to use the commands."
 echo "If you are not using the NIH Biowulf, you will need to adapt these commands to your own HPC."
 
+# Step 1
 echo "- STEP 1: ICA+FIX -"
 echo "- For the ICA+FIX runs, we recommend using our included fix_multi_run.sh script, with ICA+FIX 1.06.15 and HPC pipeline 4.1.3"
 echo "- You will need to properly configure the ICA+FIX settings.sh file for your system."
@@ -58,6 +64,12 @@ echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm."
 echo "- Run the swarm as follows:"
 echo "      swarm -f icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix"
 
+echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm." >> $PREP_LOG
+echo "- Run the swarm as follows:" >> $PREP_LOG
+echo "      swarm -f icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix" >> $PREP_LOG
+
+
+# Step 2 and 3
 echo
 echo "- STEP 2: Get final subject list (based on presence of task-rest_concat_hp2000_clean.nii.gz) -"
 echo "- STEP 3: Generate censor+truncate commands)"
@@ -65,18 +77,44 @@ echo "- NOTE, Step 3 will require manually submitting/running a SWARM job to do 
 echo "- To perform steps 2 & 3, run the script:"
 echo "      $SUPPORT_SCRIPTS/stage_3/prep_stage_3_steps2and3.sh $ABCD_CCA_REPLICATION"
 
+echo "- NOTE, Step 3 will require manually submitting/running a SWARM job to do censor+truncate." >> $PREP_LOG
+echo "- To perform steps 2 & 3, run the script:" >> $PREP_LOG
+echo "      $SUPPORT_SCRIPTS/stage_3/prep_stage_3_steps2and3.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
+
+
+# Step 4
 echo
 echo "- STEP 4: MELODIC Group-ICA -"
 echo "- Run MELODIC using the script:"
 echo "      $SUPPORT_SCRIPTS/stage_3/run_melodic.sh $ABCD_CCA_REPLICATION"
 
+echo "- STEP 4: MELODIC Group-ICA -" >> $PREP_LOG
+echo "- Run MELODIC using the script:" >> $PREP_LOG
+echo "      $SUPPORT_SCRIPTS/stage_3/run_melodic.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
+
+
+# Step 5
 echo
 echo "- STEP 5: dual_regression -"
 echo "- Run dual_regression using the script:"
 echo "      $SUPPORT_SCRIPTS/stage_3/run_dual_regression.sh $ABCD_CCA_REPLICATION"
 
+echo "- STEP 5: dual_regression -" >> $PREP_LOG
+echo "- Run dual_regression using the script:" >> $PREP_LOG
+echo "      $SUPPORT_SCRIPTS/stage_3/run_dual_regression.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
+
+
+# Step 6
 echo
 echo "- STEP 6: slices_summary -"
 echo "- Run slices_summary using the script:"
 echo "      $SUPPORT_SCRIPTS/stage_3/run_slices_summary.sh $ABCD_CCA_REPLICATION"
 echo
+
+echo "- STEP 6: slices_summary -" >> $PREP_LOG
+echo "- Run slices_summary using the script:" >> $PREP_LOG
+echo "      $SUPPORT_SCRIPTS/stage_3/run_slices_summary.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
+
+echo "$(date) - STOP" >> $PREP_LOG
+echo "--- END STAGE 3 LOG ---" >> $PREP_LOG
+echo "" >> $PREP_LOG
