@@ -23,12 +23,29 @@ else
     exit 1
 fi
 
+
+if [[ -f $CONFIG ]]; then
+
+else
+    # config doesn't exist, so create it
+    touch $CONFIG
+fi
+
 # Check if the following folders/files exist
 if [[ -d $STAGE_3_OUT ]]; then
-    rm -rf $STAGE_3_OUT/*.txt
-    rm -rf $STAGE_3_OUT/*.Rds
-    rm -rf $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
-    rm -rf $STAGE_3_OUT/swarm_logs/censor_and_truncate/*.{e,o}
+    read -p "Stage 3 Outputs Exist. Are you sure you want to overwrite it [y/n]? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "OVERWRITING STAGE 3 FILES."
+        rm -rf $STAGE_3_OUT/*.txt
+        rm -rf $STAGE_3_OUT/*.Rds
+        rm -rf $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
+        rm -rf $STAGE_3_OUT/swarm_logs/censor_and_truncate/*.{e,o}
+    else
+        # Exit
+        echo "Stage 3 files not overwritten."
+        exit 1
+    fi
 else
     mkdir -p $STAGE_3_OUT
     mkdir -p $STAGE_3_OUT/swarm_logs/icafix/
