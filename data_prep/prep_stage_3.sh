@@ -23,14 +23,6 @@ else
     exit 1
 fi
 
-
-if [[ -f $CONFIG ]]; then
-
-else
-    # config doesn't exist, so create it
-    touch $CONFIG
-fi
-
 # Check if the following folders/files exist
 if [[ -d $STAGE_3_OUT ]]; then
     read -p "Stage 3 Outputs Exist. Are you sure you want to overwrite it [y/n]? " -n 1 -r
