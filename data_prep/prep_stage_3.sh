@@ -35,6 +35,7 @@ if [[ -d $STAGE_3_OUT ]]; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "OVERWRITING STAGE 3 FILES."
         echo "OVERWRITING STAGE 3 FILES." >> $PREP_LOG
+        rm -rf $STAGE_3_OUT/*.swarm
         rm -rf $STAGE_3_OUT/*.txt
         rm -rf $STAGE_3_OUT/*.Rds
         rm -rf $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
