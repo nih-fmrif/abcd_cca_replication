@@ -23,12 +23,18 @@ else
     exit 1
 fi
 
+
+echo "--- STAGE 3 LOG ---" >> $PREP_LOG
+echo "$(date) - START" >> $PREP_LOG
+
+
 # Check if the following folders/files exist
 if [[ -d $STAGE_3_OUT ]]; then
     read -p "Stage 3 Outputs Exist. Are you sure you want to overwrite it [y/n]? " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "OVERWRITING STAGE 3 FILES."
+        echo "OVERWRITING STAGE 3 FILES." >> $PREP_LOG
         rm -rf $STAGE_3_OUT/*.txt
         rm -rf $STAGE_3_OUT/*.Rds
         rm -rf $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
@@ -42,10 +48,6 @@ else
     mkdir -p $STAGE_3_OUT/swarm_logs/censor_and_truncate/
     mkdir -p $STAGE_3_OUT/NIFTI/
 fi
-
-
-echo "--- STAGE 3 LOG ---" >> $PREP_LOG
-echo "$(date) - START" >> $PREP_LOG
 
 echo
 echo "--- PREP_STAGE_3 ---"
@@ -69,11 +71,11 @@ done < $STAGE_2_OUT/stage_2_final_subjects.txt
 echo
 echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm."
 echo "- Run the swarm as follows:"
-echo "      swarm -f icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix"
+echo "      swarm -f $STAGE_3_OUT/icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix"
 
 echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm." >> $PREP_LOG
 echo "- Run the swarm as follows:" >> $PREP_LOG
-echo "      swarm -f icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix" >> $PREP_LOG
+echo "      swarm -f $STAGE_3_OUT/icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix" >> $PREP_LOG
 
 
 # Step 2 and 3
