@@ -1,8 +1,13 @@
 
-newpath=$1
+# example usage:
+#   ./icafix_swarm_patch.sh /data/NIMH_scratch/abcd_cca/abcd_cca_replication/ /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/
+
+
+ABCD_CCA_REPLICATION=$1
+newpath=$2
+
 
 # Check for and load config
-ABCD_CCA_REPLICATION="$(dirname "$PWD")"
 if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
     # config exists, so run it
     # This will load BIDS_PATH, DERIVATIVES_PATH, DATA_PREP variables
