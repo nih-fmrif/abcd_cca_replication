@@ -25,8 +25,4 @@ done < $newpath/icafix_failed_missing.txt
 echo
 echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm."
 echo "- Run the swarm as follows:"
-echo "      swarm -f $STAGE_3_OUT/icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix"
-
-echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm." >> $PREP_LOG
-echo "- Run the swarm as follows:" >> $PREP_LOG
-echo "      swarm -f $STAGE_3_OUT/icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix" >> $PREP_LOG
+echo "      swarm -f $STAGE_3_OUT/icafix_patch.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix"
