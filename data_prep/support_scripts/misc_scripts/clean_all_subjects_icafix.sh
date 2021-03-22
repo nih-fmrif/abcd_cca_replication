@@ -6,6 +6,9 @@
 
 # NOTE, the subjects need to be folders, NOT .tar files
 
+#Example command:
+# ./clean_all_subjects_icafix.sh /data/NIMH_scratch/abcd_cca/abcd_cca_replication/data_prep/data/stage_2/stage_2_final_subjects.txt /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/NIMH_scratch/abcd_cca/abcd_cca_replication/data_prep/data/stage_3/cleanup
+
 # path to txt file with list of subjects that were run
 subjects_run=$1
 # absolute path to /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/
