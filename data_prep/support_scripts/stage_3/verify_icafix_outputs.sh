@@ -46,7 +46,8 @@ if [[ -d $STAGE_3_OUT ]]; then
 fi
 
 # store list of all subject folders located in $DCAN_REPROC
-ls -d $DCAN_REPROC/*/ | sed 's#/##' > $STAGE_3_OUT/tmp_filenames.txt
+# ls -d $DCAN_REPROC/*/ | sed 's#/##' > $STAGE_3_OUT/tmp_filenames.txt
+find $DCAN_REPROC -type d -maxdepth 1| awk -F/ '{print $NF}' > $STAGE_3_OUT/tmp_filenames.txt
 
 while read line
 do
@@ -63,8 +64,8 @@ done < filenames.txt
 # Of subjects destined for ICA+FIX (which are in $STAGE_2_OUT/stage_2_final_subjects.txt) see which ones have FAILED ICA+FIX
 comm -12 <(sort $STAGE_2_OUT/stage_2_final_subjects.txt) <(sort $STAGE_3_OUT/tmp_nofile.txt) > $STAGE_3_OUT/ICAFIX_FAILED.txt
 
-rm $STAGE_3_OUT/tmp_filenames.txt
-rm $STAGE_3_OUT/tmp_nofile.txt
+# rm $STAGE_3_OUT/tmp_filenames.txt
+# rm $STAGE_3_OUT/tmp_nofile.txt
 
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
 NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
@@ -90,7 +91,7 @@ if [[ $NUMSUBS -gt 0 ]]; then
     echo "      swarm -f $STAGE_3_OUT/icafix_patch.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix_patch/ --job-name icafix_patch"
 
     echo "After running both the CLEANING and ICA+FIX PATCHING swarms, please re-run this script (verify_icafix_outputs.sh)."
-    
+
 else
     echo "ALL SUBJECTS COMPLETED ICA+FIX SUCCESSFULLY. PIPELINE CAN PROCCED WITH $NUMSUBS_SUCCESS SUBJECTS."
     echo "To proceed with pipeline, please run the following remaining steps for Stage 3:"
