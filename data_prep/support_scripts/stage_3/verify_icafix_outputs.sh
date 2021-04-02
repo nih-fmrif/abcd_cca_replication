@@ -54,7 +54,7 @@ do
     FILE=$line/ses-baselineYear1Arm1/files/MNINonLinear/Results/fix_proc/task-rest_concat_hp2000_clean.nii.gz
     if test -f "$FILE"; then
         # record all subjects that DO HAVE final ICA+FIX output
-        echo "$FILE" >> ICAFIX_SUCCESS.txt
+        echo "$FILE" >> $STAGE_3_OUT/ICAFIX_SUCCESS.txt
     else
         # record all subjects that DO NOT HAVE final ICA+FIX output
         echo "$line" >> $STAGE_3_OUT/tmp_nofile.txt
