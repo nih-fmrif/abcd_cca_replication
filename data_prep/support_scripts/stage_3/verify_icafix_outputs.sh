@@ -49,18 +49,20 @@ fi
 
 # store list of all subject folders located in $DCAN_REPROC
 # ls -d $DCAN_REPROC/*/ | sed 's#/##' > $STAGE_3_OUT/tmp_filenames.txt
-ls -d $DCAN_REPROC/*/ > $STAGE_3_OUT/tmp_foldernames.txt
-# find $DCAN_REPROC -type d -maxdepth 1| awk -F/ '{print $NF}' > $STAGE_3_OUT/tmp_filenames.txt
+# ls -d $DCAN_REPROC/*/ > $STAGE_3_OUT/tmp_foldernames.txt
+
+# example: 'sub-NDARINVXXXXXXXX'
+find $DCAN_REPROC -type d -maxdepth 1| awk -F/ '{print $NF}' > $STAGE_3_OUT/tmp_foldernames.txt
 
 while read line
 do
-    FILE=$line/ses-baselineYear1Arm1/files/MNINonLinear/Results/fix_proc/task-rest_concat_hp2000_clean.nii.gz
+    FILE=$DCAN_REPROC/$line/ses-baselineYear1Arm1/files/MNINonLinear/Results/fix_proc/task-rest_concat_hp2000_clean.nii.gz
     if test -f "$FILE"; then
         # record all subjects that DO HAVE final ICA+FIX output (store their path to the file)
         echo "$FILE" >> $STAGE_3_OUT/ICAFIX_SUCCESS.txt
     else
         # record all subjects that DO NOT HAVE final ICA+FIX output (store subject ID)
-        echo "$line" | awk -F/ '{print $NF}' >> $STAGE_3_OUT/tmp_nofile.txt
+        echo "$line" >> $STAGE_3_OUT/tmp_nofile.txt
     fi
 done < $STAGE_3_OUT/tmp_foldernames.txt
 
