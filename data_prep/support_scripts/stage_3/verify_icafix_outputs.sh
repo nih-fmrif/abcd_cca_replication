@@ -43,25 +43,26 @@ if [[ -d $STAGE_3_OUT ]]; then
     rm $STAGE_3_OUT/ICAFIX_FAILED.txt
     rm $STAGE_3_OUT/cleanup.swarm
     rm $STAGE_3_OUT/icafix_patch.swarm
-    rm $STAGE_3_OUT/tmp_filenames.txt
+    rm $STAGE_3_OUT/tmp_foldernames.txt
     rm $STAGE_3_OUT/tmp_nofile.txt
 fi
 
 # store list of all subject folders located in $DCAN_REPROC
 # ls -d $DCAN_REPROC/*/ | sed 's#/##' > $STAGE_3_OUT/tmp_filenames.txt
-find $DCAN_REPROC -type d -maxdepth 1| awk -F/ '{print $NF}' > $STAGE_3_OUT/tmp_filenames.txt
+ls -d $DCAN_REPROC/*/ > $STAGE_3_OUT/tmp_foldernames.txt
+# find $DCAN_REPROC -type d -maxdepth 1| awk -F/ '{print $NF}' > $STAGE_3_OUT/tmp_filenames.txt
 
 while read line
 do
     FILE=$line/ses-baselineYear1Arm1/files/MNINonLinear/Results/fix_proc/task-rest_concat_hp2000_clean.nii.gz
     if test -f "$FILE"; then
-        # record all subjects that DO HAVE final ICA+FIX output
+        # record all subjects that DO HAVE final ICA+FIX output (store their path to the file)
         echo "$FILE" >> $STAGE_3_OUT/ICAFIX_SUCCESS.txt
     else
-        # record all subjects that DO NOT HAVE final ICA+FIX output
-        echo "$line" >> $STAGE_3_OUT/tmp_nofile.txt
+        # record all subjects that DO NOT HAVE final ICA+FIX output (store subject ID)
+        echo "$line" | awk -F/ '{print $NF}' >> $STAGE_3_OUT/tmp_nofile.txt
     fi
-done < $STAGE_3_OUT/tmp_filenames.txt
+done < $STAGE_3_OUT/tmp_foldernames.txt
 
 # Of subjects destined for ICA+FIX (which are in $STAGE_2_OUT/stage_2_final_subjects.txt) see which ones have FAILED ICA+FIX
 comm -12 <(sort $STAGE_2_OUT/stage_2_final_subjects.txt) <(sort $STAGE_3_OUT/tmp_nofile.txt) > $STAGE_3_OUT/ICAFIX_FAILED.txt
