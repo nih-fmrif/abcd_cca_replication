@@ -59,13 +59,13 @@ do
         # record all subjects that DO NOT HAVE final ICA+FIX output
         echo "$line" >> $STAGE_3_OUT/tmp_nofile.txt
     fi
-done < filenames.txt
+done < $STAGE_3_OUT/tmp_filenames.txt
 
 # Of subjects destined for ICA+FIX (which are in $STAGE_2_OUT/stage_2_final_subjects.txt) see which ones have FAILED ICA+FIX
 comm -12 <(sort $STAGE_2_OUT/stage_2_final_subjects.txt) <(sort $STAGE_3_OUT/tmp_nofile.txt) > $STAGE_3_OUT/ICAFIX_FAILED.txt
 
-# rm $STAGE_3_OUT/tmp_filenames.txt
-# rm $STAGE_3_OUT/tmp_nofile.txt
+rm $STAGE_3_OUT/tmp_filenames.txt
+rm $STAGE_3_OUT/tmp_nofile.txt
 
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
 NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
