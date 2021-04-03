@@ -26,8 +26,8 @@ if [[ -d $STAGE_3_OUT ]]; then
     rm $STAGE_3_OUT/ICAFIX_FAILED.txt
     rm $STAGE_3_OUT/cleanup.swarm
     rm $STAGE_3_OUT/icafix_patch.swarm
-    rm $STAGE_3_OUT/tmp_foldernames.txt
-    rm $STAGE_3_OUT/tmp_nofile.txt
+    # rm $STAGE_3_OUT/tmp_foldernames.txt
+    # rm $STAGE_3_OUT/tmp_nofile.txt
 fi
 
 echo "--- STAGE 3 - VERIFY_ICAFIX_OUTPUTS LOG ---" >> $PREP_LOG
@@ -53,7 +53,7 @@ done < $STAGE_3_OUT/tmp_foldernames.txt
 # Of subjects destined for ICA+FIX (which are in $STAGE_2_OUT/stage_2_final_subjects.txt) see which ones have FAILED ICA+FIX
 comm -12 <(sort $STAGE_2_OUT/stage_2_final_subjects.txt) <(sort $STAGE_3_OUT/tmp_nofile.txt) > $STAGE_3_OUT/ICAFIX_FAILED.txt
 
-rm $STAGE_3_OUT/tmp_filenames.txt
+rm $STAGE_3_OUT/tmp_foldernames.txt
 rm $STAGE_3_OUT/tmp_nofile.txt
 
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
@@ -77,7 +77,7 @@ if [[ $NUMSUBS -gt 0 ]]; then
     echo "- Run the CLEANING swarm as follows:"
     echo "          swarm -f $STAGE_3_OUT/cleanup.swarm -b 10 --logdir $STAGE_3_OUT/swarm_logs/cleanup/ --time=01:00:00 --job-name cleanup"
     echo "- Run the ICA+FIX PATCH swarm as follows:"
-    echo "      swarm -f $STAGE_3_OUT/icafix_patch.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix_patch/ --job-name icafix_patch"
+    echo "      swarm -f $STAGE_3_OUT/icafix_patch.swarm -g 64 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix_patch/ --job-name icafix_patch"
     echo
     echo "After running both the CLEANING and ICA+FIX PATCHING swarms, please re-run this script (verify_icafix_outputs.sh)."
     echo
