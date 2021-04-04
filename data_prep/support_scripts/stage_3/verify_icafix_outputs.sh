@@ -21,14 +21,13 @@ else
     exit 1
 fi
 
-if [[ -d $STAGE_3_OUT ]]; then
-    rm $STAGE_3_OUT/ICAFIX_SUCCESS.txt
+if [[ -f $STAGE_3_OUT/ICAFIX_FAILED.txt ]]; then
     rm $STAGE_3_OUT/ICAFIX_FAILED.txt
-    rm $STAGE_3_OUT/cleanup.swarm
-    rm $STAGE_3_OUT/icafix_patch.swarm
-    # rm $STAGE_3_OUT/tmp_foldernames.txt
-    # rm $STAGE_3_OUT/tmp_nofile.txt
 fi
+if [[ -f $STAGE_3_OUT/ICAFIX_SUCCESS.txt ]]; then
+    rm $STAGE_3_OUT/ICAFIX_SUCCESS.txt
+fi
+
 
 echo "--- STAGE 3 - VERIFY_ICAFIX_OUTPUTS LOG ---" >> $PREP_LOG
 echo "$(date) - START" >> $PREP_LOG
@@ -62,6 +61,10 @@ NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
 if [[ $NUMSUBS -gt 0 ]]; then 
     echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX. These subjects must be re-run before the pipeline can proceed." >> $PREP_LOG
     echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX. These subjects must be re-run before the pipeline can proceed."
+
+    # Remove existing cleanup and ICA+FIX patch swarm files
+    rm $STAGE_3_OUT/cleanup.swarm
+    rm $STAGE_3_OUT/icafix_patch.swarm
 
     # B. GENERATE CLEANING SWARM
     while read sub; do
