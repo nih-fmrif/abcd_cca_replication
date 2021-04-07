@@ -15,4 +15,4 @@ else
     exit 1
 fi
 
-./$SUPPORT_SCRIPTS/stage_3/verify_icafix_outputs.sh $ABCD_CCA_REPLICATION
+sh ./$SUPPORT_SCRIPTS/stage_3/verify_icafix_outputs.sh $ABCD_CCA_REPLICATION
