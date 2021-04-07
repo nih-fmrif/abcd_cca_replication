@@ -35,7 +35,7 @@ echo "$(date) - START" >> $PREP_LOG
 # A. CHECK NUMBER SUBJECTS SUCCESS AND FAIL
 # store list of all subject folders located in $DCAN_REPROC
 # example: 'sub-NDARINVXXXXXXXX'
-find $DCAN_REPROC -type d -maxdepth 1| awk -F/ '{print $NF}' > $STAGE_3_OUT/tmp_foldernames.txt
+# find $DCAN_REPROC -type d -maxdepth 1| awk -F/ '{print $NF}' > $STAGE_3_OUT/tmp_foldernames.txt
 
 while read line
 do
@@ -47,7 +47,7 @@ do
         # record all subjects that DO NOT HAVE final ICA+FIX output (store subject ID)
         echo "$line" >> $STAGE_3_OUT/tmp_nofile.txt
     fi
-done < $STAGE_3_OUT/tmp_foldernames.txt
+done < $STAGE_2_OUT/stage_2_final_subjects.txt
 
 # Of subjects destined for ICA+FIX (which are in $STAGE_2_OUT/stage_2_final_subjects.txt) see which ones have FAILED ICA+FIX
 comm -12 <(sort $STAGE_2_OUT/stage_2_final_subjects.txt) <(sort $STAGE_3_OUT/tmp_nofile.txt) > $STAGE_3_OUT/ICAFIX_FAILED.txt
@@ -55,7 +55,7 @@ comm -12 <(sort $STAGE_2_OUT/stage_2_final_subjects.txt) <(sort $STAGE_3_OUT/tmp
 rm $STAGE_3_OUT/tmp_foldernames.txt
 rm $STAGE_3_OUT/tmp_nofile.txt
 
-NUMSUBS_INPUT$(cat $STAGE_2_OUT/stage_2_final_subjects.txt | wc -l)
+NUMSUBS_INPUT=$(cat $STAGE_2_OUT/stage_2_final_subjects.txt | wc -l)
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
 NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
 
