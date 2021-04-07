@@ -3,12 +3,13 @@
 # create_config.sh
 # Created: 6/15/20
 # Updated: 7/27/20 (added variables for pipeline_version1.5)
+# Update: 4/7/21 (user no longer needs to enter the nda2.0.1.Rds file as input. Now assumed to be in data_prep/data/)
 
 
 usage()
 {
-	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/raw/nda2.0.1.Rds> <path/to/reprocessed/DCAN/output/> <path/to/conda/python>"
-    echo "ex: ./create_config.sh /data/ABCD_MBDU/abcd_bids/bids/ /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/goyaln2/conda/envs/abcd_cca_replication/bin/python"
+	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/reprocessed/DCAN/output/> <path/to/conda/python>"
+    echo "ex: ./create_config.sh /data/ABCD_MBDU/abcd_bids/bids/ /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/goyaln2/conda/envs/abcd_cca_replication/bin/python"
     # echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
     # echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 }
@@ -20,9 +21,9 @@ then
 fi
 
 BIDS_PATH=$1
-NDA_RDS_RAW=$2
-DCAN_REPROC=$3
-PYTHON=$4
+DCAN_REPROC=$2
+PYTHON=$3
+
 DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 DATA_PREP=$PWD/data_prep/
 MAIN_REPO_DATA_FOLDER=$PWD/data/
@@ -41,6 +42,9 @@ STAGE_5_OUT=$DATA_PREP/data/stage_5/
 FINAL_SUBJECTS=$STAGE_3_OUT/final_subjects.txt
 FINAL_SUBJECT_MEASURES=$STAGE_2_OUT/final_subject_measures.txt
 
+# Change file name as needed.
+NDA_RDS_RAW=$DATA_PREP/data/nda2.0.1.Rds
+
 # DONT FORGET TO CHANGE THESE MANUALLY (as needed)!
 TR_INTERVAL=0.8
 MIN_TPS=190
@@ -50,7 +54,7 @@ SCAN_FD_THRESH_2=0.15
 
 
 # THE FOLLOWING GET SET DYANMICALLY IN
-# STAGE_3
+# STAGE_3 (specifically in script verify_icafix_outputs.sh)
 #   $NUMSUBS
 #   $GICA
 #   $DR
