@@ -58,13 +58,17 @@ rm $STAGE_3_OUT/tmp_nofile.txt
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
 NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
 
+echo "ICA+FIX Results:"
+echo "NUMBER SUCCESSFUL: $NUMSUBS_SUCCESS"
+echo "NUMBER FAILED: $NUMSUBS_FAILED. The following failed (top 10 shown):"
+head -n 10 $STAGE_3_OUT/ICAFIX_FAILED.txt
+echo
+
 # PROC_CODE=0 means generate the cleaning and patching swarms
 # PROC_CODE=1 means proceed without the missing subjects
 PROC_CODE=0
 
 if [[ $NUMSUBS_FAILED -gt 0 ]]; then
-    echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX."
-    echo
 
     read -p "Some subjects failed ICA+FIX. Would you like to proceed anyway [y/n]? " -n 1 -r
     echo
@@ -82,7 +86,7 @@ fi
 
 # CHECK IF USER WANTS TO PROCEED
 echo
-read -p "Do you want to proceed [y/n]? " -n 1 -r
+read -p "Do you want to proceed, or exit script [y/n]? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Proceeding..."
