@@ -58,9 +58,30 @@ rm $STAGE_3_OUT/tmp_nofile.txt
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
 NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
 
-if [[ $NUMSUBS -gt 0 ]]; then 
-    echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX. These subjects must be re-run before the pipeline can proceed." >> $PREP_LOG
-    echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX. These subjects must be re-run before the pipeline can proceed."
+# PROC_CODE=0 means generate the cleaning and patching swarms
+# PROC_CODE=1 means proceed without the missing subjects
+PROC_CODE=0
+
+if [[ $NUMSUBS_FAILED -gt 0 ]]; then
+    echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX."
+    echo
+
+    read -p "Some subjects failed ICA+FIX. Would you like to proceed anyway [y/n]? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # PROCEED WITHOUT SUBJECTS
+        PROC_CODE=1
+    else
+        # WRITE clean and patching swarm files
+        PROC_CODE=0
+    fi
+else
+    echo "No subjects failed ICA+FIX. PIPELINE CAN PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS."
+    PROC_CODE=1
+fi
+
+if [[ $NUMSUBS -eq 0 ]]; then 
+    echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX." >> $PREP_LOG
 
     # Remove existing cleanup and ICA+FIX patch swarm files
     rm $STAGE_3_OUT/cleanup.swarm
@@ -93,10 +114,33 @@ if [[ $NUMSUBS -gt 0 ]]; then
     echo "- Run the ICA+FIX PATCH swarm as follows:" >> $PREP_LOG
     echo "      swarm -f $STAGE_3_OUT/icafix_patch.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix_patch/ --job-name icafix_patch" >> $PREP_LOG
 
-else
-    echo "ALL SUBJECTS COMPLETED ICA+FIX SUCCESSFULLY. PIPELINE CAN PROCCED WITH $NUMSUBS_SUCCESS SUBJECTS."
+elif [[ $NUMSUBS -eq 1 ]]; then 
+    echo "PIPELINE CAN PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS."
+    echo "PIPELINE CAN PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS." >> $PREP_LOG
     echo "To proceed with pipeline, please run the following remaining steps for Stage 3:"
 
+    # WRITE VARIABLES TO CONFIG FILE
+    # store subject number in config
+    echo "NUMSUBS=$NUMSUBS_SUCCESS" >> $CONFIG
+
+    # Make the melodic directory & save the path
+    GICA=$STAGE_3_OUT/${NUMSUBS}.gica
+    echo "GICA=$GICA" >> $CONFIG
+    mkdir -p $GICA
+
+    # Save path for dual_regression output
+    DR=$STAGE_3_OUT/${NUMSUBS}.dr
+    echo "DR=$DR" >> $CONFIG
+
+    # # Make our /data/$NUMSUBS folder where our MATLAB processing will go in Stage 4
+    CCA_PROC_DATA=$MAIN_REPO_DATA_FOLDER/$NUMSUBS
+    echo "CCA_PROC_DAT=$CCA_PROC_DATA" >> $CONFIG
+    mkdir -p $CCA_PROC_DATA/permutations
+    mkdir -p $CCA_PROC_DATA/iterations
+    mkdir -p $CCA_PROC_DATA/iterations/swarm/logs
+
+
+    # PRINT REMAINING COMMANDS FOR USER TO RUN
     # Step 2
     echo
     echo "- STEP 2: Generate censor+truncate commands)"
