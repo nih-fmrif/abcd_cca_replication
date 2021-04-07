@@ -2,9 +2,9 @@
 
 # prep_stage_3.sh
 # Created: 6/21/20 (pipeline_version_1.3)
-# Updated: (rewritten) 7/24/20 pipeline_version_1.5
+# Updated: 4/5/2021
 
-# Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
+# Written by Nikhil Goyal, National Institute of Mental Health, 2019-2021
 
 # Expected tools on PATH:
 # None.
@@ -15,8 +15,6 @@
 # Check for and load config
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
 if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
-    # config exists, so run it
-    # This will load BIDS_PATH, DERIVATIVES_PATH, DATA_PREP variables
     . $ABCD_CCA_REPLICATION/pipeline.config
 else
     echo "$ABCD_CCA_REPLICATION/pipeline.config does not exist! Please run create_config.sh."
@@ -38,6 +36,7 @@ if [[ -d $STAGE_3_OUT ]]; then
         rm -rf $STAGE_3_OUT/*.swarm
         rm -rf $STAGE_3_OUT/*.txt
         rm -rf $STAGE_3_OUT/*.Rds
+        rm -rf $STAGE_3_OUT/swarm_logs/cleanup/*.{e,o}
         rm -rf $STAGE_3_OUT/swarm_logs/icafix/*.{e,o}
         rm -rf $STAGE_3_OUT/swarm_logs/censor_and_truncate/*.{e,o}
     else
@@ -45,7 +44,9 @@ if [[ -d $STAGE_3_OUT ]]; then
     fi
 else
     mkdir -p $STAGE_3_OUT
+    mkdir -p $STAGE_3_OUT/swarm_logs/cleanup/
     mkdir -p $STAGE_3_OUT/swarm_logs/icafix/
+    mkdir -p $STAGE_3_OUT/swarm_logs/icafix_patch/
     mkdir -p $STAGE_3_OUT/swarm_logs/censor_and_truncate/
     mkdir -p $STAGE_3_OUT/NIFTI/
 fi
@@ -74,55 +75,40 @@ echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm."
 echo "- Run the swarm as follows:"
 echo "      swarm -f $STAGE_3_OUT/icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix"
 
-echo "- ICA+FIX SWARM file generated! Located in $STAGE_3_OUT/icafix.swarm." >> $PREP_LOG
-echo "- Run the swarm as follows:" >> $PREP_LOG
-echo "      swarm -f $STAGE_3_OUT/icafix.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix/ --job-name icafix" >> $PREP_LOG
 
-
-# Step 2 and 3
+# Step 2
 echo
-echo "- STEP 2: Get final subject list (based on presence of task-rest_concat_hp2000_clean.nii.gz) -"
-echo "- STEP 3: Generate censor+truncate commands)"
-echo "- NOTE, Step 3 will require manually submitting/running a SWARM job to do censor+truncate."
-echo "- To perform steps 2 & 3, run the script:"
-echo "      $SUPPORT_SCRIPTS/stage_3/prep_stage_3_steps2and3.sh $ABCD_CCA_REPLICATION"
+echo "- STEP 2: Generate censor+truncate commands)"
+echo "- To perform Step 2, run the script:"
+echo "      $SUPPORT_SCRIPTS/stage_3/run_censor_and_truncate.sh $ABCD_CCA_REPLICATION"
 
-echo "- NOTE, Step 3 will require manually submitting/running a SWARM job to do censor+truncate." >> $PREP_LOG
-echo "- To perform steps 2 & 3, run the script:" >> $PREP_LOG
-echo "      $SUPPORT_SCRIPTS/stage_3/prep_stage_3_steps2and3.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
-
-
-# Step 4
+# Step 3
 echo
-echo "- STEP 4: MELODIC Group-ICA -"
+echo "- STEP 3: MELODIC Group-ICA -"
 echo "- Run MELODIC using the script:"
 echo "      $SUPPORT_SCRIPTS/stage_3/run_melodic.sh $ABCD_CCA_REPLICATION"
 
-echo "- STEP 4: MELODIC Group-ICA -" >> $PREP_LOG
-echo "- Run MELODIC using the script:" >> $PREP_LOG
-echo "      $SUPPORT_SCRIPTS/stage_3/run_melodic.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
-
-
-# Step 5
+# Step 4
 echo
-echo "- STEP 5: dual_regression -"
+echo "- STEP 4: dual_regression -"
 echo "- Run dual_regression using the script:"
 echo "      $SUPPORT_SCRIPTS/stage_3/run_dual_regression.sh $ABCD_CCA_REPLICATION"
 
-echo "- STEP 5: dual_regression -" >> $PREP_LOG
-echo "- Run dual_regression using the script:" >> $PREP_LOG
-echo "      $SUPPORT_SCRIPTS/stage_3/run_dual_regression.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
-
-
-# Step 6
+# Step 5
 echo
-echo "- STEP 6: slices_summary -"
+echo "- STEP 5: slices_summary -"
 echo "- Run slices_summary using the script:"
 echo "      $SUPPORT_SCRIPTS/stage_3/run_slices_summary.sh $ABCD_CCA_REPLICATION"
 echo
 
-echo "- STEP 6: slices_summary -" >> $PREP_LOG
-echo "- Run slices_summary using the script:" >> $PREP_LOG
+# Write commands to log
+echo "- STEP 2: Generate censor+truncate commands)" >> $PREP_LOG
+echo "      $SUPPORT_SCRIPTS/stage_3/run_censor_and_truncate.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
+echo "- STEP 3: MELODIC Group-ICA -" >> $PREP_LOG
+echo "      $SUPPORT_SCRIPTS/stage_3/run_melodic.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
+echo "- STEP 4: dual_regression -" >> $PREP_LOG
+echo "      $SUPPORT_SCRIPTS/stage_3/run_dual_regression.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
+echo "- STEP 5: slices_summary -" >> $PREP_LOG
 echo "      $SUPPORT_SCRIPTS/stage_3/run_slices_summary.sh $ABCD_CCA_REPLICATION" >> $PREP_LOG
 
 echo "$(date) - STOP" >> $PREP_LOG
