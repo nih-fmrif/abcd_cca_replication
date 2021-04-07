@@ -55,10 +55,12 @@ comm -12 <(sort $STAGE_2_OUT/stage_2_final_subjects.txt) <(sort $STAGE_3_OUT/tmp
 rm $STAGE_3_OUT/tmp_foldernames.txt
 rm $STAGE_3_OUT/tmp_nofile.txt
 
+NUMSUBS_INPUT$(cat $STAGE_2_OUT/stage_2_final_subjects.txt | wc -l)
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
 NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
 
 echo "ICA+FIX Results:"
+echo "NUMBER INPUT: $NUMSUBS_INPUT"
 echo "NUMBER SUCCESSFUL: $NUMSUBS_SUCCESS"
 echo "NUMBER FAILED: $NUMSUBS_FAILED. The following failed (top 10 shown):"
 head -n 10 $STAGE_3_OUT/ICAFIX_FAILED.txt
