@@ -3,8 +3,13 @@
 # prep_stage_2.sh
 # Created: 6/12/20
 # Updated: 6/22/20 (pipeline_version_1.4)
+# Updated: 12/29/20 (updated comments for clarity)
+# Update:
 
 # Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
+# 2nd stage in our data preparation pipeline. It does the following steps:
+#   1.  
+#   2.  
 
 # Expected tools on PATH:
 # R
@@ -76,7 +81,7 @@ echo "$(date) - Number subjects after RDS cleaning: $NUM_SUBS_RDS" >> $PREP_LOG
 echo "$(date) - STEP 2 - Call final RDS proc script, extract final subjects and SMs" >> $PREP_LOG
 echo "$(date) - STEP 2 - Call final RDS proc script, extract final subjects and SMs"
 Rscript $SUPPORT_SCRIPTS/stage_2/final_rds_proc.r $DATA_PREP/data/stage_2/nda2.0.1_stage_2.Rds $STAGE_2_OUT/prep_stage_2_rds_subjects.txt $DATA_PREP/data/subject_measures.txt $DATA_PREP/data/ica_subject_measures.txt $STAGE_2_OUT
-NUM_SUBS=$(cat $STAGE_2_OUT/final_subjects.txt | wc -l)
+NUM_SUBS=$(cat $STAGE_2_OUT/stage_2_final_subjects.txt | wc -l)
 echo "Final number of subjects: $NUM_SUBS"
 NUM_SMS=$(cat $STAGE_2_OUT/final_subject_measures.txt | wc -l)
 echo "Final number of SMs: $NUM_SMS"
