@@ -16,6 +16,7 @@
 # Files
 !pip_requirements.txt
 !conda_requirements.txt
+!environment.yml
 
 # Scripts
 !create_config.sh

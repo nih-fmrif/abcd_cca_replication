@@ -10,3 +10,5 @@
 !prep_stage_3_steps2and3.sh
 !run_dual_regression.sh
 !run_slices_summary.sh
+!verify_icafix_outputs.sh
+!run_censor_truncate.sh

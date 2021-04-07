@@ -8,3 +8,7 @@
 # Files
 
 # Scripts
+!clean_all_subjects_icafix.sh
+!fix_cleanup.sh
+!icafix_swarm_patch.sh
+!cleanup_given_subject_list.sh
