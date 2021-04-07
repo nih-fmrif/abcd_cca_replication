@@ -76,9 +76,21 @@ if [[ $NUMSUBS_FAILED -gt 0 ]]; then
         PROC_CODE=0
     fi
 else
-    echo "No subjects failed ICA+FIX. PIPELINE CAN PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS."
+    echo "No subjects failed ICA+FIX. PIPELINE CAN PROCCED WITH $NUMSUBS_SUCCESS SUBJECTS."
     PROC_CODE=1
 fi
+
+# CHECK IF USER WANTS TO PROCEED
+echo
+read -p "Do you want to proceed [y/n]? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Proceeding..."
+else
+    # Exit
+    exit 1
+fi
+
 
 if [[ $NUMSUBS -eq 0 ]]; then 
     echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX." >> $PREP_LOG
