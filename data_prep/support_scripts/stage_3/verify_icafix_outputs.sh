@@ -69,7 +69,6 @@ echo
 PROC_CODE=0
 
 if [[ $NUMSUBS_FAILED -gt 0 ]]; then
-
     read -p "Some subjects failed ICA+FIX. Would you like to proceed anyway [y/n]? " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -96,7 +95,7 @@ else
 fi
 
 
-if [[ $NUMSUBS -eq 0 ]]; then 
+if [[ $PROC_CODE -eq 0 ]]; then 
     echo "WARNING: $NUMSUBS_FAILED subjects have failed ICA+FIX." >> $PREP_LOG
 
     # Remove existing cleanup and ICA+FIX patch swarm files
@@ -130,7 +129,7 @@ if [[ $NUMSUBS -eq 0 ]]; then
     echo "- Run the ICA+FIX PATCH swarm as follows:" >> $PREP_LOG
     echo "      swarm -f $STAGE_3_OUT/icafix_patch.swarm -g 32 --gres=lscratch:50 --time 24:00:00 --logdir $STAGE_3_OUT/swarm_logs/icafix_patch/ --job-name icafix_patch" >> $PREP_LOG
 
-elif [[ $NUMSUBS -eq 1 ]]; then 
+elif [[ $PROC_CODE -eq 1 ]]; then 
     echo "PIPELINE CAN PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS."
     echo "PIPELINE CAN PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS." >> $PREP_LOG
     echo "To proceed with pipeline, please run the following remaining steps for Stage 3:"
