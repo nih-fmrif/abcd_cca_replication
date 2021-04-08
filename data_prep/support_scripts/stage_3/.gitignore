@@ -12,3 +12,4 @@
 !run_slices_summary.sh
 !verify_icafix_outputs.sh
 !run_censor_truncate.sh
+!censor_then_truncate.sh
