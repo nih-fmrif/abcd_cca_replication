@@ -35,7 +35,7 @@ fi
 # PREP STAGE 3 - STEP 3: generate swarm commands for censor+truncate
 while read subject; do
     # $SUPPORT_SCRIPTS/stage_3/cen_then_truncate.sh -subj $subject -in $DCAN_REPROC -cen $STAGE_1_OUT/concat_censors/$FD_THRESH/$SCAN_FD_THRESH_1/ -out $STAGE_3_OUT/NIFTI/
-    echo "$SUPPORT_SCRIPTS/stage_3/cen_then_truncate.sh -subj $subject -in $DCAN_REPROC -cen $STAGE_1_OUT/concat_censors/$FD_THRESH/$SCAN_FD_THRESH_1/ -out $STAGE_3_OUT/NIFTI/" >> $STAGE_3_OUT/censor_and_truncate.swarm
+    echo "$SUPPORT_SCRIPTS/stage_3/censor_then_truncate.sh -subj $subject -in $DCAN_REPROC -cen $STAGE_1_OUT/concat_censors/$FD_THRESH/$SCAN_FD_THRESH_1/ -out $STAGE_3_OUT/NIFTI/" >> $STAGE_3_OUT/censor_and_truncate.swarm
 done < $STAGE_3_OUT/ICAFIX_SUCCESS.txt
 
 echo "Run Censor+Trucate with the following swarm command:"
