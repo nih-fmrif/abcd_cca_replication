@@ -59,6 +59,7 @@ NUMSUBS_INPUT=$(cat $STAGE_2_OUT/stage_2_final_subjects.txt | wc -l)
 NUMSUBS_FAILED=$(cat $STAGE_3_OUT/ICAFIX_FAILED.txt | wc -l)
 NUMSUBS_SUCCESS=$(cat $STAGE_3_OUT/ICAFIX_SUCCESS.txt | wc -l)
 
+echo
 echo "ICA+FIX Results:"
 echo "NUMBER INPUT: $NUMSUBS_INPUT"
 echo "NUMBER SUCCESSFUL: $NUMSUBS_SUCCESS"
@@ -167,7 +168,7 @@ elif [[ $PROC_CODE -eq 1 ]]; then
     # Step 2
     echo
     echo "- STEP 2: Generate censor+truncate commands)"
-    echo "      $SUPPORT_SCRIPTS/stage_3/run_censor_and_truncate.sh $ABCD_CCA_REPLICATION"
+    echo "      $SUPPORT_SCRIPTS/stage_3/run_censor_truncate.sh $ABCD_CCA_REPLICATION"
 
     # Step 3
     echo
