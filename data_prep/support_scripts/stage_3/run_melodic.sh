@@ -31,7 +31,7 @@ else
 fi
 
 # Get final paths to the NIFTI inputs
-find $STAGE_3_OUT/NIFTI/ -type f -name "*.nii.gz" | sort | >> $STAGE_3_OUT/paths_to_NIFTI_files.txt
+find $STAGE_3_OUT/NIFTI/ -type f -name "*.nii.gz" | sort >> $STAGE_3_OUT/paths_to_NIFTI_files.txt
 
 echo "run_melodic.sh - Running MELODIC"
 echo "WARNING: This script was designed to be run the NIH Biowulf, and may not work on other systems."
@@ -41,6 +41,3 @@ echo "WARNING: This script was designed to be run the NIH Biowulf, and may not w
 # The variable $GICA points to the melodic output folder (inside data_prep/).
 
 melodic -i $STAGE_3_OUT/paths_to_NIFTI_files.txt -o $GICA -m /usr/local/apps/fsl/6.0.1/data/standard/MNI152_T1_2mm_brain_mask_dil1.nii.gz --nobet -a concat --tr=$TR_INTERVAL --Oall -d 200
-
-
-
