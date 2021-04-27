@@ -21,7 +21,6 @@ matlab_exec=$(which matlab)
     exit 1
  fi
 
-
 ABCD_CCA_REPLICATION="$(dirname "$PWD")"
 if [[ -f $ABCD_CCA_REPLICATION/pipeline.config ]]; then
     # config exists, so run it
@@ -32,16 +31,25 @@ else
     exit 1
 fi
 
+# Check if the following folders exists, else make folder structure
+STAGE_4_OUT=$DATA_PREP/data/stage_4/
+if [[ -d $STAGE_4_OUT ]]; then
+    :
+else
+    mkdir -p $STAGE_4_OUT/$NUMSUBS/
+    mkdir -p $STAGE_4_OUT/swarm_logs/
+fi
 
 # STEP 1 - FSLNets to generate subject-level connectomes
 echo "Generating subject-level connectomes using FSLNets. This may take a while (6-8 hours)."
+echo "stage_4_out=$STAGE_4_OUT/$NUMSUBS/"
 echo "gica_path=$GICA"
 echo "dr_path=$DR"
 matlab -nodisplay -nodesktop -nojvm -r "stage_4_out="$STAGE_4_OUT/$NUMSUBS/"; gica_path="$GICA"; dr_path="$DR";  run $SUPPORT_SCRIPTS/stage_4/abcd_netmats.m"
 
 # STEP 2 - Generate the NET matrix
 echo "Generating the aggregated subject connectome matrix."
-$PYTHON $SUPPORT_SCRIPTS/stage_4/NET.py $STAGE_4_OUT/$NUMSUBS/raw_netmats_001.txt 200 $NUMSUBS $STGE_3_OUT/paths_to_NIFTI_files.txt $FINAL_SUBJECTS $MAIN_REPO_DATA_FOLDER/$NUMSUBS/NET.txt
+$PYTHON $SUPPORT_SCRIPTS/stage_4/NET.py $STAGE_4_OUT/$NUMSUBS/raw_netmats_001.txt 200 $NUMSUBS $STAGE_3_OUT/paths_to_NIFTI_files.txt $FINAL_SUBJECTS $MAIN_REPO_DATA_FOLDER/$NUMSUBS/NET.txt
 
 # STEP 3 - Generate VARS matrix
 echo "Generating the finalized subject measure matrix."
