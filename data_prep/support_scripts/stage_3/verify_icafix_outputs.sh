@@ -136,6 +136,10 @@ elif [[ $PROC_CODE -eq 1 ]]; then
     echo "PIPELINE PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS."
     echo "PIPELINE PROCCEDING WITH $NUMSUBS_SUCCESS SUBJECTS." >> $PREP_LOG
 
+    # Make a copy of final subject list (for later scripts to access)
+    # store in $STAGE_3_OUT/final_subjects.txt
+    cp $STAGE_3_OUT/ICAFIX_SUCCESS.txt $STAGE_3_OUT/final_subjects.txt
+
     # WRITE VARIABLES TO CONFIG FILE
     echo
     echo "WRITING THE FOLLOWING VARIABLES TO THE CONFIG FILE"
