@@ -45,7 +45,9 @@ echo "Generating subject-level connectomes using FSLNets. This may take a while 
 # echo "stage_4_out=$STAGE_4_OUT/$NUMSUBS/"
 # echo "gica_path=$GICA"
 # echo "dr_path=$DR"
-matlab -nodisplay -nodesktop -nojvm -r "stage_4_out=$STAGE_4_OUT/$NUMSUBS/; gica_path=$GICA; dr_path=$DR; abcd_cca_dir=$ABCD_CCA_REPLICATION; n_subs_in=$NUMSUBS;" < $SUPPORT_SCRIPTS/stage_4/abcd_netmats.m
+# matlab -nodisplay -nodesktop -nojvm -r "stage_4_out=$STAGE_4_OUT/$NUMSUBS/; gica_path=$GICA; dr_path=$DR; abcd_cca_dir=$ABCD_CCA_REPLICATION; n_subs_in=$NUMSUBS;" < $SUPPORT_SCRIPTS/stage_4/abcd_netmats.m
+matlab -nodisplay -nodesktop -nojvm -r "stage_4_out='$STAGE_4_OUT/$NUMSUBS/';gica_path='$GICA';dr_path='$DR';abcd_cca_dir='$ABCD_CCA_REPLICATION';n_subs_in='$NUMSUBS';run $SUPPORT_SCRIPTS/stage_4/abcd_netmats.m"
+
 
 
 # "cd '$SUPPORT_SCRIPTS/stage_4';abcd_netmats('$STAGE_4_OUT/$NUMSUBS', '$GICA', '$DR', '$ABCD_CCA_REPLICATION', '$NUMSUBS')"
