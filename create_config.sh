@@ -8,8 +8,8 @@
 
 usage()
 {
-	echo "usage: create_config.sh <path/to/main/abcd_bids/bids/> <path/to/reprocessed/DCAN/output/> <path/to/conda/python>"
-    echo "ex: ./create_config.sh /data/ABCD_MBDU/abcd_bids/bids/ /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/goyaln2/conda/envs/abcd_cca_replication/bin/python"
+	echo "usage: create_config.sh <path/to/abcd_cca_replication/> <path/to/main/abcd_bids/bids/> <path/to/reprocessed/DCAN/output/> <path/to/conda/python>"
+    echo "ex: ./create_config.sh /data/NIMH_scratch/abcd_cca/abcd_cca_replication/ /data/ABCD_MBDU/abcd_bids/bids/ /data/ABCD_MBDU/abcd_bids/bids/derivatives/dcan_reproc/ /data/goyaln2/conda/envs/abcd_cca_replication/bin/python"
     # echo "NOTE you must provide the ABSOLUTE PATH to the main directory of the ABCD collection 3165 download. for example: /data/ABCD/abcd_bids/bids/"
     # echo "NOTE you must provide the ABSOLUTE PATH to the NDA RDS file. for example /data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/data/nda2.0.1.Rds"
 }
@@ -20,9 +20,10 @@ then
 	exit 1
 fi
 
-BIDS_PATH=$1
-DCAN_REPROC=$2
-PYTHON=$3
+ABCD_CCA_REPLICATION=$1
+BIDS_PATH=$2
+DCAN_REPROC=$3
+PYTHON=$4
 
 DERIVATES_PATH=$BIDS_PATH/derivatives/abcd-hcp-pipeline/
 DATA_PREP=$PWD/data_prep/
