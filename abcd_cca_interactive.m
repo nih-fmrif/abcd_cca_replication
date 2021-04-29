@@ -36,7 +36,7 @@ SUMPICS_THICK   =   sprintf('%s/melodic_IC_thick.sum', melodic_folder);
 % load in data from FSLNets calculations
 fslnets_mat     =   load(sprintf('%s/data/%d/fslnets.mat', abcd_cca_dir, n_subs));
 % Load the Subjects X Nodes matrix (should be size Nx19900)
-N0 = load(sprintf('%s/data/%d/NET.txt', abcd_cca_dir, n_subs));  
+N0 = load(sprintf('%s/data/%d/NET.txt', abcd_cca_dir, n_subs));
 
 % VARS_0 = Subjects X SMs text file
 VARS_0 = strcsvread(sprintf('%s/data/%d/VARS.txt', abcd_cca_dir, n_subs));
@@ -87,12 +87,12 @@ conf(isnan(conf)|isinf(conf)) = 0;                % again convert NaN/inf to 0 (
 %% --- SM PROCESSING ---
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Huh-Juhn method (do not drop random subjects in this method)
 I = eye(n_subs);
 Z = conf;
 Rz = I-Z*pinv(Z);
 [Q, D, ~] = svd(null(Z'));
 Qz = Q*D;
-
 
 % Matrix S1 (only ICA sms)
 S1=[VARS(:,ica_sms_idx)];
@@ -101,9 +101,30 @@ S1=[VARS(:,ica_sms_idx)];
 % S2, formed by gaussianizing the SMs we keep
 S2=palm_inormal(S1); % Gaussianise
 
-% Impute first, THEN do nuisance regression
 
-%%%%%%% TESTING HERE
+% for i=1:size(S2,2) % deconfound ignoring missing data
+%   tmp=~isnan(S2(:,i));
+%   tmpconf=nets_demean(conf(tmp,:));
+%   [q,d,~] = svd(null(tmpconf'),'econ');
+%   q = q*d;
+
+%   %I = eye(size(tmpconf,1));
+%   %H = tmpconf*pinv(tmpconf)
+%   %R = I - H;
+%   S2(tmp,i)=normalize(q'*S2(tmp,i));
+% end
+
+% Q_test = S2*pinv(palm_inormal(S1))';
+
+% A=Q_test*Q_test';
+% % Symmetric, idempotent (i.e. A*A=A), all eigenvalues of A have to be 0 or 1, trace(A) has to be N-ncol(Z) OR ncol(Z) (not sure)
+% B = Q_test'*Q_test;
+% B has to be identity (square matrix) of size N-ncols(Z)
+% Q_test' = pinv(Q_test)
+
+% If these conditions are met, we can use this Q_test rather than the Qz from Huh-Juhn (this is our new Q matrix)
+
+
 % Project onto nearest valid cov matrix so we don't have NaNs
 S2Cov=zeros(size(S2,1));
 for i=1:size(S2,1) % estimate "pairwise" covariance, ignoring missing data
@@ -116,6 +137,11 @@ end
 % "projection" is ambiguous here, this is imputation
 % this nearestSPD is same as mean imputation, could do either really.
 S3=nearestSPD(S2Cov); % project onto the nearest valid covariance matrix. This method avoids imputation (we can't have any missing values before running the PCA)
+
+
+
+
+% S_Q = Qz'*S3;
 
 % Mean imputation method for comparison
 % Get mean for each column, excluding NaNs
@@ -133,15 +159,20 @@ S3=nearestSPD(S2Cov); % project onto the nearest valid covariance matrix. This m
 %   col_vals(nan_rows) = col_means(i)
 
 % Determine how much data is missing:
-sum(sum(isnan(S3)))/(size(S3,1)*size(S3,2))*100
+% sum(sum(isnan(S3)))/(size(S3,1)*size(S3,2))*100
 
 % N_dim_SM should be >= size(S,2) to capture as much of the data as possible. Try N_dim_SM = size(S3,2) and something larger.
-[S4,uu1_Q,dd1_Q] = nets_svds(S3, 73); % PCA of netmat via SVD reduction
-
+[S4,uu1_Q,dd1_Q] = nets_svds(S3, size(S2,2)); % PCA of netmat via SVD reduction
+% S5=S4;
 % Do the residualization AFTER PCA.
 % Why? Because the purpose of the above PCA is to get a matrix that is NOT missing any data and we do PCA to compensate for the fact that the above covariance matrix is NOT actually a true positive defininte cov. matrix
 % This S5 is input to CCA.
-S5 = Qz'*S4;
+
+S5_resid_after_PCA = Qz'*S4;
+[S5_resid_before_PCA,uu1_Q,dd1_Q] = nets_svds(Qz'*S3, size(S2,2)); % PCA of netmat via SVD reduction
+
+S5_resid_after_PCA_R = Rz'*S4;
+[S5_resid_before_PCA_R,uu1_Q,dd1_Q] = nets_svds(Rz'*S3, size(S2,2)); % PCA of netmat via SVD reduction
 
 
 %{
@@ -232,6 +263,8 @@ N3 = [N1 N2]; % Concat horizontally
 
 % N4_R = (I-Z*pinv(Z))*N3;
 N4 = Qz'*N3;
+N4_R = Rz'*N3;
+% N4 = Q_test'*N3;
 
 
 % Qz and Rz will lead to same CCA results, but Qz is the smallest space to represent the information
@@ -254,12 +287,15 @@ N4 = Qz'*N3;
 % If there is no missing data, A and B give the same result, but B is more complicated. If, however, there are missing data, B can be used since we can approximate cov(X) using nearest SPD.
 
 
-[N5,ss1,vv1] = nets_svds(N4, 1000); % PCA of netmat via SVD reduction
+[N5,ss1,vv1] = nets_svds(N4, 200); % PCA of netmat via SVD reduction
 % [N5_Q,ss1_Q,vv1_Q] = nets_svds(N4_Q, N_dim); % PCA of netmat via SVD reduction
 
-%% --- CCA ---
+[N5_R,ss1_R,vv1_R] = nets_svds(N4_R, 1000); % PCA of netmat via SVD reduction
+% [A, B, R, U, V, initial_stats] = canoncorr(N5_R,S5);
+
+%% --- CCA with Qz---
 fprintf("Running CCA on matrices S5 and N5\n")
-[A, B, R, U, V, initial_stats] = canoncorr(N5,S5);
+[A, B, R, U, V, initial_stats] = canoncorr(N5,S5_resid_after_PCA);
 
 % Plot
 figure;
@@ -268,6 +304,36 @@ scatter(U(:,1), V(:,1))
 figure;
 plotregression(U(:,1), V(:,1))
 
+fprintf("Running CCA on matrices S5 and N5\n")
+[A1, B1, R1, U1, V1, initial_stats1] = canoncorr(N5,S5_resid_before_PCA);
+
+% Plot
+figure;
+scatter(U1(:,1), V1(:,1))
+% Plot with regression line
+figure;
+plotregression(U1(:,1), V1(:,1))
+
+%% --- CCA with Rz---
+fprintf("Running CCA on matrices S5 and N5\n")
+[A, B, R, U, V, initial_stats] = canoncorr(N5_R,S5_resid_after_PCA_R);
+
+% Plot
+figure;
+scatter(U(:,1), V(:,1))
+% Plot with regression line
+figure;
+plotregression(U(:,1), V(:,1))
+
+fprintf("Running CCA on matrices S5 and N5\n")
+[A1, B1, R1, U1, V1, initial_stats1] = canoncorr(N5_R,S5_resid_before_PCA_R);
+
+% Plot
+figure;
+scatter(U1(:,1), V1(:,1))
+% Plot with regression line
+figure;
+plotregression(U1(:,1), V1(:,1))
 
 % CCA with Winkler CCA code (PRODUCES SAME RESULT)
 % [cc1,A1,B1,U1,V1] = cca(N5,S5,n_subs - rank(Z))
