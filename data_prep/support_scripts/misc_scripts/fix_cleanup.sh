@@ -20,12 +20,11 @@ then
 	exit 1
 fi
 
-# Check if input exists
+
 
 # Accept either tarballed subjects or folders
-
 if [[ -d $subject ]]; then 
-    echo "folder passed, will now remove files"
+    echo "folder passed as input, now removing ica+fix files."
     DIR=$subject
 elif [[ -f $subject ]]; then
     if file $subject | grep -q compressed ; then
@@ -35,7 +34,7 @@ elif [[ -f $subject ]]; then
 
         # Now make sure that the directory is actually there.
         if [[ -d $DIR ]]; then 
-            echo "Subject unzip successful, will now remove files."
+            echo "Subject unzip successful, now removing ica+fix files."
         else
             echo "Subject unzipping failed. Exiting."
             # exit 1
