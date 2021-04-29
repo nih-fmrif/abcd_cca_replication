@@ -36,8 +36,9 @@ fi
 
 # Logging, delete if already exists (since we're starting fresh)
 if [[ -f $PREP_LOG ]]; then
-    rm $PREP_LOG
-    touch $PREP_LOG
+    # rm $PREP_LOG
+    # touch $PREP_LOG
+    :
 else
     touch $PREP_LOG
 fi
@@ -50,15 +51,6 @@ if [[ -d $STAGE_0_OUT ]]; then
 else
     mkdir -p $STAGE_0_OUT
     mkdir -p $STAGE_0_OUT/swarm_logs/
-fi
-
-# Check if we have censor files directory
-if [[ -d $CENSOR_FILES ]]; then
-    # Delete the files inside here
-    # rm $CENSOR_FILES/*.txt
-    :
-else
-    mkdir -p $CENSOR_FILES
 fi
 
 # Check if we have pre-censor length directory
