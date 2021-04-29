@@ -3,6 +3,12 @@
 % Updated 4/27/2021
 
 % Written by Nikhil Goyal, National Institute of Mental Health, 2019-2020
+abcd_cca_dir="/data/NIMH_scratch/abcd_cca/abcd_cca_replication/";
+stage_4_out='/data/NIMH_scratch/abcd_cca/abcd_cca_replication/data_prep//data/stage_4//5013/';
+gica_path='/data/NIMH_scratch/abcd_cca/abcd_cca_replication/data_prep//data/stage_3//5013.gica';
+dr_path='/data/NIMH_scratch/abcd_cca/abcd_cca_replication/data_prep//data/stage_3//5013.dr'
+n_subs_in=5013;
+
 
 if ~isdeployed
     addpath(genpath(sprintf('%s/dependencies/', abcd_cca_dir)));
@@ -79,3 +85,6 @@ netmats5_001 =  nets_netmats(ts,1,'ridgep',0.01);     % Ridge Regression partial
 save(sprintf('%s/fslnets.mat',stage_4_out),'-v7.3')
 
 writematrix(netmats5_001, sprintf('%s/raw_netmats_001.txt',stage_4_out))
+
+% Exit code needed?
+exit 
