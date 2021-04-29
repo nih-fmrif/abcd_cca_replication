@@ -11,7 +11,7 @@
 # FSL
 
 # Example usage:
-#   ./run_dual_regression.sh
+#   ./run_dual_regression.sh /data/NIMH_scratch/abcd_cca/abcd_cca_replication/
 
 # Check for fsl
 fsl_exec=$(which fsl)
