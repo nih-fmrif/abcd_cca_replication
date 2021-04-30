@@ -5,7 +5,8 @@ perms_per_batch_in = 2000
 N_perm_in = 100000
 N_dim_in = 70
 n_subs_in = 5013
-abcd_cca_dir    =   '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/';
+% abcd_cca_dir    =   '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/';
+abcd_cca_dir    =   '/data/NIMH_scratch/abcd_cca/abcd_cca_replication';
 
 % subs_folder    =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/ica_500_test/'
 % melodic_folder      =  '/data/ABCD_MBDU/goyaln2/abcd_cca_replication/data_prep/ica_500_test/groupICA200_50subs.gica/';
@@ -33,8 +34,8 @@ SUMPICS         =   sprintf('%s/melodic_IC_thin.sum', melodic_folder);
 SUMPICS_THICK   =   sprintf('%s/melodic_IC_thick.sum', melodic_folder);
 
 %% --- Read in data, set some variables, create confounds matrix ---
-% load in data from FSLNets calculations
-fslnets_mat     =   load(sprintf('%s/data/%d/fslnets.mat', abcd_cca_dir, n_subs));
+% load in data from FSLNets calculations (located in data_prep/data/stage_4/)
+fslnets_mat     =   load(sprintf('%s/data_prep/data/stage_4/%d/fslnets.mat', abcd_cca_dir, n_subs));
 % Load the Subjects X Nodes matrix (should be size Nx19900)
 N0 = load(sprintf('%s/data/%d/NET.txt', abcd_cca_dir, n_subs));
 
