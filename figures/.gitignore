@@ -1,0 +1,8 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!stage2_submission_figures_ABCD_ICAFIX.m
+!pneg_tables_prep_ABCD_ICAFIX.m
+!pos-neg-lookup.mat
+!prep_netfigs_ABCD.m

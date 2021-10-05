@@ -10,8 +10,7 @@
 !pipeline_diagrams/
 !misc_scripts/
 !hcp_cca_testing/
-!smith_cca_analysis/
-!revised_cca_analysis/
+!figures/
 
 # Files
 !pip_requirements.txt
@@ -27,3 +26,4 @@
 !abcd_cca_single.m
 !abcd_cca_batch.m
 !abcd_cca_interactive.m
+!abcd_cca_80-20.m
