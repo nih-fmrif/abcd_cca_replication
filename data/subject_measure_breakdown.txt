@@ -21,6 +21,7 @@ anthro_bmi_calc
 age
 demo_prtnr_empl_p
 household.income.bl
+high.educ
 
 ---CCA VARS (74 total)---
 nihtbx_picture_uncorrected
