@@ -171,9 +171,7 @@ pneg_vars = [VARS(:,ica_sms_idx) VARS(:,bmi_col) VARS(:,educ_col) VARS(:,age_col
 
 % specify CCA mode
 I = 2;
-% run the correlations, the sign is arbitrary, so lets flip it to be
-% consistent with Smith
-CorCCA = -1*corr(V(:,I), palm_inormal(pneg_vars), 'rows','pairwise');
+CorCCA = corr(V(:,I), palm_inormal(pneg_vars), 'rows','pairwise');
 
 % open the figure
 figure;
